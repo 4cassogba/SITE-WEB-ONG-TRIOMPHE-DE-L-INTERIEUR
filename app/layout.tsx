@@ -1,7 +1,19 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { siteConfig } from "@/lib/content";
+
+// Police de base du site. Les autres polices (display, script, impact
+// ci-dessous) restent auto-hébergées pour éviter toute dépendance au CDN
+// Google Fonts au moment du build — Next.js a déjà renvoyé des URLs de
+// fichiers obsolètes (404) pour Lora à un moment donné — mais Inter est
+// chargée via next/font/google à la demande explicite de l'ONG.
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 // Polices auto-hébergées (variable fonts) plutôt que next/font/google : évite
 // toute dépendance au CDN Google Fonts au moment du build, Next.js a déjà
@@ -10,17 +22,6 @@ const displayFont = localFont({
   src: "./fonts/playfair-variable.woff2",
   variable: "--font-display-serif",
   weight: "500 800",
-  display: "swap",
-});
-
-// Axe de graisse réel de ce fichier variable : 200-800 (vérifié via sa table
-// fvar), pas 400-700 comme précédemment déclaré ici — ce plafond trop bas
-// faisait silencieusement retomber à 700 tout font-weight:900 déjà présent
-// dans le CSS (ex. Badge3 .neon, antérieur à cette session).
-const manrope = localFont({
-  src: "./fonts/manrope-variable.woff2",
-  variable: "--font-manrope",
-  weight: "200 800",
   display: "swap",
 });
 
@@ -101,7 +102,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="fr"
-      className={`${displayFont.variable} ${manrope.variable} ${dancingScript.variable} ${bebasNeue.variable} h-full antialiased`}
+      className={`${inter.variable} ${displayFont.variable} ${dancingScript.variable} ${bebasNeue.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-mist-100 text-ink">
         {children}

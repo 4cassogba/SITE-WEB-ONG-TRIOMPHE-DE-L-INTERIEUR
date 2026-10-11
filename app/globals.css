@@ -77,7 +77,7 @@
   --color-ink: var(--color-ink);
 
   --font-display: var(--font-display-serif);
-  --font-sans: var(--font-manrope);
+  --font-sans: var(--font-inter);
 }
 
 html {
