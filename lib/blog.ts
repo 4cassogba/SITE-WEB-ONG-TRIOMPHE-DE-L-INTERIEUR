@@ -44,9 +44,9 @@ export const blogPosts: BlogPost[] = [
     title:
       "Journée mondiale de la santé mentale : le CIGIBM 4 dévoile « le vaccin de la dépression » en conférence de presse",
     excerpt:
-      "Au lendemain de la Journée mondiale de la santé mentale, Triomphe de l'Intérieur a réuni la presse à Cotonou pour annoncer la 4ème édition du CIGIBM et son thème.",
-    date: "11 octobre 2026",
-    isoDate: "2026-10-11",
+      "Le jour même de la Journée mondiale de la santé mentale, Triomphe de l'Intérieur a réuni la presse à Cotonou pour annoncer la 4ème édition du CIGIBM et son thème.",
+    date: "10 octobre 2026",
+    isoDate: "2026-10-10",
     readTime: "4 min",
     author: "Coach Christelle Gnimassou",
     authorRole: "Présidente-fondatrice, Triomphe de l'Intérieur",
@@ -58,11 +58,11 @@ export const blogPosts: BlogPost[] = [
     body: [
       {
         type: "paragraph",
-        text: "Le 10 octobre, comme chaque année, le monde a marqué la Journée mondiale de la santé mentale, une date qui rappelle qu'un mal invisible ne cesse pas d'exister parce qu'on refuse d'en parler. Au Bénin, c'est dans la foulée de cette journée que Triomphe de l'Intérieur a choisi de sortir du silence autrement : en convoquant la presse.",
+        text: "Le 10 octobre, comme chaque année, le monde a marqué la Journée mondiale de la santé mentale, une date qui rappelle qu'un mal invisible ne cesse pas d'exister parce qu'on refuse d'en parler. Au Bénin, c'est précisément ce jour-là que Triomphe de l'Intérieur a choisi de marquer l'occasion autrement : en convoquant la presse.",
       },
       {
         type: "paragraph",
-        text: "Le 11 octobre 2026, dans les locaux de l'ONG à Cotonou, journalistes, partenaires et membres de l'équipe se sont retrouvés pour une conférence de presse avec un seul objectif : annoncer officiellement la 4ème édition du Congrès International de Guérison Intérieure et de Bien-être Mental (CIGIBM), et son thème.",
+        text: "Le 10 octobre 2026, dans les locaux de l'ONG à Cotonou, journalistes, partenaires et membres de l'équipe se sont retrouvés pour une conférence de presse avec un seul objectif : annoncer officiellement la 4ème édition du Congrès International de Guérison Intérieure et de Bien-être Mental (CIGIBM), et son thème.",
       },
       {
         type: "heading",

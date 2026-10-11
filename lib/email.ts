@@ -403,7 +403,7 @@ export function buildAmbassadorBoosterEmail(fullName: string, referralUrl: strin
   };
 }
 
-// Déclenché manuellement après la conférence de presse du 11 octobre 2026
+// Déclenché manuellement après la conférence de presse du 10 octobre 2026
 // (annonce du thème de l'édition 4) : donne aux ambassadeurs la preuve que
 // l'événement qu'ils relaient est couvert par la presse béninoise, un
 // argument concret à montrer à une personne qui hésite encore.
@@ -420,7 +420,7 @@ export function buildAmbassadorPressConferenceEmail(fullName: string, referralUr
       ${first}, ce que vous partagez est maintenant officiel.
     </h1>
     <p style="margin:0 0 20px; font-size:15px; line-height:1.6; color:#16211dcc; font-family:Arial, sans-serif;">
-      Le 11 octobre, I COM TV, le journal Fraternité et Éduc&apos;Action étaient présents pour la conférence de presse où nous avons annoncé le thème du CIGIBM ${cigibm.nextEdition.edition} : « ${cigibm.nextEdition.theme} ». Ce que vous invitez vos proches à rejoindre, c&apos;est désormais un événement que la presse béninoise suit elle aussi.
+      Le 10 octobre, I COM TV, le journal Fraternité et Éduc&apos;Action étaient présents pour la conférence de presse où nous avons annoncé le thème du CIGIBM ${cigibm.nextEdition.edition} : « ${cigibm.nextEdition.theme} ». Ce que vous invitez vos proches à rejoindre, c&apos;est désormais un événement que la presse béninoise suit elle aussi.
     </p>
     <p style="margin:0 0 20px; font-size:15px; line-height:1.6; color:#16211dcc; font-family:Arial, sans-serif;">
       C&apos;est exactement le genre de preuve qui rassure une personne qui hésite encore à s&apos;inscrire : montrez-lui que ce n&apos;est pas que vous qui en parlez.
