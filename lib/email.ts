@@ -25,7 +25,21 @@ const LOGO_MARK_URL = `${SITE_URL}/images/logo-mark.png`;
 // réduisent ce padding sous 600px ; le style inline reste le repli pour les
 // clients qui ignorent <style> (ils gardent alors le padding "desktop",
 // jamais pire qu'avant).
-function emailShell(content: string) {
+// Signature affichée dans le corps de l'email, juste avant le pied de page
+// institutionnel — distincte du nom d'expéditeur ("Coach Christelle", cf.
+// SENDER_NAME plus bas) qui n'apparaît que dans la boîte de réception,
+// jamais dans le corps lui-même. Omise sur les notifications internes
+// (signed: false) : celles-ci s'adressent à l'administration, pas à un
+// participant ou un ambassadeur, et n'ont pas vocation à paraître signées
+// personnellement par Christelle.
+function signatureBlock() {
+  return `<p style="margin:28px 0 0; font-size:14px; line-height:1.6; color:#16211d99; font-family:Georgia, 'Times New Roman', serif; font-style:italic;">
+    — Coach Christelle
+  </p>`;
+}
+
+function emailShell(content: string, options: { signed?: boolean } = {}) {
+  const signed = options.signed ?? true;
   return `<!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -62,6 +76,7 @@ function emailShell(content: string) {
             <tr>
               <td style="background:#ffffff; padding:36px 40px 44px;" class="email-content-pad">
                 ${content}
+                ${signed ? signatureBlock() : ""}
               </td>
             </tr>
             <tr>
@@ -836,7 +851,7 @@ export function buildAmbassadorReferralAdminNotification(
       </tr>
     </table>
     ${ctaButton("Voir les ambassadeurs", `${SITE_URL}/admin/ambassadors`)}
-  `);
+  `, { signed: false });
 
   return {
     // Même raison que buildAmbassadorReferralEmail ci-dessus : le nom du
@@ -882,7 +897,7 @@ export function buildAmbassadorPendingApprovalAdminNotification(
       Son compte reste invisible du site tant qu&apos;il n&apos;est pas activé. Nous lui avons annoncé une validation sous quelques minutes.
     </p>
     ${ctaButton("Valider ce compte", `${SITE_URL}/admin/ambassadors/${ambassadorId}/edit`)}
-  `);
+  `, { signed: false });
 
   return {
     subject: `À valider : ${ambassadorFullName} veut devenir ambassadeur`,

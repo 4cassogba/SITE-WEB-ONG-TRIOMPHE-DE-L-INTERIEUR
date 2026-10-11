@@ -1,15 +1,37 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { siteConfig } from "./content";
 import {
   addAmbassadorToBrevoList,
   buildAmbassadorBadgeAnnouncementEmail,
   buildAmbassadorBoosterEmail,
+  buildAmbassadorPendingApprovalAdminNotification,
   buildAmbassadorPressConferenceDateCorrectionEmail,
   buildAmbassadorPressConferenceEmail,
+  buildAmbassadorReferralAdminNotification,
   buildAmbassadorTipsEmail,
   buildBadgeReminderEmail,
   buildConfirmationEmail,
   buildParticipantTeaserEmail,
 } from "./email";
+
+describe("email signature", () => {
+  it("signs person-facing emails with Coach Christelle before the footer", () => {
+    const message = buildConfirmationEmail("Aïcha");
+
+    const signatureIndex = message.html.indexOf("Coach Christelle");
+    const footerIndex = message.html.indexOf(siteConfig.location);
+    expect(signatureIndex).toBeGreaterThan(-1);
+    expect(signatureIndex).toBeLessThan(footerIndex);
+  });
+
+  it("omits the signature on internal admin notifications", () => {
+    const referral = buildAmbassadorReferralAdminNotification("Fatou Diallo", "Jean Dupont", 3);
+    const pendingApproval = buildAmbassadorPendingApprovalAdminNotification("amb-1", "Fatou Diallo", "fatou@example.com");
+
+    expect(referral.html).not.toContain("Coach Christelle");
+    expect(pendingApproval.html).not.toContain("Coach Christelle");
+  });
+});
 
 describe("buildConfirmationEmail", () => {
   it("includes a link to the badge page built from SITE_URL when a token is given", () => {
