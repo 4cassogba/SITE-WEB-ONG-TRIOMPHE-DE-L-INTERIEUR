@@ -439,6 +439,30 @@ export function buildAmbassadorPressConferenceEmail(fullName: string, referralUr
   };
 }
 
+// Correctif court envoyé après buildAmbassadorPressConferenceEmail, qui
+// indiquait par erreur le 11 octobre au lieu du 10 — un ambassadeur qui
+// relaierait cette date à un proche le répéterait à son tour.
+export function buildAmbassadorPressConferenceDateCorrectionEmail(fullName: string) {
+  const first = fullName.split(/\s+/)[0];
+
+  const html = emailShell(`
+    <p style="margin:0 0 4px; font-family:Arial, sans-serif; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#307335; font-weight:bold;">
+      Petite précision
+    </p>
+    <h1 style="margin:0 0 20px; font-size:26px; line-height:1.25; color:#183a1a;">
+      ${first}, une correction sur mon dernier email.
+    </h1>
+    <p style="margin:0 0 20px; font-size:15px; line-height:1.6; color:#16211dcc; font-family:Arial, sans-serif;">
+      La conférence de presse avec I COM TV, Fraternité et Éduc&apos;Action a eu lieu le <strong>10 octobre</strong>, et non le 11 comme indiqué par erreur. Le reste ne change pas : l&apos;article et votre lien sont toujours valables.
+    </p>
+  `);
+
+  return {
+    subject: `${first}, petite correction : c'était le 10 octobre`,
+    html,
+  };
+}
+
 // Deux visuels possibles pour le partage : l'affiche officielle et la
 // photo de Coach Christelle (seringue en forme de cœur, tirée de la
 // campagne "Le vaccin de la dépression"). Un seul par email, tiré au

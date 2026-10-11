@@ -3,6 +3,7 @@ import {
   addAmbassadorToBrevoList,
   buildAmbassadorBadgeAnnouncementEmail,
   buildAmbassadorBoosterEmail,
+  buildAmbassadorPressConferenceDateCorrectionEmail,
   buildAmbassadorPressConferenceEmail,
   buildAmbassadorTipsEmail,
   buildBadgeReminderEmail,
@@ -141,6 +142,16 @@ describe("buildAmbassadorPressConferenceEmail", () => {
       "https://ongtriomphedelinterieur.com/blog/conference-presse-cigibm-vaccin-de-la-depression"
     );
     expect(message.html).toContain("I COM TV");
+  });
+});
+
+describe("buildAmbassadorPressConferenceDateCorrectionEmail", () => {
+  it("states the corrected date without repeating the wrong one", () => {
+    const message = buildAmbassadorPressConferenceDateCorrectionEmail("Fatou Diallo");
+
+    expect(message.subject).toContain("Fatou");
+    expect(message.html).toContain("10 octobre");
+    expect(message.html).not.toContain("11 octobre");
   });
 });
 
