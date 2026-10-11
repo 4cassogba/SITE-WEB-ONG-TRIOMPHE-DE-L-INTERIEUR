@@ -103,6 +103,32 @@ function Block({ block }: { block: BlogBlock }) {
           </div>
         </Reveal>
       );
+    case "links":
+      return (
+        <Reveal>
+          <div className="mt-8 rounded-2xl bg-leaf-50 p-6">
+            {block.heading && (
+              <p className="text-xs font-semibold uppercase tracking-wide text-leaf-700">
+                {block.heading}
+              </p>
+            )}
+            <ul className="mt-3 space-y-2">
+              {block.items.map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-leaf-800 underline decoration-leaf-400 underline-offset-4 hover:text-leaf-900"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
+      );
   }
 }
 

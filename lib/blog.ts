@@ -15,6 +15,11 @@ export type BlogBlock =
       imagePosition: "left" | "right";
       heading?: string;
       paragraphs: string[];
+    }
+  | {
+      type: "links";
+      heading?: string;
+      items: { label: string; href: string }[];
     };
 
 export type BlogPost = {
@@ -33,6 +38,104 @@ export type BlogPost = {
 };
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: "conference-presse-cigibm-vaccin-de-la-depression",
+    type: "activite",
+    title:
+      "Journée mondiale de la santé mentale : le CIGIBM 4 dévoile « le vaccin de la dépression » en conférence de presse",
+    excerpt:
+      "Au lendemain de la Journée mondiale de la santé mentale, Triomphe de l'Intérieur a réuni la presse à Cotonou pour annoncer la 4ème édition du CIGIBM et son thème.",
+    date: "11 octobre 2026",
+    isoDate: "2026-10-11",
+    readTime: "4 min",
+    author: "Coach Christelle Gnimassou",
+    authorRole: "Présidente-fondatrice, Triomphe de l'Intérieur",
+    authorAvatar: "/images/author-christelle-gnimassou.jpg",
+    featuredImage: {
+      src: "/images/cigibm-edition-4/conference-presse/christelle-podium-annonce.jpg",
+      alt: "Christelle Eugénie Gnimassou s'exprime au pupitre devant la presse, entourée des bannières de l'ONG Triomphe de l'Intérieur et de CG Consulting",
+    },
+    body: [
+      {
+        type: "paragraph",
+        text: "Le 10 octobre, comme chaque année, le monde a marqué la Journée mondiale de la santé mentale, une date qui rappelle qu'un mal invisible ne cesse pas d'exister parce qu'on refuse d'en parler. Au Bénin, c'est dans la foulée de cette journée que Triomphe de l'Intérieur a choisi de sortir du silence autrement : en convoquant la presse.",
+      },
+      {
+        type: "paragraph",
+        text: "Le 11 octobre 2026, dans les locaux de l'ONG à Cotonou, journalistes, partenaires et membres de l'équipe se sont retrouvés pour une conférence de presse avec un seul objectif : annoncer officiellement la 4ème édition du Congrès International de Guérison Intérieure et de Bien-être Mental (CIGIBM), et son thème.",
+      },
+      {
+        type: "heading",
+        text: "Le vaccin de la dépression, une image pour un combat concret",
+      },
+      {
+        type: "paragraph",
+        text: "« Le vaccin de la dépression. » Le thème choisi pour cette édition ne laisse personne indifférent, et c'est voulu. Comme un vaccin, la prévention en santé mentale n'agit pas après coup : elle agit avant, en donnant à chacun les outils pour reconnaître les premiers signes, les siens et ceux d'un proche, avant que la dépression ne s'installe.",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm-edition-4/conference-presse/christelle-podium-micro.jpg",
+          alt: "Christelle Eugénie Gnimassou au micro, devant les bannières ONG Triomphe de l'Intérieur et CG Consulting",
+        },
+        imagePosition: "right",
+        heading: "Un message porté personnellement",
+        paragraphs: [
+          "Face aux caméras, Christelle Eugénie Gnimassou, présidente-fondatrice de l'ONG, a présenté les grandes lignes du congrès à venir : le 17 octobre 2026, dès 9h00, au Palais des Congrès de Cotonou, sur inscription gratuite.",
+          "Elle est aussi revenue sur la raison d'être du CIGIBM depuis sa création : faire de la santé mentale un sujet qu'on aborde à voix haute, et non plus un secret qu'on porte seul.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Une équipe au complet pour porter l'annonce",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm-edition-4/conference-presse/equipe-ong-triomphe.jpg",
+          alt: "Membres de l'équipe de l'ONG Triomphe de l'Intérieur posant ensemble après la conférence de presse",
+        },
+        imagePosition: "left",
+        heading: "L'équipe de Triomphe de l'Intérieur",
+        paragraphs: [
+          "Une annonce de cette ampleur ne se prépare jamais seule. Derrière la présidente-fondatrice, c'est toute l'équipe de l'ONG qui s'est mobilisée pour cette conférence de presse, de la logistique à l'accueil des journalistes.",
+        ],
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm-edition-4/conference-presse/equipe-partenaires-presse.jpg",
+          alt: "Équipe de l'ONG Triomphe de l'Intérieur et partenaires, dont CG Consulting, réunis après la conférence de presse",
+        },
+        imagePosition: "right",
+        heading: "Des partenaires engagés à nos côtés",
+        paragraphs: [
+          "Cette mobilisation dépasse l'ONG elle-même. Partenaires, dont le cabinet CG Consulting, collaborateurs et membres de la presse réunis sur cette photo témoignent d'une dynamique qui dépasse une seule organisation : celle d'un réseau grandissant autour de la santé mentale au Bénin.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "La presse a répondu présent",
+      },
+      {
+        type: "paragraph",
+        text: "Trois médias ont fait le déplacement pour couvrir l'annonce : I COM TV, le journal Fraternité et le groupe de presse spécialisé Éduc'Action. Leur présence confirme l'intérêt croissant, au Bénin, pour les sujets de santé mentale, longtemps restés en marge du débat public.",
+      },
+      {
+        type: "links",
+        heading: "Les médias présents à la conférence",
+        items: [
+          { label: "I COM TV", href: "https://www.youtube.com/channel/UCpC5j0yGfCs0ss4WWsQjmFQ" },
+          { label: "Fraternité", href: "https://fraternite.bj/" },
+          { label: "Éduc'Action", href: "https://eduactions.bj/" },
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Rendez-vous le 17 octobre 2026, dès 9h00, au Palais des Congrès de Cotonou, pour la 4ème édition du CIGIBM. La participation est gratuite, sur inscription.",
+      },
+    ],
+  },
   {
     slug: "pourquoi-le-mental-dabord-femme-celibataire",
     type: "article",

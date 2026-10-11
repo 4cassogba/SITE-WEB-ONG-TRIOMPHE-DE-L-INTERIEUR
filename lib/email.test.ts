@@ -3,6 +3,7 @@ import {
   addAmbassadorToBrevoList,
   buildAmbassadorBadgeAnnouncementEmail,
   buildAmbassadorBoosterEmail,
+  buildAmbassadorPressConferenceEmail,
   buildAmbassadorTipsEmail,
   buildBadgeReminderEmail,
   buildConfirmationEmail,
@@ -127,6 +128,19 @@ describe("buildAmbassadorTipsEmail", () => {
     const distinctPaths = new Set(christellePaths);
 
     expect(distinctPaths.size).toBeLessThanOrEqual(2);
+  });
+});
+
+describe("buildAmbassadorPressConferenceEmail", () => {
+  it("links the press-conference blog post and keeps the referral link, not just a pep talk", () => {
+    const message = buildAmbassadorPressConferenceEmail("Fatou Diallo", "https://ongtriomphedelinterieur.com/r/fatou");
+
+    expect(message.subject).toContain("Fatou");
+    expect(message.html).toContain("https://ongtriomphedelinterieur.com/r/fatou");
+    expect(message.html).toContain(
+      "https://ongtriomphedelinterieur.com/blog/conference-presse-cigibm-vaccin-de-la-depression"
+    );
+    expect(message.html).toContain("I COM TV");
   });
 });
 

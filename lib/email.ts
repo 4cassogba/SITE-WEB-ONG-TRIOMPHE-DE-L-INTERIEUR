@@ -403,6 +403,42 @@ export function buildAmbassadorBoosterEmail(fullName: string, referralUrl: strin
   };
 }
 
+// Déclenché manuellement après la conférence de presse du 11 octobre 2026
+// (annonce du thème de l'édition 4) : donne aux ambassadeurs la preuve que
+// l'événement qu'ils relaient est couvert par la presse béninoise, un
+// argument concret à montrer à une personne qui hésite encore.
+export function buildAmbassadorPressConferenceEmail(fullName: string, referralUrl: string) {
+  const first = fullName.split(/\s+/)[0];
+  const blogUrl = `${SITE_URL}/blog/conference-presse-cigibm-vaccin-de-la-depression`;
+  const shareMessage = `Je vous invite au CIGIBM ${cigibm.nextEdition.edition}, « ${cigibm.nextEdition.theme} », les ${cigibm.nextEdition.dates} au ${cigibm.nextEdition.venue}. Réservez votre place gratuite ici : ${referralUrl}`;
+
+  const html = emailShell(`
+    <p style="margin:0 0 4px; font-family:Arial, sans-serif; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#307335; font-weight:bold;">
+      C&apos;est passé dans la presse
+    </p>
+    <h1 style="margin:0 0 20px; font-size:26px; line-height:1.25; color:#183a1a;">
+      ${first}, ce que vous partagez est maintenant officiel.
+    </h1>
+    <p style="margin:0 0 20px; font-size:15px; line-height:1.6; color:#16211dcc; font-family:Arial, sans-serif;">
+      Le 11 octobre, I COM TV, le journal Fraternité et Éduc&apos;Action étaient présents pour la conférence de presse où nous avons annoncé le thème du CIGIBM ${cigibm.nextEdition.edition} : « ${cigibm.nextEdition.theme} ». Ce que vous invitez vos proches à rejoindre, c&apos;est désormais un événement que la presse béninoise suit elle aussi.
+    </p>
+    <p style="margin:0 0 20px; font-size:15px; line-height:1.6; color:#16211dcc; font-family:Arial, sans-serif;">
+      C&apos;est exactement le genre de preuve qui rassure une personne qui hésite encore à s&apos;inscrire : montrez-lui que ce n&apos;est pas que vous qui en parlez.
+    </p>
+    ${ctaButton("Lire l'article", blogUrl)}
+    <p style="margin:28px 0 8px; font-size:15px; line-height:1.6; color:#16211dcc; font-family:Arial, sans-serif;">
+      Voici votre lien, prêt à repartir.
+    </p>
+    ${referralLinkBox(referralUrl)}
+    ${shareButtons(shareMessage)}
+  `);
+
+  return {
+    subject: `${first}, la presse était là : le CIGIBM ${cigibm.nextEdition.edition} fait parler de lui`,
+    html,
+  };
+}
+
 // Deux visuels possibles pour le partage : l'affiche officielle et la
 // photo de Coach Christelle (seringue en forme de cœur, tirée de la
 // campagne "Le vaccin de la dépression"). Un seul par email, tiré au
