@@ -57,7 +57,7 @@ export default function ComposeForm() {
         <select
           value={template}
           onChange={(e) => setTemplate(e.target.value as "custom" | "badge-link")}
-          className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-sm"
+          className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-base sm:text-sm"
         >
           <option value="custom">Message libre</option>
           <option value="badge-link">Lien du badge « J&apos;y serai » (email, branded)</option>
@@ -72,7 +72,7 @@ export default function ComposeForm() {
       {template === "custom" && (
         <div>
           <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-ink/60">Canal</label>
-          <select name="channel" defaultValue="email" className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-sm">
+          <select name="channel" defaultValue="email" className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-base sm:text-sm">
             <option value="email">Email</option>
             <option value="sms">SMS</option>
             <option value="whatsapp" disabled>WhatsApp (non configuré)</option>
@@ -81,7 +81,7 @@ export default function ComposeForm() {
       )}
       <div>
         <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-ink/60">Édition</label>
-        <select name="editionNumber" defaultValue="4" className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-sm">
+        <select name="editionNumber" defaultValue="4" className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-base sm:text-sm">
           <option value="4">Édition 4</option>
         </select>
       </div>
@@ -94,14 +94,14 @@ export default function ComposeForm() {
         <input
           name="batchLabel"
           required
-          className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-sm"
+          className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-base sm:text-sm"
           placeholder={template === "badge-link" ? "Envoi du lien de badge" : "Rappel CIGIBM 2026"}
         />
       </div>
       {template === "custom" && (
         <div>
           <label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-ink/60">Message</label>
-          <textarea name="message" required rows={5} className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-sm" />
+          <textarea name="message" required rows={5} className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-base sm:text-sm" />
         </div>
       )}
       <button type="submit" disabled={sending} className="rounded-full bg-leaf-600 px-6 py-3 text-sm font-semibold text-mist-50 disabled:opacity-60">

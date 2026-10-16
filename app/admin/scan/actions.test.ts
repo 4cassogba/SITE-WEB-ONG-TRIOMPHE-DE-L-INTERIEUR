@@ -82,6 +82,40 @@ describe("admin/scan actions — auth boundary", () => {
     });
   });
 
+  describe("registerWalkInAction", () => {
+    const WALKIN_NAME = "Scan Action Walkin Test";
+
+    afterEach(async () => {
+      await db.participant.deleteMany({ where: { fullName: WALKIN_NAME } });
+    });
+
+    it("rejects an unauthenticated caller and creates nobody", async () => {
+      mockGetClaims.mockResolvedValue({ data: { claims: null }, error: null });
+
+      const { registerWalkInAction } = await import("./actions");
+      await expect(registerWalkInAction({ fullName: WALKIN_NAME })).rejects.toMatchObject({
+        digest: expect.stringContaining("NEXT_REDIRECT"),
+      });
+
+      expect(await db.participant.count({ where: { fullName: WALKIN_NAME } })).toBe(0);
+    });
+
+    it("lets a scanner-role session register and check in a walk-in, credited to that scanner", async () => {
+      const admin = await db.adminProfile.create({
+        data: { id: `${TEST_ADMIN_ID_PREFIX}walkin`, fullName: "Scanner Walkin", role: "scanner" },
+      });
+      mockGetClaims.mockResolvedValue({ data: { claims: { sub: admin.id } }, error: null });
+
+      const { registerWalkInAction } = await import("./actions");
+      const result = await registerWalkInAction({ fullName: WALKIN_NAME });
+
+      expect(result).toEqual({ status: "registered", fullName: WALKIN_NAME });
+      const row = await db.participant.findFirstOrThrow({ where: { fullName: WALKIN_NAME } });
+      expect(row.checkedInByAdminId).toBe(admin.id);
+      expect(row.attendedAt).not.toBeNull();
+    });
+  });
+
   describe("with a real scanner-role AdminProfile session", () => {
     it("checkInByIdAction succeeds and records the scanner as checkedInByAdminId", async () => {
       const admin = await db.adminProfile.create({

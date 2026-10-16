@@ -24,7 +24,8 @@ export type UpsertTeamMemberInput = {
 
 export type UpsertTeamMemberResult =
   | { status: "created"; id: string }
-  | { status: "attributed"; id: string };
+  | { status: "attributed"; id: string }
+  | { status: "unchanged"; id: string };
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
@@ -65,7 +66,7 @@ export async function upsertTeamMember(input: UpsertTeamMemberInput): Promise<Up
   });
 
   let userId: string;
-  let status: UpsertTeamMemberResult["status"];
+  let status: "created" | "attributed";
 
   if (!error) {
     userId = data.user!.id;
@@ -77,6 +78,14 @@ export async function upsertTeamMember(input: UpsertTeamMemberInput): Promise<Up
     status = "attributed";
   } else {
     throw error;
+  }
+
+  // Un compte déjà admin ne doit jamais être rétrogradé en scanner par ce
+  // formulaire : saisir son propre email dans une liste d'hôtesses suffisait
+  // à se retirer l'accès admin.
+  if (status === "attributed" && role === "scanner") {
+    const existingProfile = await db.adminProfile.findUnique({ where: { id: userId } });
+    if (existingProfile?.role === "admin") return { status: "unchanged", id: userId };
   }
 
   await db.adminProfile.upsert({

@@ -10,8 +10,15 @@ vi.mock("@/lib/supabase/admin", () => ({
 
 const mockUpsert = vi.fn();
 const mockFindMany = vi.fn();
+const mockFindUnique = vi.fn();
 vi.mock("@/lib/db", () => ({
-  db: { adminProfile: { upsert: (...args: unknown[]) => mockUpsert(...args), findMany: (...args: unknown[]) => mockFindMany(...args) } },
+  db: {
+    adminProfile: {
+      upsert: (...args: unknown[]) => mockUpsert(...args),
+      findMany: (...args: unknown[]) => mockFindMany(...args),
+      findUnique: (...args: unknown[]) => mockFindUnique(...args),
+    },
+  },
 }));
 
 import { upsertTeamMember } from "./team";
@@ -21,6 +28,8 @@ describe("upsertTeamMember", () => {
     mockCreateUser.mockReset();
     mockListUsers.mockReset();
     mockUpsert.mockReset();
+    mockFindUnique.mockReset();
+    mockFindUnique.mockResolvedValue(null);
   });
 
   it("creates a new Supabase Auth user and AdminProfile row when the email is new", async () => {
@@ -71,6 +80,20 @@ describe("upsertTeamMember", () => {
       create: { id: "existing-user", fullName: "Fatou Déjà-Là", role: "scanner" },
       update: { fullName: "Fatou Déjà-Là", role: "scanner" },
     });
+  });
+
+  it("never demotes an existing admin to scanner", async () => {
+    mockCreateUser.mockResolvedValue({
+      data: { user: null },
+      error: { code: "email_exists", message: "already registered" },
+    });
+    mockListUsers.mockResolvedValue({ data: { users: [{ id: "boss", email: "boss@example.com" }] }, error: null });
+    mockFindUnique.mockResolvedValue({ id: "boss", role: "admin" });
+
+    const result = await upsertTeamMember({ fullName: "Boss", email: "boss@example.com", password: "x12345", role: "scanner" });
+
+    expect(result).toEqual({ status: "unchanged", id: "boss" });
+    expect(mockUpsert).not.toHaveBeenCalled();
   });
 
   it("rethrows an unrelated createUser error instead of attempting attribution", async () => {

@@ -51,7 +51,7 @@ export default function ParticipantsTable({ participants }: { participants: Part
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher par nom, téléphone, email ou ambassadeur…"
           aria-label="Rechercher un·e participant·e"
-          className="w-full rounded-xl border border-ink/15 bg-mist-50 py-3 pl-10 pr-4 text-sm outline-none focus:border-leaf-500"
+          className="w-full rounded-xl border border-ink/15 bg-mist-50 py-3 pl-10 pr-4 text-base sm:text-sm outline-none focus:border-leaf-500"
         />
       </div>
       <p className="mt-2 text-xs text-ink/45">

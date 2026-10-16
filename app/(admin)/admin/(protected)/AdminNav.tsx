@@ -103,7 +103,7 @@ export function AdminBottomNav() {
   return (
     <nav
       aria-label="Navigation principale"
-      className="fixed inset-x-0 bottom-0 z-40 flex border-t border-ink/10 bg-mist-50/95 backdrop-blur lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 flex border-t border-ink/10 bg-mist-50/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
     >
       {navItems.map((item) => {
         const active = isActive(pathname, item.href, item.exact);
@@ -111,12 +111,12 @@ export function AdminBottomNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] transition-colors ${
-              active ? "text-leaf-700" : "text-ink/50"
+            className={`flex min-w-0 flex-1 flex-col items-center gap-1 px-0.5 py-2.5 text-[10px] transition-colors active:bg-leaf-50 ${
+              active ? "font-semibold text-leaf-700" : "text-ink/55"
             }`}
           >
             <item.Icon className="h-5 w-5" />
-            {item.shortLabel}
+            <span className="max-w-full truncate">{item.shortLabel}</span>
           </Link>
         );
       })}

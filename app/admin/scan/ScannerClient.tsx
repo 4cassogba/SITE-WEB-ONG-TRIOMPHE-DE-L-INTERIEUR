@@ -3,11 +3,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { unstable_rethrow } from "next/navigation";
 import jsQR from "jsqr";
-import { checkInAction, checkInByIdAction, searchParticipantsAction } from "./actions";
+import { checkInAction, checkInByIdAction, registerWalkInAction, searchParticipantsAction } from "./actions";
 import type { CheckInResult, ParticipantMatch } from "@/lib/checkin/checkin";
 
+// "walkin" : le formulaire d'inscription sur place est ouvert. Tout état autre
+// qu'"idle" bloque déjà les scans caméra et les taps de recherche (cf.
+// submitToken / submitParticipant), donc la caméra ne peut pas enregistrer un
+// badge pendant que l'hôtesse saisit.
 type ScanState =
   | { kind: "idle" }
+  | { kind: "walkin" }
   | { kind: "checking" }
   | { kind: "result"; result: CheckInResult }
   | { kind: "error"; message: string };
@@ -45,6 +50,9 @@ export default function ScannerClient() {
   const [state, setState] = useState<ScanState>({ kind: "idle" });
   const [searchQuery, setSearchQuery] = useState("");
   const [searchOutcome, setSearchOutcome] = useState<SearchOutcome | null>(null);
+  const [walkIn, setWalkIn] = useState({ fullName: "", phone: "", email: "" });
+  const [walkInError, setWalkInError] = useState<string | null>(null);
+  const [walkInSubmitting, setWalkInSubmitting] = useState(false);
 
   // Seul point d'écriture de `state` : garde `stateKindRef` synchronisé sans
   // effet séparé (donc sans décalage d'une frame entre le rendu et le ref).
@@ -101,6 +109,46 @@ export default function ScannerClient() {
     },
     [state.kind, applyState],
   );
+
+  // Préremplit depuis ce que l'hôtesse vient de chercher : des chiffres = un
+  // téléphone, sinon un nom — elle ne retape pas ce qu'elle vient de saisir.
+  const openWalkIn = useCallback(
+    (prefill?: string) => {
+      const text = (prefill ?? "").trim();
+      const looksLikePhone = /^[+\d][\d\s.()-]{5,}$/.test(text);
+      setWalkIn({ fullName: looksLikePhone ? "" : text, phone: looksLikePhone ? text : "", email: "" });
+      setWalkInError(null);
+      lastSubmittedToken.current = null;
+      applyState({ kind: "walkin" });
+    },
+    [applyState],
+  );
+
+  const closeWalkIn = useCallback(() => {
+    applyState({ kind: "idle" });
+  }, [applyState]);
+
+  async function submitWalkIn() {
+    if (walkInSubmitting) return;
+    setWalkInSubmitting(true);
+    setWalkInError(null);
+    try {
+      const result = await registerWalkInAction(walkIn);
+      if (result.status === "invalid") {
+        setWalkInError(result.message);
+        return;
+      }
+      applyState({ kind: "result", result });
+      setSearchQuery("");
+      setSearchOutcome(null);
+    } catch (err) {
+      unstable_rethrow(err);
+      console.error("Échec de l'inscription sur place", err);
+      setWalkInError(CHECKIN_FAILURE_MESSAGE);
+    } finally {
+      setWalkInSubmitting(false);
+    }
+  }
 
   // Après un résultat affiché, on autorise à nouveau le même jeton (au cas
   // où le même visiteur reviendrait volontairement se faire re-scanner) une
@@ -213,6 +261,14 @@ export default function ScannerClient() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  // Retour tactile (Android uniquement : iOS n'expose pas l'API vibration) pour
+  // qu'une hôtesse qui ne regarde pas l'écran sente un échec ou un doublon.
+  useEffect(() => {
+    if (state.kind !== "result") return;
+    const ok = state.result.status === "success" || state.result.status === "registered";
+    navigator.vibrate?.(ok ? [80] : [200, 100, 200]);
+  }, [state]);
+
   const trimmedQuery = searchQuery.trim();
   const showSearchPanel = trimmedQuery.length >= 2;
   // N'affiche le résultat mémorisé que s'il correspond à la requête actuelle
@@ -220,25 +276,82 @@ export default function ScannerClient() {
   // pendant que la nouvelle est en cours (debounce ou requête en vol).
   const outcomeForQuery = searchOutcome?.query === trimmedQuery ? searchOutcome : null;
 
-  return (
-    <div className="mx-auto mt-6 flex w-full max-w-sm flex-1 flex-col gap-4">
-      <div className="relative overflow-hidden rounded-2xl border border-mist-50/15 bg-black">
-        <video ref={videoRef} className="w-full" muted playsInline />
-        <canvas ref={canvasRef} className="hidden" />
-      </div>
-      {cameraError && <p className="text-sm text-red-300">{cameraError}</p>}
+  const resultTone =
+    state.kind === "result"
+      ? state.result.status === "success" || state.result.status === "registered"
+        ? "success"
+        : state.result.status === "already"
+          ? "warning"
+          : "danger"
+      : state.kind === "error"
+        ? "danger"
+        : null;
 
-      <div className="flex flex-col gap-2">
+  const toneClass = {
+    success: "bg-leaf-500 text-leaf-950",
+    warning: "bg-amber-400 text-amber-950",
+    danger: "bg-red-500 text-white",
+  } as const;
+
+  return (
+    <div className="mx-auto mt-4 flex w-full max-w-md flex-1 flex-col gap-5 pb-48">
+      {/* Réduite pendant une recherche : sinon, clavier ouvert, les résultats
+          et le bouton d'inscription sur place tombent sous le clavier. La vidéo
+          reste montée (simple changement de classe), le scan continue. */}
+      <div
+        className={`relative w-full overflow-hidden rounded-3xl bg-black shadow-2xl shadow-black/40 ring-1 ring-mist-50/15 transition-[height] duration-300 ${
+          searchQuery.trim() ? "h-28" : "aspect-square max-h-[50dvh]"
+        }`}
+      >
+        <video ref={videoRef} className="absolute inset-0 h-full w-full object-cover" autoPlay muted playsInline />
+        <canvas ref={canvasRef} className="hidden" />
+        {/* Cadre de visée : repères d'angle, sans bloquer la lecture du QR. */}
+        <div aria-hidden className="pointer-events-none absolute inset-[12%] rounded-2xl">
+          <span className="absolute left-0 top-0 h-8 w-8 rounded-tl-xl border-l-4 border-t-4 border-leaf-300" />
+          <span className="absolute right-0 top-0 h-8 w-8 rounded-tr-xl border-r-4 border-t-4 border-leaf-300" />
+          <span className="absolute bottom-0 left-0 h-8 w-8 rounded-bl-xl border-b-4 border-l-4 border-leaf-300" />
+          <span className="absolute bottom-0 right-0 h-8 w-8 rounded-br-xl border-b-4 border-r-4 border-leaf-300" />
+        </div>
+        {!cameraError && !searchQuery.trim() && (
+          <p className="absolute inset-x-0 bottom-3 text-center text-xs font-medium text-mist-50/80 drop-shadow">
+            Placez le QR code du badge dans le cadre
+          </p>
+        )}
+        {cameraError && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/80 p-6 text-center">
+            <p className="text-base font-semibold text-mist-50">Caméra indisponible</p>
+            {!searchQuery.trim() && (
+              <>
+                <p className="text-sm text-mist-50/70">
+                  Autorisez l&apos;accès à la caméra dans les réglages du navigateur, puis rechargez. En attendant,
+                  utilisez la recherche ci-dessous.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => window.location.reload()}
+                  className="mt-1 min-h-12 rounded-full bg-mist-50 px-6 text-base font-semibold text-leaf-950"
+                >
+                  Recharger
+                </button>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-3">
         <label htmlFor="participant-search" className="text-xs font-semibold uppercase tracking-wide text-mist-50/60">
-          Secours manuel : recherche par nom ou téléphone
+          Secours manuel : nom ou téléphone
         </label>
         <input
           id="participant-search"
           type="search"
+          inputMode="search"
+          autoComplete="off"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Nom ou numéro de téléphone"
-          className="min-w-0 rounded-xl border border-mist-50/20 bg-mist-50/5 px-3 py-2 text-sm text-mist-50 outline-none placeholder:text-mist-50/40"
+          className="min-h-14 min-w-0 rounded-2xl border border-mist-50/20 bg-mist-50/10 px-4 text-base text-mist-50 outline-none placeholder:text-mist-50/40 focus:border-leaf-300"
         />
 
         {showSearchPanel && (
@@ -248,7 +361,16 @@ export default function ScannerClient() {
               <p className="text-sm text-red-300">La recherche a échoué. Vérifiez la connexion et réessayez.</p>
             )}
             {outcomeForQuery?.kind === "results" && outcomeForQuery.matches.length === 0 && (
-              <p className="text-sm text-mist-50/60">Aucun résultat.</p>
+              <div className="rounded-2xl border border-amber-300/40 bg-amber-400/10 p-4 text-center">
+                <p className="text-base font-semibold text-amber-100">Aucun résultat pour « {trimmedQuery} »</p>
+                <button
+                  type="button"
+                  onClick={() => openWalkIn(trimmedQuery)}
+                  className="mt-3 min-h-14 w-full rounded-full bg-amber-300 text-base font-bold text-amber-950 active:bg-amber-200"
+                >
+                  Inscrire sur place
+                </button>
+              </div>
             )}
             {outcomeForQuery?.kind === "results" &&
               outcomeForQuery.matches.map((match) => (
@@ -257,12 +379,12 @@ export default function ScannerClient() {
                   type="button"
                   disabled={state.kind !== "idle"}
                   onClick={() => void submitParticipant(match)}
-                  className="flex flex-col items-start gap-1 rounded-xl border border-mist-50/15 bg-mist-50/5 px-3 py-2 text-left text-sm text-mist-50 disabled:opacity-50"
+                  className="flex min-h-16 flex-col items-start justify-center gap-0.5 rounded-2xl border border-mist-50/15 bg-mist-50/10 px-4 py-3 text-left text-base text-mist-50 active:bg-mist-50/20 disabled:opacity-50"
                 >
                   <span className="font-semibold">{match.fullName}</span>
-                  <span className="text-mist-50/60">{match.phone}</span>
+                  <span className="text-sm text-mist-50/60">{match.phone}</span>
                   {match.attendedAt && (
-                    <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-xs text-amber-200">
+                    <span className="mt-1 rounded-full bg-amber-500/25 px-2.5 py-0.5 text-xs text-amber-200">
                       Déjà enregistré(e) à {match.attendedAt.toLocaleTimeString("fr-FR")}
                     </span>
                   )}
@@ -272,51 +394,173 @@ export default function ScannerClient() {
         )}
       </div>
 
-      {state.kind === "checking" && <p className="text-center text-sm text-mist-50/70">Vérification…</p>}
+      {!(outcomeForQuery?.kind === "results" && outcomeForQuery.matches.length === 0) && (
+        <button
+          type="button"
+          onClick={() => openWalkIn(searchQuery)}
+          disabled={state.kind !== "idle"}
+          className="min-h-14 rounded-2xl border border-dashed border-mist-50/30 text-base font-semibold text-mist-50/90 active:bg-mist-50/10 disabled:opacity-50"
+        >
+          + Pas dans la liste ? Inscrire sur place
+        </button>
+      )}
 
-      {state.kind === "error" && (
-        <div className="rounded-2xl bg-red-500/20 p-5 text-center text-red-200">
-          <p className="font-semibold">{state.message}</p>
-          <button
-            type="button"
-            onClick={dismissError}
-            className="mt-4 rounded-full border border-current px-5 py-2 text-sm font-semibold"
+      {/* Inscription sur place : seul le nom est obligatoire, téléphone et email
+          sont facultatifs pour ne pas ralentir la file. */}
+      {state.kind === "walkin" && (
+        <div
+          role="dialog"
+          aria-label="Inscrire sur place"
+          className="fixed inset-0 z-50 flex items-end bg-black/60 sm:items-center sm:justify-center"
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void submitWalkIn();
+            }}
+            className="max-h-dvh w-full max-w-md overflow-y-auto rounded-t-3xl bg-mist-50 px-6 pt-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] text-leaf-950 sm:rounded-3xl"
           >
-            Réessayer
-          </button>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h2 className="font-display text-2xl">Inscrire sur place</h2>
+                <p className="mt-1 text-sm text-leaf-950/60">La personne sera marquée présente tout de suite.</p>
+              </div>
+              <button
+                type="button"
+                onClick={closeWalkIn}
+                aria-label="Fermer"
+                className="-mr-2 -mt-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-2xl text-leaf-950/60 active:bg-leaf-950/10"
+              >
+                ×
+              </button>
+            </div>
+
+            <label className="mt-5 block text-xs font-semibold uppercase tracking-wide text-leaf-950/60" htmlFor="walkin-name">
+              Nom complet
+            </label>
+            <input
+              id="walkin-name"
+              required
+              autoFocus
+              autoComplete="off"
+              autoCapitalize="words"
+              value={walkIn.fullName}
+              onChange={(e) => setWalkIn((w) => ({ ...w, fullName: e.target.value }))}
+              className="mt-1.5 min-h-14 w-full rounded-2xl border border-leaf-950/15 bg-white px-4 text-base outline-none focus:border-leaf-600"
+            />
+
+            <label className="mt-4 block text-xs font-semibold uppercase tracking-wide text-leaf-950/60" htmlFor="walkin-phone">
+              Téléphone <span className="font-normal normal-case">(facultatif)</span>
+            </label>
+            <input
+              id="walkin-phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="off"
+              value={walkIn.phone}
+              onChange={(e) => setWalkIn((w) => ({ ...w, phone: e.target.value }))}
+              className="mt-1.5 min-h-14 w-full rounded-2xl border border-leaf-950/15 bg-white px-4 text-base outline-none focus:border-leaf-600"
+            />
+
+            <label className="mt-4 block text-xs font-semibold uppercase tracking-wide text-leaf-950/60" htmlFor="walkin-email">
+              Email <span className="font-normal normal-case">(facultatif)</span>
+            </label>
+            <input
+              id="walkin-email"
+              type="email"
+              inputMode="email"
+              autoComplete="off"
+              autoCapitalize="none"
+              value={walkIn.email}
+              onChange={(e) => setWalkIn((w) => ({ ...w, email: e.target.value }))}
+              className="mt-1.5 min-h-14 w-full rounded-2xl border border-leaf-950/15 bg-white px-4 text-base outline-none focus:border-leaf-600"
+            />
+
+            {walkInError && <p className="mt-3 text-sm font-medium text-red-700">{walkInError}</p>}
+
+            <button
+              type="submit"
+              disabled={walkInSubmitting || walkIn.fullName.trim().length < 2}
+              className="mt-5 min-h-14 w-full rounded-full bg-leaf-600 text-lg font-bold text-mist-50 active:bg-leaf-700 disabled:opacity-50"
+            >
+              {walkInSubmitting ? "Enregistrement…" : "Inscrire et marquer présent(e)"}
+            </button>
+          </form>
         </div>
       )}
 
-      {state.kind === "result" && (
+      {/* Résultat : feuille fixée en bas de l'écran pour rester visible quelle
+          que soit la hauteur du téléphone, marge basse = zone sûre iPhone. */}
+      {(state.kind === "checking" || resultTone) && (
         <div
-          className={`rounded-2xl p-5 text-center ${
-            state.result.status === "success"
-              ? "bg-leaf-500/20 text-leaf-200"
-              : state.result.status === "already"
-                ? "bg-amber-500/20 text-amber-200"
-                : "bg-red-500/20 text-red-200"
+          role="status"
+          aria-live="assertive"
+          className={`fixed inset-x-0 bottom-0 z-50 rounded-t-3xl px-6 pt-6 text-center shadow-[0_-12px_40px_rgba(0,0,0,0.4)] pb-[max(1.5rem,env(safe-area-inset-bottom))] ${
+            resultTone ? toneClass[resultTone] : "bg-mist-50 text-leaf-950"
           }`}
         >
-          {state.result.status === "not_found" && <p className="font-semibold">Billet invalide</p>}
-          {state.result.status === "already" && (
-            <>
-              <p className="font-semibold">{state.result.fullName}</p>
-              <p className="mt-1 text-sm">Déjà enregistré(e) à {state.result.attendedAt.toLocaleTimeString("fr-FR")}</p>
-            </>
-          )}
-          {state.result.status === "success" && (
-            <>
-              <p className="font-semibold">{state.result.fullName}</p>
-              <p className="mt-1 text-sm">Enregistré(e) avec succès</p>
-            </>
-          )}
-          <button
-            type="button"
-            onClick={resetForNextScan}
-            className="mt-4 rounded-full border border-current px-5 py-2 text-sm font-semibold"
-          >
-            Scanner suivant
-          </button>
+          <div className="mx-auto max-w-md">
+            {state.kind === "checking" && <p className="py-4 text-lg font-semibold">Vérification…</p>}
+
+            {state.kind === "error" && <p className="text-lg font-semibold">{state.message}</p>}
+
+            {state.kind === "result" && state.result.status === "not_found" && (
+              <>
+                <p className="text-4xl" aria-hidden>✕</p>
+                <p className="mt-1 text-2xl font-bold">Billet invalide</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetForNextScan();
+                    openWalkIn();
+                  }}
+                  className="mt-4 min-h-14 w-full rounded-full bg-white text-lg font-bold text-red-700"
+                >
+                  Inscrire sur place
+                </button>
+              </>
+            )}
+            {state.kind === "result" && state.result.status === "registered" && (
+              <>
+                <p className="text-4xl" aria-hidden>✓</p>
+                <p className="mt-1 text-2xl font-bold">{state.result.fullName}</p>
+                <p className="mt-1 text-base">Inscrit(e) et présent(e)</p>
+              </>
+            )}
+            {state.kind === "result" && state.result.status === "already" && (
+              <>
+                <p className="text-4xl" aria-hidden>!</p>
+                <p className="mt-1 text-2xl font-bold">{state.result.fullName}</p>
+                <p className="mt-1 text-base">Déjà enregistré(e) à {state.result.attendedAt.toLocaleTimeString("fr-FR")}</p>
+              </>
+            )}
+            {state.kind === "result" && state.result.status === "success" && (
+              <>
+                <p className="text-4xl" aria-hidden>✓</p>
+                <p className="mt-1 text-2xl font-bold">{state.result.fullName}</p>
+                <p className="mt-1 text-base">Enregistré(e) avec succès</p>
+              </>
+            )}
+
+            {state.kind === "error" && (
+              <button
+                type="button"
+                onClick={dismissError}
+                className="mt-4 min-h-14 w-full rounded-full bg-black/20 text-lg font-bold"
+              >
+                Réessayer
+              </button>
+            )}
+            {state.kind === "result" && (
+              <button
+                type="button"
+                onClick={resetForNextScan}
+                className="mt-4 min-h-14 w-full rounded-full bg-black/20 text-lg font-bold"
+              >
+                Scanner suivant
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>

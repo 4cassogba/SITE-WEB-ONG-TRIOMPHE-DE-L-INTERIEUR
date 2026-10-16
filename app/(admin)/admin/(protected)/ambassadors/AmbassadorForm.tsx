@@ -36,7 +36,7 @@ function SubmitButton({ submitLabel }: { submitLabel: string }) {
   );
 }
 
-const inputClass = "w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-sm";
+const inputClass = "w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-base sm:text-sm";
 
 export default function AmbassadorForm({ ambassador, action, submitLabel, showActiveToggle }: AmbassadorFormProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(ambassador?.photoUrl ?? null);

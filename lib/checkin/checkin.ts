@@ -1,9 +1,12 @@
 import { db } from "@/lib/db";
+import { normalizePhone } from "@/lib/phone";
 
 export type CheckInResult =
   | { status: "not_found" }
   | { status: "already"; fullName: string; attendedAt: Date }
-  | { status: "success"; fullName: string };
+  | { status: "success"; fullName: string }
+  | { status: "registered"; fullName: string }
+  | { status: "invalid"; message: string };
 
 // Never carries attendanceToken — it's a bearer credential (whoever holds it
 // can check the participant in), and the door search has no need to send it
@@ -52,6 +55,58 @@ export async function checkInParticipantById(id: string, scannerAdminId: string)
   const participant = await db.participant.findUnique({ where: { id } });
   if (!participant) return { status: "not_found" };
   return markAttended(participant, scannerAdminId);
+}
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Personne venue sans inscription (ou introuvable dans la liste) : l'hôtesse
+// l'inscrit et la marque présente en une seule action. Seul le nom est
+// obligatoire — au guichet, ralentir la file pour un email manquant coûte
+// plus cher qu'une fiche incomplète. Phone vaut "" quand il n'est pas donné
+// (la colonne est non nullable).
+//
+// Jamais de doublon : un email déjà inscrit, ou un même nom + téléphone,
+// renvoie vers la fiche existante (check-in normal) au lieu d'en créer une
+// seconde — même règle « deux identifiants sur trois » que l'inscription
+// publique, ici en version minimale.
+export async function registerWalkIn(
+  input: { fullName: string; phone?: string; email?: string },
+  scannerAdminId: string
+): Promise<CheckInResult> {
+  const fullName = input.fullName.trim().replace(/\s+/g, " ");
+  const email = input.email?.trim() || undefined;
+  const phoneRaw = input.phone?.trim();
+  const phone = phoneRaw ? normalizePhone(phoneRaw) : "";
+
+  if (fullName.length < 2) return { status: "invalid", message: "Le nom est obligatoire." };
+  if (email && !EMAIL_PATTERN.test(email)) return { status: "invalid", message: "Cet email ne semble pas valide." };
+
+  const edition4 = await db.edition.findUnique({ where: { number: 4 } });
+  if (!edition4) return { status: "invalid", message: "Édition introuvable." };
+
+  const duplicate = await db.participant.findFirst({
+    where: {
+      editionId: edition4.id,
+      OR: [
+        ...(email ? [{ email: { equals: email, mode: "insensitive" as const } }] : []),
+        ...(phone ? [{ phone, fullName: { equals: fullName, mode: "insensitive" as const } }] : []),
+      ],
+    },
+  });
+  if (duplicate) return markAttended(duplicate, scannerAdminId);
+
+  const created = await db.participant.create({
+    data: {
+      editionId: edition4.id,
+      fullName,
+      phone,
+      email: email ?? null,
+      registrationSource: "qr_walkin",
+      attendedAt: new Date(),
+      checkedInByAdminId: scannerAdminId,
+    },
+  });
+  return { status: "registered", fullName: created.fullName };
 }
 
 // Manual door fallback: search by name or phone when the camera can't read a

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it } from "vitest";
 import { db } from "@/lib/db";
-import { checkInParticipant, checkInParticipantById, searchParticipants } from "./checkin";
+import { checkInParticipant, checkInParticipantById, registerWalkIn, searchParticipants } from "./checkin";
 
 const TEST_EMAIL_DOMAIN = "@test.plan.checkin.example";
 
@@ -98,6 +98,56 @@ describe("checkInParticipantById", () => {
     // Same protection as the token-keyed path: a second scanner picking the
     // same name from search results must not steal credit for the check-in.
     expect(row.checkedInByAdminId).toBe("admin-original");
+  });
+});
+
+describe("registerWalkIn", () => {
+  const WALKIN_NAME_PREFIX = "Walkin Test";
+
+  afterEach(async () => {
+    await db.participant.deleteMany({
+      where: { OR: [{ fullName: { startsWith: WALKIN_NAME_PREFIX } }, { email: { endsWith: TEST_EMAIL_DOMAIN } }] },
+    });
+  });
+
+  it("registers and checks in someone with only a name, leaving phone and email empty", async () => {
+    const result = await registerWalkIn({ fullName: `  ${WALKIN_NAME_PREFIX}  Seul ` }, "admin-1");
+
+    expect(result).toEqual({ status: "registered", fullName: `${WALKIN_NAME_PREFIX} Seul` });
+    const row = await db.participant.findFirstOrThrow({ where: { fullName: `${WALKIN_NAME_PREFIX} Seul` } });
+    expect(row.registrationSource).toBe("qr_walkin");
+    expect(row.attendedAt).not.toBeNull();
+    expect(row.checkedInByAdminId).toBe("admin-1");
+    expect(row.phone).toBe("");
+    expect(row.email).toBeNull();
+  });
+
+  it("normalises a local phone number and keeps the optional email", async () => {
+    await registerWalkIn(
+      { fullName: `${WALKIN_NAME_PREFIX} Complet`, phone: "0100000091", email: `walkin${TEST_EMAIL_DOMAIN}` },
+      "admin-1"
+    );
+
+    const row = await db.participant.findFirstOrThrow({ where: { email: `walkin${TEST_EMAIL_DOMAIN}` } });
+    expect(row.phone).toBe("+2290100000091");
+  });
+
+  it("checks in the existing participant instead of duplicating when the email is already registered", async () => {
+    const existing = await createTestParticipant({ email: `dup${TEST_EMAIL_DOMAIN}` });
+
+    const result = await registerWalkIn({ fullName: "Autre Nom", email: `DUP${TEST_EMAIL_DOMAIN}` }, "admin-1");
+
+    expect(result).toEqual({ status: "success", fullName: "Checkin Test Person" });
+    const count = await db.participant.count({ where: { email: { equals: existing.email!, mode: "insensitive" } } });
+    expect(count).toBe(1);
+  });
+
+  it("rejects a missing name and a malformed email without creating anything", async () => {
+    expect((await registerWalkIn({ fullName: " " }, "admin-1")).status).toBe("invalid");
+    expect((await registerWalkIn({ fullName: `${WALKIN_NAME_PREFIX} Mail`, email: "pas-un-email" }, "admin-1")).status).toBe(
+      "invalid"
+    );
+    expect(await db.participant.count({ where: { fullName: { startsWith: WALKIN_NAME_PREFIX } } })).toBe(0);
   });
 });
 

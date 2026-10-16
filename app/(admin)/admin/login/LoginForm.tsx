@@ -44,7 +44,7 @@ export default function LoginForm() {
           type="email"
           required
           autoComplete="email"
-          className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-sm outline-none focus:border-leaf-500"
+          className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-base sm:text-sm outline-none focus:border-leaf-500"
         />
       </div>
       <div>
@@ -57,7 +57,7 @@ export default function LoginForm() {
           type="password"
           required
           autoComplete="current-password"
-          className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-sm outline-none focus:border-leaf-500"
+          className="w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-base sm:text-sm outline-none focus:border-leaf-500"
         />
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}

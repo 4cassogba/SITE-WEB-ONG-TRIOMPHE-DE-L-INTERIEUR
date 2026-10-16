@@ -4,6 +4,7 @@ import { requireScanAccess } from "@/lib/admin/auth";
 import {
   checkInParticipant,
   checkInParticipantById,
+  registerWalkIn,
   searchParticipants,
   type CheckInResult,
   type ParticipantMatch,
@@ -19,6 +20,16 @@ export async function checkInAction(token: string): Promise<CheckInResult> {
 export async function searchParticipantsAction(query: string): Promise<ParticipantMatch[]> {
   await requireScanAccess();
   return searchParticipants(query);
+}
+
+// Personne absente de la liste : inscription + présence en un seul geste.
+export async function registerWalkInAction(input: {
+  fullName: string;
+  phone?: string;
+  email?: string;
+}): Promise<CheckInResult> {
+  const session = await requireScanAccess();
+  return registerWalkIn(input, session.id);
 }
 
 // Companion to searchParticipantsAction: check in whoever staff picked from
