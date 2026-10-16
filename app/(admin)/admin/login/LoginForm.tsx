@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useSyncExternalStore, type FormEvent } from "react";
+
+// false pendant le rendu serveur et l'hydratation, true une fois le JS actif.
+const subscribeNoop = () => () => {};
+function useHydrated() {
+  return useSyncExternalStore(subscribeNoop, () => true, () => false);
+}
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -8,6 +14,7 @@ export default function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const hydrated = useHydrated();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,7 +44,11 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    // Sur réseau lent, un tap avant le chargement du JS envoyait le formulaire
+    // HTML natif en GET : email et mot de passe en clair dans l'URL et
+    // l'historique, sans connexion. Bouton bloqué jusqu'à l'hydratation, et
+    // method="post" pour qu'aucun identifiant ne finisse jamais dans l'URL.
+    <form method="post" onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="email" className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-ink/60">
           Email
@@ -67,10 +78,10 @@ export default function LoginForm() {
       {error && <p className="text-sm text-red-600">{error}</p>}
       <button
         type="submit"
-        disabled={loading}
-        className="w-full rounded-full bg-leaf-600 px-6 py-3 text-sm font-semibold text-mist-50 transition-colors hover:bg-leaf-700 disabled:opacity-60"
+        disabled={loading || !hydrated}
+        className="min-h-12 w-full rounded-full bg-leaf-600 px-6 py-3 text-base font-semibold text-mist-50 transition-colors hover:bg-leaf-700 disabled:opacity-60 sm:text-sm"
       >
-        {loading ? "Connexion..." : "Se connecter"}
+        {!hydrated ? "Chargement…" : loading ? "Connexion..." : "Se connecter"}
       </button>
     </form>
   );

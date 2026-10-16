@@ -22,6 +22,27 @@ describe("LoginForm", () => {
     mockRefresh.mockReset();
   });
 
+  // Avant le chargement du JS, le HTML serveur ne doit jamais permettre un
+  // envoi natif en GET (identifiants en clair dans l'URL).
+  it("server-renders a disabled POST form until hydration", async () => {
+    const { renderToString } = await import("react-dom/server");
+    const html = renderToString(<LoginForm />);
+
+    expect(html).toMatch(/<form[^>]*method="post"/);
+    expect(html).toMatch(/<button[^>]*type="submit"[^>]*disabled=""/);
+  });
+
+  it("shows a suspended-account message when Supabase reports a ban", async () => {
+    mockSignIn.mockResolvedValue({ error: { code: "user_banned", message: "User is banned" } });
+    render(<LoginForm />);
+
+    await userEvent.type(screen.getByLabelText(/email/i), "hotesse@example.com");
+    await userEvent.type(screen.getByLabelText(/mot de passe/i), "scan12345");
+    fireEvent.click(screen.getByRole("button", { name: /se connecter/i }));
+
+    expect(await screen.findByText(/compte est suspendu/i)).toBeInTheDocument();
+  });
+
   it("shows an error message when sign-in fails", async () => {
     mockSignIn.mockResolvedValue({ error: { message: "Invalid login credentials" } });
     render(<LoginForm />);
