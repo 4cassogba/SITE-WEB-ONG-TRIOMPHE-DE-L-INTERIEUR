@@ -5,6 +5,30 @@ import { unstable_rethrow } from "next/navigation";
 import jsQR from "jsqr";
 import { checkInAction, checkInByIdAction, registerWalkInAction, searchParticipantsAction } from "./actions";
 import type { CheckInResult, ParticipantMatch } from "@/lib/checkin/checkin";
+import { cigibm } from "@/lib/content";
+
+// Message lu à voix haute ou montré à la personne accueillie : il s'adresse à
+// elle ("votre présence"), le bouton en dessous s'adresse à l'hôtesse.
+function PresenceConfirmed({ fullName, note }: { fullName: string; note?: string }) {
+  return (
+    <>
+      <div
+        aria-hidden
+        className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg shadow-black/20"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="#307335" strokeWidth="3" className="h-9 w-9">
+          <path d="m5 12.5 4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      <p className="mt-4 text-xs font-bold uppercase tracking-[0.25em] text-white/80">Félicitations</p>
+      <p className="mt-1 text-2xl font-bold leading-tight">{fullName}</p>
+      <p className="mx-auto mt-2 max-w-xs text-base leading-snug text-white/95">
+        Votre présence est marquée au CIGIBM 2026 · {cigibm.nextEdition.edition}.
+      </p>
+      {note && <p className="mt-1 text-sm text-white/75">{note}</p>}
+    </>
+  );
+}
 
 // "walkin" : le formulaire d'inscription sur place est ouvert. Tout état autre
 // qu'"idle" bloque déjà les scans caméra et les taps de recherche (cf.
@@ -28,12 +52,96 @@ type SearchOutcome =
 
 const CHECKIN_FAILURE_MESSAGE = "Échec de la vérification. Vérifiez la connexion et réessayez.";
 const SEARCH_DEBOUNCE_MS = 300;
+const SCAN_INTERVAL_MS = 100;
+const SAME_BADGE_COOLDOWN_MS = 4000;
+// Côté max de l'image passée à jsQR : au-delà, le décodage devient trop lent
+// sur un téléphone d'entrée de gamme pour suivre ~10 analyses/s.
+const MAX_DECODE_SIDE = 960;
+// Part de l'image analysée en mode "zoom" : correspond au cadre de visée
+// affiché à l'écran (la vidéo est recadrée en carré, repères à 12 % du bord).
+const CENTER_CROP_RATIO = 0.75;
+
+// Lecteur natif du système (Chrome Android notamment ; absent sur iOS) : bien
+// plus tolérant que jsQR à la distance, au flou et à l'angle. Typé à la main,
+// l'API n'est pas encore dans les types DOM de TypeScript.
+type NativeQrDetector = { detect(source: HTMLVideoElement): Promise<Array<{ rawValue: string }>> };
+type NativeQrDetectorCtor = {
+  new (options: { formats: string[] }): NativeQrDetector;
+  getSupportedFormats?: () => Promise<string[]>;
+};
+
+async function createNativeQrDetector(): Promise<NativeQrDetector | null> {
+  const Ctor = (window as unknown as { BarcodeDetector?: NativeQrDetectorCtor }).BarcodeDetector;
+  if (!Ctor) return null;
+  try {
+    const formats = await Ctor.getSupportedFormats?.();
+    if (formats && !formats.includes("qr_code")) return null;
+    return new Ctor({ formats: ["qr_code"] });
+  } catch {
+    return null;
+  }
+}
+
+async function detectWithNative(detector: NativeQrDetector, video: HTMLVideoElement): Promise<string | null> {
+  try {
+    const codes = await detector.detect(video);
+    return codes[0]?.rawValue || null;
+  } catch {
+    return null;
+  }
+}
+
+// Alterne deux analyses : le centre seul en pleine résolution (un badge
+// lointain est petit au milieu du cadre — c'est l'équivalent d'un zoom), puis
+// l'image entière réduite (badge proche ou présenté hors du cadre).
+function decodeWithJsQR(video: HTMLVideoElement, canvas: HTMLCanvasElement, pass: number): string | null {
+  const vw = video.videoWidth;
+  const vh = video.videoHeight;
+  let sx = 0;
+  let sy = 0;
+  let sw = vw;
+  let sh = vh;
+  if (pass % 2 === 0) {
+    const side = Math.min(vw, vh) * CENTER_CROP_RATIO;
+    sx = (vw - side) / 2;
+    sy = (vh - side) / 2;
+    sw = side;
+    sh = side;
+  }
+  const scale = Math.min(1, MAX_DECODE_SIDE / Math.max(sw, sh));
+  const dw = Math.round(sw * scale);
+  const dh = Math.round(sh * scale);
+  canvas.width = dw;
+  canvas.height = dh;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return null;
+  ctx.drawImage(video, sx, sy, sw, sh, 0, 0, dw, dh);
+  const { data } = ctx.getImageData(0, 0, dw, dh);
+  // Badges imprimés en sombre sur clair : inutile de tester l'image inversée,
+  // ce qui divise par deux le temps de décodage.
+  return jsQR(data, dw, dh, { inversionAttempts: "dontInvert" })?.data || null;
+}
+
+// Autofocus continu là où le navigateur le permet (Android). Silencieusement
+// ignoré ailleurs : iOS gère déjà la mise au point lui-même.
+async function enableContinuousFocus(stream: MediaStream) {
+  const [track] = stream.getVideoTracks();
+  try {
+    const caps = track?.getCapabilities?.() as { focusMode?: string[] } | undefined;
+    if (caps?.focusMode?.includes("continuous")) {
+      await track.applyConstraints({ advanced: [{ focusMode: "continuous" } as MediaTrackConstraintSet] });
+    }
+  } catch {
+    // Pas de mise au point pilotable : on garde celle par défaut.
+  }
+}
 
 export default function ScannerClient() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rafRef = useRef<number | null>(null);
   const lastSubmittedToken = useRef<string | null>(null);
+  // Jusqu'à quand `lastSubmittedToken` reste bloqué (voir resetForNextScan).
+  const sameTokenBlockedUntil = useRef(0);
   // Incrémenté à chaque recherche réellement envoyée au serveur ; permet
   // d'ignorer la réponse d'une requête devenue obsolète (une frappe plus
   // récente a déjà déclenché une nouvelle recherche).
@@ -68,8 +176,9 @@ export default function ScannerClient() {
     // check-in concurrent, ni écraser silencieusement ce qui est affiché
     // avant que l'agent n'ait acquitté ("Scanner suivant"/"Réessayer").
     if (stateKindRef.current !== "idle") return;
-    if (lastSubmittedToken.current === token) return;
+    if (lastSubmittedToken.current === token && Date.now() < sameTokenBlockedUntil.current) return;
     lastSubmittedToken.current = token;
+    sameTokenBlockedUntil.current = Number.POSITIVE_INFINITY;
     applyState({ kind: "checking" });
     try {
       const result = await checkInAction(token);
@@ -150,13 +259,14 @@ export default function ScannerClient() {
     }
   }
 
-  // Après un résultat affiché, on autorise à nouveau le même jeton (au cas
-  // où le même visiteur reviendrait volontairement se faire re-scanner) une
-  // fois que l'agent a repris un nouveau scan. On réinitialise aussi la
-  // recherche : la transaction précédente est terminée, la prochaine repart
-  // d'une recherche vierge.
+  // Après un résultat affiché, le même badge reste ignoré quelques secondes :
+  // s'il est encore devant la caméra quand l'hôtesse tape "Passer au suivant",
+  // il serait sinon relu aussitôt et la personne qu'on vient d'accueillir
+  // s'afficherait en orange "Déjà enregistré(e)". Passé ce délai, un badge
+  // représenté volontairement est relu normalement. On réinitialise aussi la
+  // recherche : la transaction précédente est terminée.
   const resetForNextScan = useCallback(() => {
-    lastSubmittedToken.current = null;
+    sameTokenBlockedUntil.current = Date.now() + SAME_BADGE_COOLDOWN_MS;
     applyState({ kind: "idle" });
     setSearchQuery("");
     setSearchOutcome(null);
@@ -172,28 +282,40 @@ export default function ScannerClient() {
 
   useEffect(() => {
     let stream: MediaStream | null = null;
+    let timer: number | null = null;
+    let detector: NativeQrDetector | null = null;
+    let pass = 0;
     // Si l'agent quitte la page pendant que la boîte de dialogue de
     // permission caméra est encore ouverte, le nettoyage de cet effet
-    // s'exécute avant que getUserMedia() ne se résolve — stream et
-    // rafRef.current valent encore null à ce moment-là. Ce drapeau, capturé
-    // par la closure, permet de le détecter quand la promesse se résout plus
-    // tard et d'arrêter net (piste caméra coupée, boucle jamais démarrée).
+    // s'exécute avant que getUserMedia() ne se résolve — stream et timer
+    // valent encore null à ce moment-là. Ce drapeau, capturé par la closure,
+    // permet de le détecter quand la promesse se résout plus tard et
+    // d'arrêter net (piste caméra coupée, boucle jamais démarrée).
     let cancelled = false;
 
     async function startCamera() {
       try {
-        const acquired = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+        // Sans résolution demandée, beaucoup de téléphones (iPhone compris)
+        // livrent du 640x480 : un badge tenu à un bras de distance n'y fait
+        // plus que quelques pixels par module de QR, illisible. `ideal` ne
+        // fait jamais échouer l'appel sur un appareil qui ne suit pas.
+        const acquired = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+        });
         if (cancelled) {
           acquired.getTracks().forEach((track) => track.stop());
           return;
         }
         stream = acquired;
+        await enableContinuousFocus(acquired);
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           await videoRef.current.play();
         }
+        detector = await createNativeQrDetector();
         if (cancelled) return;
-        scanLoop();
+        void tick();
       } catch (err) {
         if (cancelled) return;
         console.error("Camera access failed", err);
@@ -201,36 +323,25 @@ export default function ScannerClient() {
       }
     }
 
-    function scanLoop() {
+    // ~10 analyses/s suffisent pour un badge présenté à la main, et laissent
+    // le téléphone respirer (batterie, chauffe) sur une journée d'accueil.
+    async function tick() {
       if (cancelled) return;
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      if (!video || !canvas || video.readyState !== video.HAVE_ENOUGH_DATA) {
-        rafRef.current = requestAnimationFrame(scanLoop);
-        return;
+      // Rien à analyser pendant qu'un résultat ou le formulaire est affiché.
+      if (video && canvas && stateKindRef.current === "idle" && video.readyState >= video.HAVE_ENOUGH_DATA && video.videoWidth > 0) {
+        const token = detector ? await detectWithNative(detector, video) : decodeWithJsQR(video, canvas, pass++);
+        if (token && !cancelled) void submitToken(token);
       }
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        rafRef.current = requestAnimationFrame(scanLoop);
-        return;
-      }
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const decoded = jsQR(imageData.data, imageData.width, imageData.height);
-      if (decoded?.data) {
-        void submitToken(decoded.data);
-      }
-      rafRef.current = requestAnimationFrame(scanLoop);
+      if (!cancelled) timer = window.setTimeout(tick, SCAN_INTERVAL_MS);
     }
 
     startCamera();
 
     return () => {
       cancelled = true;
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
+      if (timer !== null) window.clearTimeout(timer);
       stream?.getTracks().forEach((track) => track.stop());
     };
   }, [submitToken]);
@@ -288,7 +399,7 @@ export default function ScannerClient() {
         : null;
 
   const toneClass = {
-    success: "bg-leaf-500 text-leaf-950",
+    success: "bg-[linear-gradient(180deg,#3c9042_0%,#245627_100%)] text-white",
     warning: "bg-amber-400 text-amber-950",
     danger: "bg-red-500 text-white",
   } as const;
@@ -521,11 +632,7 @@ export default function ScannerClient() {
               </>
             )}
             {state.kind === "result" && state.result.status === "registered" && (
-              <>
-                <p className="text-4xl" aria-hidden>✓</p>
-                <p className="mt-1 text-2xl font-bold">{state.result.fullName}</p>
-                <p className="mt-1 text-base">Inscrit(e) et présent(e)</p>
-              </>
+              <PresenceConfirmed fullName={state.result.fullName} note="Inscription sur place réussie." />
             )}
             {state.kind === "result" && state.result.status === "already" && (
               <>
@@ -535,11 +642,7 @@ export default function ScannerClient() {
               </>
             )}
             {state.kind === "result" && state.result.status === "success" && (
-              <>
-                <p className="text-4xl" aria-hidden>✓</p>
-                <p className="mt-1 text-2xl font-bold">{state.result.fullName}</p>
-                <p className="mt-1 text-base">Enregistré(e) avec succès</p>
-              </>
+              <PresenceConfirmed fullName={state.result.fullName} />
             )}
 
             {state.kind === "error" && (
@@ -555,9 +658,11 @@ export default function ScannerClient() {
               <button
                 type="button"
                 onClick={resetForNextScan}
-                className="mt-4 min-h-14 w-full rounded-full bg-black/20 text-lg font-bold"
+                className={`mt-5 min-h-14 w-full rounded-full text-lg font-bold transition-transform active:scale-[0.98] ${
+                  resultTone === "success" ? "bg-white text-leaf-800 shadow-lg shadow-black/15" : "bg-black/20"
+                }`}
               >
-                Scanner suivant
+                Passer au suivant →
               </button>
             )}
           </div>
