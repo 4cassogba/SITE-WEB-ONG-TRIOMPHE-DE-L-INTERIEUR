@@ -15,7 +15,9 @@ export async function getAdminSession(): Promise<AdminSession | null> {
   if (!userId) return null;
 
   const profile = await db.adminProfile.findUnique({ where: { id: userId } });
-  if (!profile) return null;
+  // Un compte suspendu est traité comme déconnecté partout (admin, scan,
+  // Server Actions), y compris si sa session Supabase est encore valide.
+  if (!profile || profile.suspendedAt) return null;
 
   return { id: profile.id, fullName: profile.fullName, role: profile.role };
 }

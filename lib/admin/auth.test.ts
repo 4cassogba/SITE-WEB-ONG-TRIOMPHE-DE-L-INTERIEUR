@@ -64,4 +64,17 @@ describe("getAdminSession", () => {
     expect(session).not.toHaveProperty("testBypass");
     expect(mockFindUnique).toHaveBeenCalledWith({ where: { id: "user-123" } });
   });
+
+  it("returns null for a suspended account even though its Supabase session is still valid", async () => {
+    mockGetClaims.mockResolvedValue({ data: { claims: { sub: "user-123" } }, error: null });
+    mockFindUnique.mockResolvedValue({
+      id: "user-123",
+      fullName: "Hôtesse",
+      role: "scanner",
+      testBypass: false,
+      suspendedAt: new Date(),
+    });
+
+    expect(await getAdminSession()).toBeNull();
+  });
 });

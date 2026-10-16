@@ -24,7 +24,11 @@ export default function LoginForm() {
     setLoading(false);
 
     if (signInError) {
-      setError("Identifiants incorrects. Vérifiez votre email et mot de passe.");
+      setError(
+        signInError.code === "user_banned"
+          ? "Ce compte est suspendu. Contactez l'administrateur."
+          : "Identifiants incorrects. Vérifiez votre email et mot de passe."
+      );
       return;
     }
 

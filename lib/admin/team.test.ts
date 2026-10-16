@@ -2,26 +2,111 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 
 const mockCreateUser = vi.fn();
 const mockListUsers = vi.fn();
+const mockUpdateUserById = vi.fn();
+const mockDeleteUser = vi.fn();
 vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: () => ({
-    auth: { admin: { createUser: mockCreateUser, listUsers: mockListUsers } },
+    auth: {
+      admin: {
+        createUser: mockCreateUser,
+        listUsers: mockListUsers,
+        updateUserById: mockUpdateUserById,
+        deleteUser: mockDeleteUser,
+      },
+    },
   }),
 }));
 
 const mockUpsert = vi.fn();
 const mockFindMany = vi.fn();
 const mockFindUnique = vi.fn();
+const mockUpdate = vi.fn();
+const mockDeleteMany = vi.fn();
 vi.mock("@/lib/db", () => ({
   db: {
     adminProfile: {
       upsert: (...args: unknown[]) => mockUpsert(...args),
       findMany: (...args: unknown[]) => mockFindMany(...args),
       findUnique: (...args: unknown[]) => mockFindUnique(...args),
+      update: (...args: unknown[]) => mockUpdate(...args),
+      deleteMany: (...args: unknown[]) => mockDeleteMany(...args),
     },
   },
 }));
 
-import { upsertTeamMember } from "./team";
+import { reactivateTeamMember, removeTeamMember, suspendTeamMember, upsertTeamMember } from "./team";
+
+describe("suspend / reactivate / remove a team member", () => {
+  beforeEach(() => {
+    for (const m of [mockUpdateUserById, mockDeleteUser, mockUpdate, mockDeleteMany]) m.mockReset();
+    mockUpdateUserById.mockResolvedValue({ data: {}, error: null });
+    mockDeleteUser.mockResolvedValue({ data: {}, error: null });
+    mockUpdate.mockResolvedValue({});
+    mockDeleteMany.mockResolvedValue({ count: 1 });
+  });
+
+  it("suspends by flagging the profile and banning the Supabase account", async () => {
+    await suspendTeamMember("hostess-1", "admin-1");
+
+    expect(mockUpdate).toHaveBeenCalledWith({
+      where: { id: "hostess-1" },
+      data: { suspendedAt: expect.any(Date) },
+    });
+    expect(mockUpdateUserById).toHaveBeenCalledWith("hostess-1", { ban_duration: "876000h" });
+  });
+
+  // Le drapeau en base suffit à couper l'accès : un ban Supabase en échec ne
+  // doit pas faire croire à l'admin que la suspension a raté.
+  it("keeps the suspension when the Supabase ban fails", async () => {
+    mockUpdateUserById.mockResolvedValue({ data: {}, error: { message: "boom" } });
+
+    await expect(suspendTeamMember("hostess-1", "admin-1")).resolves.toBeUndefined();
+    expect(mockUpdate).toHaveBeenCalled();
+  });
+
+  it("reactivates by lifting the ban before clearing the flag", async () => {
+    await reactivateTeamMember("hostess-1", "admin-1");
+
+    expect(mockUpdateUserById).toHaveBeenCalledWith("hostess-1", { ban_duration: "none" });
+    expect(mockUpdate).toHaveBeenCalledWith({ where: { id: "hostess-1" }, data: { suspendedAt: null } });
+  });
+
+  it("leaves the account suspended when lifting the ban fails", async () => {
+    mockUpdateUserById.mockResolvedValue({ data: {}, error: { message: "boom" } });
+
+    await expect(reactivateTeamMember("hostess-1", "admin-1")).rejects.toMatchObject({ message: "boom" });
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  it("removes the login account and the profile", async () => {
+    await removeTeamMember("hostess-1", "admin-1");
+
+    expect(mockDeleteUser).toHaveBeenCalledWith("hostess-1");
+    expect(mockDeleteMany).toHaveBeenCalledWith({ where: { id: "hostess-1" } });
+  });
+
+  it("finishes a half-done removal when the Supabase account is already gone", async () => {
+    mockDeleteUser.mockResolvedValue({ data: {}, error: { status: 404, code: "user_not_found", message: "User not found" } });
+
+    await removeTeamMember("hostess-1", "admin-1");
+    expect(mockDeleteMany).toHaveBeenCalledWith({ where: { id: "hostess-1" } });
+  });
+
+  it("keeps the profile when deleting the Supabase account fails for another reason", async () => {
+    mockDeleteUser.mockResolvedValue({ data: {}, error: { status: 500, message: "boom" } });
+
+    await expect(removeTeamMember("hostess-1", "admin-1")).rejects.toMatchObject({ message: "boom" });
+    expect(mockDeleteMany).not.toHaveBeenCalled();
+  });
+
+  it("refuses to suspend, reactivate or remove the admin's own account", async () => {
+    await expect(suspendTeamMember("admin-1", "admin-1")).rejects.toThrow("propre accès");
+    await expect(reactivateTeamMember("admin-1", "admin-1")).rejects.toThrow("propre accès");
+    await expect(removeTeamMember("admin-1", "admin-1")).rejects.toThrow("propre accès");
+    expect(mockUpdate).not.toHaveBeenCalled();
+    expect(mockDeleteUser).not.toHaveBeenCalled();
+  });
+});
 
 describe("upsertTeamMember", () => {
   beforeEach(() => {

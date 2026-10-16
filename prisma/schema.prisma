@@ -97,6 +97,10 @@ model AdminProfile {
   role       AdminRole @default(scanner)
   testBypass Boolean   @default(false)
   createdAt  DateTime  @default(now())
+  // Non nul = accès coupé immédiatement (vérifié à chaque requête par
+  // getAdminSession), en plus du ban Supabase qui bloque les nouvelles
+  // connexions mais pas une session déjà ouverte.
+  suspendedAt DateTime?
 }
 
 model MessagingLog {
