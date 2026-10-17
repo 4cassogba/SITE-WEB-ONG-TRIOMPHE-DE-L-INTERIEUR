@@ -269,6 +269,36 @@ export function buildReminderEmail(firstName: string) {
   };
 }
 
+// Le jour même, pour les inscrits pas encore scannés à l'entrée. Le lien
+// mène au badge (QR d'entrée) plutôt qu'au programme : c'est ce dont la
+// personne a besoin pour entrer vite.
+export function buildEventDayReminderEmail(fullName: string, badgeToken: string) {
+  const first = fullName.split(/\s+/)[0];
+  const html = emailShell(`
+    <p style="margin:0 0 4px; font-family:Arial, sans-serif; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#307335; font-weight:bold;">
+      C&apos;est aujourd&apos;hui
+    </p>
+    <h1 style="margin:0 0 20px; font-size:26px; line-height:1.25; color:#183a1a;">
+      ${first}, on vous attend aujourd&apos;hui au CIGIBM.
+    </h1>
+    <p style="margin:0 0 16px; font-size:15px; line-height:1.6; color:#16211dcc; font-family:Arial, sans-serif;">
+      Le CIGIBM ${cigibm.nextEdition.edition}, « ${cigibm.nextEdition.theme} », a commencé ce matin à 9h00 au ${cigibm.nextEdition.venue}. Votre place est réservée : il n&apos;est pas trop tard pour nous rejoindre.
+    </p>
+    <p style="margin:0 0 8px; font-size:15px; line-height:1.6; color:#16211dcc; font-family:Arial, sans-serif;">
+      À l&apos;entrée, présentez simplement votre badge : son QR code est scanné en une seconde.
+    </p>
+    ${ctaButton("Afficher mon badge d'entrée", `${SITE_URL}/cigibm-2026/badge/${badgeToken}`)}
+    <p style="margin:20px 0 0; font-size:13px; line-height:1.6; color:#16211d99; font-family:Arial, sans-serif;">
+      Une question pour venir ? Appelez-nous au ${cigibm.nextEdition.registrationPhones[0]}.
+    </p>
+  `);
+
+  return {
+    subject: `${first}, c'est aujourd'hui : on vous attend au CIGIBM`,
+    html,
+  };
+}
+
 // Date/heure réelles de l'édition à venir, pour calculer le compte à
 // rebours et construire le lien "Ajouter à mon calendrier" — distinct de
 // cigibm.nextEdition.dates (texte affiché aux humains, ex. "17 octobre

@@ -11,6 +11,7 @@ import {
   buildAmbassadorTipsEmail,
   buildBadgeReminderEmail,
   buildConfirmationEmail,
+  buildEventDayReminderEmail,
   buildParticipantTeaserEmail,
 } from "./email";
 
@@ -30,6 +31,17 @@ describe("email signature", () => {
 
     expect(referral.html).not.toContain("Coach Christelle");
     expect(pendingApproval.html).not.toContain("Coach Christelle");
+  });
+});
+
+describe("buildEventDayReminderEmail", () => {
+  it("speaks about today and links the attendee's own entry badge", () => {
+    const message = buildEventDayReminderEmail("Aïcha Traoré", "tok123");
+
+    expect(message.subject).toContain("Aïcha");
+    expect(message.subject).toContain("aujourd'hui");
+    expect(message.html).toContain("https://ongtriomphedelinterieur.com/cigibm-2026/badge/tok123");
+    expect(message.html).not.toContain("quelques jours");
   });
 });
 
