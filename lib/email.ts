@@ -299,6 +299,64 @@ export function buildEventDayReminderEmail(fullName: string, badgeToken: string)
   };
 }
 
+// Jour J, pour les ambassadeurs : relancer leurs invités pas encore arrivés.
+// Seulement des chiffres, jamais de noms — comme le reste du programme,
+// l'ambassadeur ne voit pas l'identité de ses inscrits. Le message à
+// transférer renvoie chacun à son propre badge (reçu par email) et rappelle
+// qu'on peut encore s'inscrire à l'entrée.
+export function buildAmbassadorEventDayEmail(fullName: string, referredCount: number, presentCount: number) {
+  const first = fullName.split(/\s+/)[0];
+  const absentCount = Math.max(0, referredCount - presentCount);
+  const forwardMessage = `C'est aujourd'hui ! Le CIGIBM ${cigibm.nextEdition.edition}, « ${cigibm.nextEdition.theme} », a commencé à 9h00 au ${cigibm.nextEdition.venue}. Viens prendre ta dose : présente ton badge à l'entrée (lien reçu par email). Pas encore inscrit(e) ? On t'inscrit sur place.`;
+
+  const stats =
+    referredCount > 0
+      ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px; background:#f2f7f3; border-radius:14px; font-family:Arial, sans-serif;">
+      <tr>
+        <td width="50%" style="padding:18px 12px; text-align:center;">
+          <p style="margin:0; font-size:30px; line-height:1; color:#183a1a; font-weight:bold;">${presentCount}</p>
+          <p style="margin:6px 0 0; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#307335; font-weight:bold;">déjà là</p>
+        </td>
+        <td width="50%" style="padding:18px 12px; text-align:center; border-left:1px solid #dbe7dd;">
+          <p style="margin:0; font-size:30px; line-height:1; color:#9a5b00; font-weight:bold;">${absentCount}</p>
+          <p style="margin:6px 0 0; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#9a5b00; font-weight:bold;">pas encore arrivé${absentCount > 1 ? "s" : ""}</p>
+        </td>
+      </tr>
+    </table>`
+      : "";
+
+  const html = emailShell(`
+    <p style="margin:0 0 4px; font-family:Arial, sans-serif; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#307335; font-weight:bold;">
+      Jour J · Programme Ambassadeurs
+    </p>
+    <h1 style="margin:0 0 20px; font-size:26px; line-height:1.25; color:#183a1a;">
+      ${first}, c&apos;est le moment de relancer vos invités.
+    </h1>
+    <p style="margin:0 0 20px; font-size:15px; line-height:1.6; color:#16211dcc; font-family:Arial, sans-serif;">
+      Le CIGIBM ${cigibm.nextEdition.edition}, « ${cigibm.nextEdition.theme} », a commencé ce matin à 9h00 au ${cigibm.nextEdition.venue}. ${
+        referredCount > 0
+          ? "Une partie de vos invités n&apos;est pas encore arrivée : un message de vous maintenant peut faire la différence pour qu&apos;ils viennent prendre leur dose."
+          : "Il n&apos;est pas trop tard : un message de vous maintenant peut décider un proche à venir prendre sa dose."
+      }
+    </p>
+    ${stats}
+    <p style="margin:0 0 8px; font-size:13px; letter-spacing:1px; text-transform:uppercase; color:#307335; font-weight:bold; font-family:Arial, sans-serif;">
+      Message prêt à envoyer
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 8px; background:#f9fbf9; border:1.5px dashed #307335; border-radius:14px; font-family:Arial, sans-serif;">
+      <tr>
+        <td style="padding:16px 20px; font-size:14px; line-height:1.6; color:#16211d;">${forwardMessage}</td>
+      </tr>
+    </table>
+    ${ctaButton("Envoyer sur WhatsApp", `https://wa.me/?text=${encodeURIComponent(forwardMessage)}`, "whatsapp")}
+  `);
+
+  return {
+    subject: `${first}, c'est le moment : relancez vos invités pour leur dose`,
+    html,
+  };
+}
+
 // Date/heure réelles de l'édition à venir, pour calculer le compte à
 // rebours et construire le lien "Ajouter à mon calendrier" — distinct de
 // cigibm.nextEdition.dates (texte affiché aux humains, ex. "17 octobre

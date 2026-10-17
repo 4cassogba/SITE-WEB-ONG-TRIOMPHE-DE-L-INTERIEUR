@@ -4,6 +4,7 @@ import {
   addAmbassadorToBrevoList,
   buildAmbassadorBadgeAnnouncementEmail,
   buildAmbassadorBoosterEmail,
+  buildAmbassadorEventDayEmail,
   buildAmbassadorPendingApprovalAdminNotification,
   buildAmbassadorPressConferenceDateCorrectionEmail,
   buildAmbassadorPressConferenceEmail,
@@ -31,6 +32,25 @@ describe("email signature", () => {
 
     expect(referral.html).not.toContain("Coach Christelle");
     expect(pendingApproval.html).not.toContain("Coach Christelle");
+  });
+});
+
+describe("buildAmbassadorEventDayEmail", () => {
+  it("shows present/absent counts and a forwardable WhatsApp message, never invitee names", () => {
+    const message = buildAmbassadorEventDayEmail("Fatou Diallo", 40, 6);
+
+    expect(message.subject).toContain("Fatou");
+    expect(message.html).toContain(">6<");
+    expect(message.html).toContain(">34<");
+    expect(message.html).toContain("https://wa.me/?text=");
+    expect(message.html).toContain("prendre ta dose");
+  });
+
+  it("drops the stats block for an ambassador with no invitees yet", () => {
+    const message = buildAmbassadorEventDayEmail("Fatou Diallo", 0, 0);
+
+    expect(message.html).not.toContain("déjà là");
+    expect(message.html).toContain("Envoyer sur WhatsApp");
   });
 });
 
