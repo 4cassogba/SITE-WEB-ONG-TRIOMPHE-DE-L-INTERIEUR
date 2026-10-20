@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Image from "next/image";
 import Avatar from "@/components/Avatar";
 import { Cigibm5Hero, OptInButton } from "@/components/Cigibm5Teaser";
@@ -13,7 +14,7 @@ import Reveal from "@/components/Reveal";
 import { renderInline } from "@/components/InlineLinks";
 import AmbassadorSlider from "@/components/AmbassadorSlider";
 import AmbassadorSignupForm from "@/components/AmbassadorSignupForm";
-import AmbassadorSuccessPopup from "@/components/AmbassadorSuccessPopup";
+import AmbassadorFeedback from "@/components/AmbassadorFeedback";
 import { cigibm, foundingStory, mentalHealthStats, pressMentions } from "@/lib/content";
 import { getGalleryImages, getNamedImage } from "@/lib/media";
 import { pageMetadata } from "@/lib/seo";
@@ -50,12 +51,11 @@ export const metadata: Metadata = pageMetadata({
   image: { url: "/images/cigibm-featured.jpg", alt: "Congrès CIGIBM" },
 });
 
-export default async function CigibmPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ ambassadeur?: string; ref?: string }>;
-}) {
-  const { ambassadeur, ref } = await searchParams;
+// Page statique régénérée toutes les 60 s : le nombre d'inscrits par ambassadeur
+// peut avoir jusqu'à une minute de retard, en échange d'un affichage immédiat.
+export const revalidate = 60;
+
+export default async function CigibmPage() {
   const featured = getNamedImage("cigibm-featured") ?? getGalleryImages("cigibm")[0];
   const poster = getNamedImage("cigibm-poster");
   const nextEditionPhotos = getGalleryImages(`cigibm-${cigibm.nextEdition.id}`);
@@ -357,17 +357,14 @@ export default async function CigibmPage({
             </div>
           )}
 
-          {ambassadeur === "succes" && ref && <AmbassadorSuccessPopup slug={ref} />}
-          {ambassadeur === "existant" && ref && <AmbassadorSuccessPopup slug={ref} alreadyExists />}
+          <Suspense fallback={null}>
+            <AmbassadorFeedback part="popup" phone={cigibm.nextEdition.registrationPhones[0]} />
+          </Suspense>
 
           <div className="mx-auto mt-16 max-w-md">
-            {ambassadeur === "erreur" && (
-              <p className="mb-5 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-center text-sm text-red-300">
-                Une erreur est survenue, votre inscription n&apos;a pas pu
-                être enregistrée. Réessayez, ou appelez le{" "}
-                {cigibm.nextEdition.registrationPhones[0]}.
-              </p>
-            )}
+            <Suspense fallback={null}>
+              <AmbassadorFeedback part="error" phone={cigibm.nextEdition.registrationPhones[0]} />
+            </Suspense>
             <AmbassadorSignupForm />
           </div>
         </Container>
