@@ -320,12 +320,12 @@ export default async function BlogPostPage({
               Envie d&apos;aller plus loin ?
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-sm text-mist-100/75 sm:text-base">
-              Réservez votre place au prochain CIGIBM, ou écrivez-nous
-              directement si vous préférez en parler avant.
+              Découvrez le CIGIBM et la Méthode R.A.C.I.N.E.S., ou écrivez-nous
+              directement si vous préférez en parler.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-4">
-              <Button href="/cigibm-2026" variant="primary">
-                Réserver ma place au CIGIBM
+              <Button href="/cigibm" variant="primary">
+                Découvrir le CIGIBM
               </Button>
               <Button href="/contact" variant="ghost" className="!border-mist-50/30 !text-mist-50 hover:!bg-mist-50/10">
                 Nous contacter

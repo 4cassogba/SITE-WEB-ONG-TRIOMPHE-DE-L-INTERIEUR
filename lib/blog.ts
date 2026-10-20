@@ -51,6 +51,155 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "fraternite-reportage-cigibm-2026-guerison-interieure",
+    type: "article",
+    title: "Fraternité raconte le CIGIBM 2026 : « un rendez-vous de guérison intérieure »",
+    excerpt:
+      "Dans son édition du 20 octobre 2026, le quotidien Fraternité consacre sa une et sa page 10 au CIGIBM. Retour sur un reportage qui explique ce que veut vraiment dire « le vaccin de la dépression », et sur l'appel qu'il nous invite à adresser aux pouvoirs publics.",
+    date: "20 octobre 2026",
+    isoDate: "2026-10-20",
+    readTime: "6 min",
+    author: "ONG Triomphe de l'Intérieur",
+    authorRole: "Équipe de communication",
+    authorAvatar: "/images/logo-mark.png",
+    featuredImage: {
+      src: "/images/cigibm/reportage-fraternite-cover.jpg",
+      alt: "La une de Fraternité du mardi 20 octobre 2026 et la page 10 consacrée au CIGIBM : « Christelle Gnimassou fait du CIGIBM un rendez-vous de guérison intérieure »",
+    },
+    body: [
+      {
+        type: "paragraph",
+        text: "Il y a des lendemains de congrès qui se mesurent à ce que la presse en retient. Ce mardi 20 octobre 2026, [Fraternité](https://fraternite.bj/), quotidien béninois d'information et d'analyse, a placé le CIGIBM à sa une, rubrique « Événement », avec un reportage complet en page 10. Quelques jours plus tôt, le même journal avait déjà couvert [la conférence de presse qui annonçait l'édition](https://fraternite.bj/4e-edition-du-congres-international-de-guerison-interieure-et-de-bien-etre-mental-mettre-le-vaccin-de-la-depression-au-coeur-des-priorites/). Avant, puis après : un fil rouge que nous tenons à saluer.",
+      },
+      {
+        type: "heading",
+        text: "À la une : un congrès, une métaphore",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/Fraternité 1.jpeg",
+          alt: "Une de Fraternité, n° 6727 du mardi 20 octobre 2026, avec l'encadré Événement consacré au CIGIBM",
+        },
+        imagePosition: "left",
+        imageAspect: "portrait",
+        caption: "Fraternité, n° 6727, mardi 20 octobre 2026, une.",
+        paragraphs: [
+          "Sous la rubrique « Événement », la une annonce un article de la page 10 : « Christelle Gnimassou fait du CIGIBM un rendez-vous de guérison intérieure ». Le titre dit l'essentiel : en quatre éditions, le congrès est devenu un rendez-vous, un moment que l'on attend et que l'on retrouve.",
+          "À côté des grands sujets du jour, la santé mentale prend sa place en première page. C'est précisément ce que cherche le CIGIBM : sortir le sujet de la marge.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Avant le congrès : ce que Fraternité avait déjà expliqué",
+      },
+      {
+        type: "paragraph",
+        text: "Dans son article du 12 octobre, signé Fidégnon, Fraternité rapporte l'annonce faite lors de [la conférence de presse du 10 octobre](/blog/conference-presse-cigibm-vaccin-de-la-depression), à l'auditorium de la Fondation Friedrich Ebert, le jour de la Journée mondiale de la santé mentale. Le journal s'arrête longuement sur le thème, « Le vaccin de la dépression », et sur la manière dont Coach Christelle Gnimassou le définit.",
+      },
+      {
+        type: "quote",
+        text: "Le « vaccin » ne renvoie pas à un produit pharmaceutique ou à une guérison miracle, mais à des moyens concrets et accessibles à tous pour renforcer sa résilience avant l'effondrement.",
+        cite: "Coach Christelle Gnimassou, citée par Fraternité, 12 octobre 2026",
+      },
+      {
+        type: "paragraph",
+        text: "Le journal relève aussi les chiffres qui justifient cette logique de prévention. Nous les reprenons tels que Fraternité les cite, d'après l'Organisation mondiale de la Santé :",
+      },
+      {
+        type: "list",
+        items: [
+          "Plus d'un milliard de personnes vivent aujourd'hui avec un trouble de santé mentale.",
+          "Entre 1990 et 2013, le nombre de personnes touchées par la dépression ou l'anxiété est passé de 416 à 615 millions, soit une hausse de près de 50 %.",
+          "Le coût économique mondial de ces troubles est estimé à environ 1 000 milliards de dollars par an, surtout en perte de productivité.",
+          "Chaque dollar investi dans le traitement de la dépression et de l'anxiété rapporterait environ 4 dollars en santé et en productivité.",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Fraternité souligne aussi un choix de positionnement : le CIGIBM ne se présente ni comme un hôpital ni comme un ministère, mais comme une plateforme de prévention ancrée dans les communautés, et multisectorielle, car la santé mentale touche l'éducation, la protection sociale, l'emploi et l'entrepreneuriat. Pour cette édition, le journal rappelait l'ambition affichée : plus de 3 000 participants en présentiel et 100 000 en ligne, dans une vingtaine de pays.",
+      },
+      {
+        type: "heading",
+        text: "Le jour J vu par Fraternité",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/fraternite-equipe-benevoles.jpg",
+          alt: "L'équipe de bénévoles en tenue blanche et nœud papillon vert, avec Christelle Gnimassou en tenue verte au centre, devant le panneau du CIGIBM",
+        },
+        imagePosition: "right",
+        caption: "Photo parue dans Fraternité (signée Jean Karl) : l'équipe du CIGIBM autour de sa promotrice.",
+        paragraphs: [
+          "C'est dans la Salle Rouge du Palais des Congrès de Cotonou que s'est ouverte, le 17 octobre, la 4ème édition. Fraternité rappelle que l'événement est organisé par l'ONG Triomphe de l'Intérieur à l'initiative de sa promotrice, avec le soutien de l'ONG Filles en Action, de Ghana Access et d'autres partenaires.",
+          "Le ton de la journée a été donné dès la cérémonie d'ouverture par la marraine, Ella Wama, experte en genre. Le reportage en détaille ensuite les temps forts.",
+        ],
+      },
+      {
+        type: "list",
+        items: [
+          "Annick Mireille Azandjèmè a invité l'assistance à regarder la dépression au-delà de l'individu : deuils non résolus, traumatismes enfouis et schémas familiaux inconscients peuvent se transmettre d'une génération à l'autre.",
+          "Jessie Vanessa a exploré le lien entre vie spirituelle et blessures affectives, en insistant sur la nécessité de guérir son intériorité, sans que la foi serve de prétexte pour négliger le suivi émotionnel.",
+          "Valdye Gbaguidi a abordé la confiance en soi, le regard de l'entourage et la stigmatisation : aucune personne ne saurait être réduite à ses difficultés ni enfermée dans une étiquette. Demander de l'aide est encore trop souvent perçu comme une faiblesse.",
+          "Espoir Tchehoun a consacré son intervention à la prévention du burn-out : effets du surmenage et de la pression constante, besoin d'un meilleur équilibre entre exigences professionnelles et santé mentale.",
+          "Le grand panel, avec Rudy Chapsal Aboua et Astéris A. Ahouignan, s'est penché sur les piliers de la résilience : la famille, la foi, le travail et la gestion des finances.",
+          "En fin de journée, Christelle Eugénie Gnimassou a présenté en détail la vision du « Vaccin de la Dépression », avant de remettre des distinctions aux ambassadeurs et challengers engagés dans la cause.",
+        ],
+      },
+      {
+        type: "quote",
+        text: "Le « vaccin » contre la dépression n'est pas une réponse unique, mais une approche globale du bien-être, où chaque dimension de l'existence compte et où l'équilibre de l'une soutient celui des autres.",
+        cite: "Fraternité, 20 octobre 2026, page 10",
+      },
+      {
+        type: "heading",
+        text: "Un appel aux pouvoirs publics",
+      },
+      {
+        type: "paragraph",
+        text: "Le reportage se termine sur une phrase que nous faisons nôtre : la santé mentale est un droit fondamental, non un luxe. Un droit ne se garantit pas par la seule bonne volonté d'une ONG. C'est pourquoi nous nous permettons, avec respect et dans un esprit de collaboration, d'adresser trois demandes à la [Présidence de la République](https://presidence.bj), au [ministère de la Santé](https://sante.gouv.bj) et, plus largement, au [Gouvernement](https://www.gouv.bj) :",
+      },
+      {
+        type: "list",
+        items: [
+          "Inscrire la prévention en santé mentale parmi les priorités de santé publique, aux côtés de la vaccination et du dépistage, puisque agir en amont coûte moins cher, humainement et économiquement, qu'agir dans l'urgence.",
+          "Associer les initiatives communautaires comme le CIGIBM aux campagnes nationales, à commencer par la Journée mondiale de la santé mentale du 10 octobre, pour que leur travail de sensibilisation rejoigne celui des institutions.",
+          "Faciliter l'accès à l'écoute et à l'accompagnement psychologique de proximité, au plus près des communautés. La caravane de sensibilisation prévue pour cette édition, de la Place de l'Amazone à la Cité Ministérielle, en portait symboliquement l'idée : le message doit circuler jusqu'aux lieux de décision.",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Le CIGIBM ne remplace ni l'hôpital ni le ministère : il en est un relais, en amont, là où la souffrance n'a pas encore de nom. Notre porte est ouverte à toute institution qui souhaite échanger, construire ou simplement mieux comprendre ce que nous faisons sur le terrain : [écrivez-nous](/contact).",
+      },
+      {
+        type: "heading",
+        text: "Merci à Fraternité",
+      },
+      {
+        type: "paragraph",
+        text: "Une édition se joue dans la salle, mais elle se prolonge dans les journaux. Merci au groupe de presse [Fraternité](https://fraternite.bj/), à Marina Hounnou et à Fidégnon, d'avoir donné de l'espace à un sujet que l'on traite encore trop rarement. Pour retrouver nos autres articles, parcourez la [revue de presse du CIGIBM 2026](/blog/revue-de-presse-cigibm-2026-la-droiture-l-emergent), le [coup d'envoi au Palais des Congrès](/blog/cigibm-2026-coup-d-envoi-palais-des-congres) et notre page sur la [Méthode R.A.C.I.N.E.S.](/methode-racines).",
+      },
+      {
+        type: "references",
+        heading: "Sources",
+        items: [
+          {
+            label: "Fraternité, n° 6727, mardi 20 octobre 2026, page 10 : « Christelle Gnimassou fait du CIGIBM un rendez-vous de guérison intérieure », Marina Hounnou (coll.).",
+          },
+          {
+            label: "Fraternité, 12 octobre 2026, par Fidégnon : « 4e édition du Congrès International de Guérison Intérieure et de Bien-être Mental : mettre le « vaccin de la dépression » au cœur des priorités ».",
+            href: "https://fraternite.bj/4e-edition-du-congres-international-de-guerison-interieure-et-de-bien-etre-mental-mettre-le-vaccin-de-la-depression-au-coeur-des-priorites/",
+          },
+          { label: "Groupe de presse Fraternité, site officiel.", href: "https://fraternite.bj/" },
+          { label: "Présidence de la République du Bénin, site officiel.", href: "https://presidence.bj" },
+          { label: "Ministère de la Santé du Bénin, portail officiel.", href: "https://sante.gouv.bj" },
+          { label: "Gouvernement de la République du Bénin, portail officiel.", href: "https://www.gouv.bj" },
+        ],
+      },
+    ],
+  },
+  {
     slug: "revue-de-presse-cigibm-2026-la-droiture-l-emergent",
     type: "article",
     title: "Revue de presse : le CIGIBM 2026 à la une de La Droiture et de L'Émergent",
