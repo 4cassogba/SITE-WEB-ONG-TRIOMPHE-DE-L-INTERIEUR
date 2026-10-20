@@ -69,7 +69,7 @@ export const blogPosts: BlogPost[] = [
     body: [
       {
         type: "paragraph",
-        text: "Il y a des lendemains de congrès qui se mesurent à ce que la presse en retient. Ce mardi 20 octobre 2026, [Fraternité](https://fraternite.bj/), quotidien béninois d'information et d'analyse, a placé le CIGIBM à sa une, rubrique « Événement », avec un reportage complet en page 10. Quelques jours plus tôt, le même journal avait déjà couvert [la conférence de presse qui annonçait l'édition](https://fraternite.bj/4e-edition-du-congres-international-de-guerison-interieure-et-de-bien-etre-mental-mettre-le-vaccin-de-la-depression-au-coeur-des-priorites/). Avant, puis après : un fil rouge que nous tenons à saluer.",
+        text: "Il y a des lendemains de congrès qui se mesurent à ce que la presse en retient. Ce mardi 20 octobre 2026, [Fraternité](https://fraternite.bj/), quotidien béninois d'information et d'analyse, a placé le CIGIBM à sa une, rubrique « Culture et Société », avec un reportage complet en page 10. Quelques jours plus tôt, le même journal avait déjà couvert [la conférence de presse qui annonçait l'édition](https://fraternite.bj/4e-edition-du-congres-international-de-guerison-interieure-et-de-bien-etre-mental-mettre-le-vaccin-de-la-depression-au-coeur-des-priorites/). Avant, puis après : un fil rouge que nous tenons à saluer.",
       },
       {
         type: "heading",
@@ -79,13 +79,13 @@ export const blogPosts: BlogPost[] = [
         type: "imageText",
         image: {
           src: "/images/cigibm/Fraternité 1.jpeg",
-          alt: "Une de Fraternité, n° 6727 du mardi 20 octobre 2026, avec l'encadré Événement consacré au CIGIBM",
+          alt: "Une de Fraternité, n° 6727 du mardi 20 octobre 2026, avec l'encadré consacré au CIGIBM",
         },
         imagePosition: "left",
         imageAspect: "portrait",
         caption: "Fraternité, n° 6727, mardi 20 octobre 2026, une.",
         paragraphs: [
-          "Sous la rubrique « Événement », la une annonce un article de la page 10 : « Christelle Gnimassou fait du CIGIBM un rendez-vous de guérison intérieure ». Le titre dit l'essentiel : en quatre éditions, le congrès est devenu un rendez-vous, un moment que l'on attend et que l'on retrouve.",
+          "Sous la rubrique « Culture et Société », la une annonce un article de la page 10 : « Christelle Gnimassou fait du CIGIBM un rendez-vous de guérison intérieure ». Le titre dit l'essentiel : en quatre éditions, le congrès est devenu un rendez-vous, un moment que l'on attend et que l'on retrouve.",
           "À côté des grands sujets du jour, la santé mentale prend sa place en première page. C'est précisément ce que cherche le CIGIBM : sortir le sujet de la marge.",
         ],
       },
@@ -126,25 +126,38 @@ export const blogPosts: BlogPost[] = [
       {
         type: "imageText",
         image: {
-          src: "/images/cigibm/fraternite-equipe-benevoles.jpg",
-          alt: "L'équipe de bénévoles en tenue blanche et nœud papillon vert, avec Christelle Gnimassou en tenue verte au centre, devant le panneau du CIGIBM",
+          src: "/images/cigibm/cigibm-equipe-souriante.jpg",
+          alt: "L'équipe du CIGIBM en tenue blanche et vert, souriante, autour de Christelle Gnimassou en tenue verte, devant le panneau du congrès",
         },
         imagePosition: "right",
-        caption: "Photo parue dans Fraternité (signée Jean Karl) : l'équipe du CIGIBM autour de sa promotrice.",
+        caption: "L'équipe du CIGIBM autour de sa promotrice (photo : Jean Karl).",
         paragraphs: [
-          "C'est dans la Salle Rouge du Palais des Congrès de Cotonou que s'est ouverte, le 17 octobre, la 4ème édition. Fraternité rappelle que l'événement est organisé par l'ONG Triomphe de l'Intérieur à l'initiative de sa promotrice, avec le soutien de l'ONG Filles en Action, de Ghana Access et d'autres partenaires.",
+          "C'est dans la Salle Rouge du Palais des Congrès de Cotonou que s'est ouverte, le 17 octobre, la 4ème édition. Fraternité rappelle que l'événement est organisé par l'ONG Triomphe de l'Intérieur à l'initiative de sa promotrice, avec le soutien de l'ONG [Filles en Action](https://www.fillesenactions.org/), de Ghana Access et d'autres partenaires.",
           "Le ton de la journée a été donné dès la cérémonie d'ouverture par la marraine, Ella Wama, experte en genre. Le reportage en détaille ensuite les temps forts.",
         ],
       },
       {
         type: "list",
         items: [
-          "Annick Mireille Azandjèmè a invité l'assistance à regarder la dépression au-delà de l'individu : deuils non résolus, traumatismes enfouis et schémas familiaux inconscients peuvent se transmettre d'une génération à l'autre.",
+          "[Annick Mireille Azandjèmè](https://www.linkedin.com/in/annick-azandjeme-5b705148/) a invité l'assistance à regarder la dépression au-delà de l'individu : deuils non résolus, traumatismes enfouis et schémas familiaux inconscients peuvent se transmettre d'une génération à l'autre.",
           "Jessie Vanessa a exploré le lien entre vie spirituelle et blessures affectives, en insistant sur la nécessité de guérir son intériorité, sans que la foi serve de prétexte pour négliger le suivi émotionnel.",
-          "Valdye Gbaguidi a abordé la confiance en soi, le regard de l'entourage et la stigmatisation : aucune personne ne saurait être réduite à ses difficultés ni enfermée dans une étiquette. Demander de l'aide est encore trop souvent perçu comme une faiblesse.",
+          "[Valdye Gbaguidi](https://www.linkedin.com/in/valdye-gbaguidi-921a9b2a3/) a abordé la confiance en soi, le regard de l'entourage et la stigmatisation : aucune personne ne saurait être réduite à ses difficultés ni enfermée dans une étiquette. Demander de l'aide est encore trop souvent perçu comme une faiblesse.",
           "Espoir Tchehoun a consacré son intervention à la prévention du burn-out : effets du surmenage et de la pression constante, besoin d'un meilleur équilibre entre exigences professionnelles et santé mentale.",
           "Le grand panel, avec Rudy Chapsal Aboua et Astéris A. Ahouignan, s'est penché sur les piliers de la résilience : la famille, la foi, le travail et la gestion des finances.",
           "En fin de journée, Christelle Eugénie Gnimassou a présenté en détail la vision du « Vaccin de la Dépression », avant de remettre des distinctions aux ambassadeurs et challengers engagés dans la cause.",
+        ],
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/cigibm-photo-ensemble-scene.jpg",
+          alt: "Photo de famille des participants du CIGIBM 2026, rassemblés debout sur la scène devant les fauteuils rouges de la salle",
+        },
+        imagePosition: "left",
+        heading: "Une salle, une même cause",
+        caption: "Photo de famille du CIGIBM 2026 (photo : Jean Karl).",
+        paragraphs: [
+          "À la fin de la journée, participants, intervenants et équipe se sont retrouvés sur scène pour la photo de famille. Une image qui dit mieux que des mots ce que le congrès voulait montrer : un sujet qu'on ne porte plus seul.",
         ],
       },
       {
@@ -179,23 +192,6 @@ export const blogPosts: BlogPost[] = [
       {
         type: "paragraph",
         text: "Une édition se joue dans la salle, mais elle se prolonge dans les journaux. Merci au groupe de presse [Fraternité](https://fraternite.bj/), à Marina Hounnou et à Fidégnon, d'avoir donné de l'espace à un sujet que l'on traite encore trop rarement. Pour retrouver nos autres articles, parcourez la [revue de presse du CIGIBM 2026](/blog/revue-de-presse-cigibm-2026-la-droiture-l-emergent), le [coup d'envoi au Palais des Congrès](/blog/cigibm-2026-coup-d-envoi-palais-des-congres) et notre page sur la [Méthode R.A.C.I.N.E.S.](/methode-racines).",
-      },
-      {
-        type: "references",
-        heading: "Sources",
-        items: [
-          {
-            label: "Fraternité, n° 6727, mardi 20 octobre 2026, page 10 : « Christelle Gnimassou fait du CIGIBM un rendez-vous de guérison intérieure », Marina Hounnou (coll.).",
-          },
-          {
-            label: "Fraternité, 12 octobre 2026, par Fidégnon : « 4e édition du Congrès International de Guérison Intérieure et de Bien-être Mental : mettre le « vaccin de la dépression » au cœur des priorités ».",
-            href: "https://fraternite.bj/4e-edition-du-congres-international-de-guerison-interieure-et-de-bien-etre-mental-mettre-le-vaccin-de-la-depression-au-coeur-des-priorites/",
-          },
-          { label: "Groupe de presse Fraternité, site officiel.", href: "https://fraternite.bj/" },
-          { label: "Présidence de la République du Bénin, site officiel.", href: "https://presidence.bj" },
-          { label: "Ministère de la Santé du Bénin, portail officiel.", href: "https://sante.gouv.bj" },
-          { label: "Gouvernement de la République du Bénin, portail officiel.", href: "https://www.gouv.bj" },
-        ],
       },
     ],
   },
