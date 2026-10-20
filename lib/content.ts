@@ -280,7 +280,7 @@ export const cigibm = {
       location: "Palais des Congrès, Cotonou",
       attendance: "Bilan de fréquentation à venir",
       description:
-        "Parrainée par Ella Wama, experte en genre. Ouverture à la Salle Rouge du Palais des Congrès, interventions sur les origines de la souffrance, la confiance en soi, le burn-out et les piliers de la résilience, remise de distinctions aux ambassadeurs. Couverte par Fraternité, La Droiture, L'Émergent et I COM tv.",
+        "Parrainée par [Ella Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), experte en genre. Ouverture à la Salle Rouge du Palais des Congrès, interventions sur les origines de la souffrance, la confiance en soi, le burn-out et les piliers de la résilience, remise de distinctions aux ambassadeurs. Couverte par Fraternité, La Droiture, L'Émergent et I COM tv.",
     },
   ],
   // Prochaine édition annoncée, dates à confirmer avec l'ONG (affiche reçue

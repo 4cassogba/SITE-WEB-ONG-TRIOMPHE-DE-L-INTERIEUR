@@ -133,7 +133,7 @@ export const blogPosts: BlogPost[] = [
         caption: "L'équipe du CIGIBM autour de sa promotrice (photo : Jean Karl).",
         paragraphs: [
           "C'est dans la Salle Rouge du Palais des Congrès de Cotonou que s'est ouverte, le 17 octobre, la 4ème édition. Fraternité rappelle que l'événement est organisé par l'ONG Triomphe de l'Intérieur à l'initiative de sa promotrice, avec le soutien de l'ONG [Filles en Action](https://www.fillesenactions.org/), de Ghana Access et d'autres partenaires.",
-          "Le ton de la journée a été donné dès la cérémonie d'ouverture par la marraine, Ella Wama, experte en genre. Le reportage en détaille ensuite les temps forts.",
+          "Le ton de la journée a été donné dès la cérémonie d'ouverture par la marraine, [Ella Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), experte en genre. Le reportage en détaille ensuite les temps forts.",
         ],
       },
       {
@@ -249,13 +249,13 @@ export const blogPosts: BlogPost[] = [
         caption: "L'Émergent, n° 983, lundi 19 octobre 2026, une.",
         paragraphs: [
           "L'Émergent consacre la manchette de son édition n° 983 à la promotrice du congrès : « La promotrice Christelle GNIMASSOU, un engagement renouvelé pour briser le silence autour de la dépression et promouvoir la guérison intérieure ».",
-          "En bas de la même une, le journal relaie les mots de la marraine de cette 4ème édition, Ella Mara Wama, qui résument à eux seuls la raison d'être du congrès.",
+          "En bas de la même une, le journal relaie les mots de la marraine de cette 4ème édition, [Ella Mara Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), qui résument à eux seuls la raison d'être du congrès.",
         ],
       },
       {
         type: "quote",
         text: "Nous soignons les corps tout en laissant les esprits saigner en silence.",
-        cite: "Ella Mara Wama, marraine de la 4ème édition du CIGIBM, citée par L'Émergent (n° 983, 19 octobre 2026)",
+        cite: "[Ella Mara Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), marraine de la 4ème édition du CIGIBM, citée par L'Émergent (n° 983, 19 octobre 2026)",
       },
       {
         type: "heading",
@@ -317,7 +317,7 @@ export const blogPosts: BlogPost[] = [
           },
           {
             label:
-              "L'Émergent, n° 983, lundi 19 octobre 2026, une : « “Nous soignons les corps tout en laissant les esprits saigner en silence” dixit la marraine Ella Mara WAMA ».",
+              "L'Émergent, n° 983, lundi 19 octobre 2026, une : « “Nous soignons les corps tout en laissant les esprits saigner en silence” dixit la marraine [Ella Mara WAMA](https://www.linkedin.com/in/ella-wama-mara-expertegenre/) ».",
           },
           {
             label: "Organisation mondiale de la Santé, « Trouble dépressif (dépression) », principaux repères, 11 septembre 2026.",

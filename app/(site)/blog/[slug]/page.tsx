@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
+import { inlineLinkClass, renderInline } from "@/components/InlineLinks";
 import Button from "@/components/Button";
 import { getPostBySlug, getSortedPosts, type BlogBlock } from "@/lib/blog";
 import { siteConfig } from "@/lib/content";
@@ -30,36 +30,6 @@ export async function generateMetadata({
     image: { url: post.featuredImage.src, alt: post.featuredImage.alt },
     article: { publishedTime: post.isoDate, author: post.author },
   });
-}
-
-const INLINE_LINK = /\[([^\]]+)\]\(([^)\s]+)\)/g;
-const inlineLinkClass =
-  "font-medium text-leaf-700 underline decoration-leaf-300 underline-offset-4 transition-colors hover:text-leaf-900 hover:decoration-leaf-600";
-
-// `[libellé](href)` -> lien (cf. BlogBlock). Les éléments React sont construits
-// ici : aucun HTML brut n'est injecté.
-function renderInline(text: string): ReactNode {
-  const parts: ReactNode[] = [];
-  let last = 0;
-  for (const match of text.matchAll(INLINE_LINK)) {
-    const [whole, label, href] = match;
-    const index = match.index ?? 0;
-    if (index > last) parts.push(text.slice(last, index));
-    parts.push(
-      href.startsWith("/") ? (
-        <Link key={index} href={href} className={inlineLinkClass}>
-          {label}
-        </Link>
-      ) : (
-        <a key={index} href={href} target="_blank" rel="noopener noreferrer" className={inlineLinkClass}>
-          {label}
-        </a>
-      )
-    );
-    last = index + whole.length;
-  }
-  if (last < text.length) parts.push(text.slice(last));
-  return parts;
 }
 
 function Block({ block }: { block: BlogBlock }) {
@@ -101,7 +71,7 @@ function Block({ block }: { block: BlogBlock }) {
                       </a>
                     )
                   ) : (
-                    item.label
+                    renderInline(item.label)
                   )}
                 </li>
               ))}
@@ -129,7 +99,7 @@ function Block({ block }: { block: BlogBlock }) {
         <Reveal>
           <figure className="mt-8 border-l-2 border-leaf-400 py-2 pl-6">
             <blockquote className="font-display text-xl leading-snug text-leaf-900 sm:text-2xl">« {block.text} »</blockquote>
-            {block.cite && <figcaption className="mt-3 text-sm text-ink/55">— {block.cite}</figcaption>}
+            {block.cite && <figcaption className="mt-3 text-sm text-ink/55">— {renderInline(block.cite)}</figcaption>}
           </figure>
         </Reveal>
       );

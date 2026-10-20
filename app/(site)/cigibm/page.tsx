@@ -10,6 +10,7 @@ import ImagePlaceholder from "@/components/ImagePlaceholder";
 import Photo from "@/components/Photo";
 import PhotoCarousel from "@/components/PhotoCarousel";
 import Reveal from "@/components/Reveal";
+import { renderInline } from "@/components/InlineLinks";
 import AmbassadorSlider from "@/components/AmbassadorSlider";
 import AmbassadorSignupForm from "@/components/AmbassadorSignupForm";
 import AmbassadorSuccessPopup from "@/components/AmbassadorSuccessPopup";
@@ -414,7 +415,7 @@ export default async function CigibmPage({
                       {edition.attendance}
                     </p>
                     <p className="mt-4 max-w-xl text-base leading-relaxed text-ink/70">
-                      {edition.description}
+                      {renderInline(edition.description)}
                     </p>
                   </Reveal>
                 </div>
