@@ -21,7 +21,9 @@ export default function BlogCard({ post, index = 0 }: { post: BlogPost; index?: 
             alt={post.featuredImage.alt}
             fill
             sizes="(min-width: 1024px) 33vw, 100vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
+              post.featuredImage.position === "top" ? "object-top" : ""
+            }`}
           />
           <span className="absolute left-4 top-4 rounded-full bg-mist-50/95 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-leaf-700">
             {typeLabel[post.type]}

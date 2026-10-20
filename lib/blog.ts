@@ -43,7 +43,9 @@ export type BlogPost = {
   author: string;
   authorRole: string;
   authorAvatar: string;
-  featuredImage: { src: string; alt: string; credit?: string };
+  // position "top" : garde le haut de l'image quand le bandeau la recadre
+  // (photo de groupe dont les visages sont en haut). Centre par défaut.
+  featuredImage: { src: string; alt: string; credit?: string; position?: "top" | "center" };
   body: BlogBlock[];
 };
 
@@ -199,6 +201,7 @@ export const blogPosts: BlogPost[] = [
     featuredImage: {
       src: "/images/cigibm/Cover CIGIBM1 2026.png",
       alt: "Christelle Eugénie Gnimassou, au centre, devant le panneau officiel du CIGIBM 2026 lors du lancement de la 4ème édition",
+      position: "top",
     },
     body: [
       {

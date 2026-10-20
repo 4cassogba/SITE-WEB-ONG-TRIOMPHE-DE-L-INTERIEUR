@@ -271,10 +271,13 @@ export default async function BlogPostPage({
             alt={post.featuredImage.alt}
             fill
             priority
+            quality={90}
             sizes="100vw"
-            className="object-cover opacity-70"
+            className={`object-cover ${post.featuredImage.position === "top" ? "object-top" : ""}`}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-leaf-950 via-leaf-950/40 to-transparent" />
+          {/* Assombrit seulement la moitié basse, derrière le titre : la photo
+              (visages compris) reste nette et lumineuse au-dessus. */}
+          <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-leaf-950 via-leaf-950/60 to-transparent" />
         </div>
         <Container className="relative -mt-24 pb-12 sm:-mt-28">
           <Reveal>

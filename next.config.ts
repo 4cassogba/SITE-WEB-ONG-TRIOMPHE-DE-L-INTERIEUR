@@ -9,6 +9,9 @@ const supabaseHostname = process.env.NEXT_PUBLIC_SUPABASE_URL
 
 const nextConfig: NextConfig = {
   images: {
+    // 90 : grandes images plein écran (bandeau des articles), où la
+    // compression par défaut (75) se voit sur une photo déjà agrandie.
+    qualities: [75, 90],
     // Photos d'ambassadeurs, images de blog, etc. servies depuis le bucket
     // public Supabase Storage du projet — next/image refuse tout hôte
     // distant non explicitement listé ici.
