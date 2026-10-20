@@ -103,6 +103,29 @@ function Block({ block }: { block: BlogBlock }) {
           </div>
         </Reveal>
       );
+    case "video":
+      // youtube-nocookie : pas de cookie de suivi tant que le lecteur n'est
+      // pas lancé. loading="lazy" : rien n'est chargé avant le défilement.
+      return (
+        <Reveal>
+          <figure className="mt-10">
+            <div className="relative aspect-video w-full overflow-hidden rounded-[2rem] bg-black">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${block.youtubeId}?rel=0`}
+                title={block.title}
+                loading="lazy"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full"
+              />
+            </div>
+            {block.caption && (
+              <figcaption className="mt-3 text-center text-sm text-ink/55">{block.caption}</figcaption>
+            )}
+          </figure>
+        </Reveal>
+      );
     case "links":
       return (
         <Reveal>

@@ -20,7 +20,8 @@ export type BlogBlock =
       type: "links";
       heading?: string;
       items: { label: string; href: string }[];
-    };
+    }
+  | { type: "video"; youtubeId: string; title: string; caption?: string };
 
 export type BlogPost = {
   slug: string;
@@ -38,6 +39,76 @@ export type BlogPost = {
 };
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: "cigibm-2026-coup-d-envoi-palais-des-congres",
+    type: "activite",
+    title: "CIGIBM 2026 : coup d'envoi au Palais des Congrès pour guérir les blessures invisibles",
+    excerpt:
+      "Ce samedi 17 octobre 2026, la 4ème édition du CIGIBM s'est ouverte au Palais des Congrès de Cotonou devant un public nombreux, autour de la santé mentale et de la guérison des blessures invisibles.",
+    date: "20 octobre 2026",
+    isoDate: "2026-10-20",
+    readTime: "3 min",
+    author: "ONG Triomphe de l'Intérieur",
+    authorRole: "Équipe de communication",
+    authorAvatar: "/images/logo-mark.png",
+    featuredImage: {
+      src: "/images/cigibm-edition-4/lancement/reportage-icom.jpg",
+      alt: "Public assis dans l'auditorium du Palais des Congrès de Cotonou lors du lancement du CIGIBM 2026",
+      credit: "Image : I COM",
+    },
+    body: [
+      {
+        type: "paragraph",
+        text: "Le coup d'envoi a été officiellement donné ce samedi 17 octobre 2026 au Palais des Congrès de Cotonou. Pour sa 4ème édition, le Congrès International de Guérison Intérieure et de Bien-être Mental (CIGIBM) a réuni un public nombreux autour d'une conviction simple : la santé mentale se soigne aussi, et les blessures qu'on ne voit pas méritent qu'on s'y arrête.",
+      },
+      {
+        type: "video",
+        youtubeId: "oN71eH0b_tA",
+        title: "Guérison intérieure et santé mentale : coup d'envoi de la 4e édition du CIGIBM",
+        caption: "Reportage réalisé par I COM, structure de production audiovisuelle et de communication.",
+      },
+      {
+        type: "heading",
+        text: "Les blessures invisibles au centre de la salle",
+      },
+      {
+        type: "paragraph",
+        text: "Ce que l'on porte en silence ne se voit pas, mais finit toujours par peser. C'est à ces blessures-là que le CIGIBM consacre ses journées, avec un thème pensé comme une réponse : « Le vaccin de la dépression ». L'idée n'est pas d'attendre que la souffrance s'installe pour agir, mais de donner à chacun les moyens de la reconnaître et de s'en protéger, pour soi comme pour ses proches.",
+      },
+      {
+        type: "quote",
+        text: "Une blessure qu'on ne nomme pas ne guérit pas.",
+      },
+      {
+        type: "heading",
+        text: "Christelle Gnimassou, un engagement qui ne faiblit pas",
+      },
+      {
+        type: "paragraph",
+        text: "L'événement est porté par Christelle Eugénie Gnimassou, présidente-fondatrice de l'ONG Triomphe de l'Intérieur. Depuis plusieurs années, malgré les difficultés et sans jamais se décourager, elle œuvre pour offrir un espace d'écoute et de prise en charge accessible à tous, là où la santé mentale reste encore trop souvent un sujet tabou.",
+      },
+      {
+        type: "paragraph",
+        text: "Le CIGIBM est né de son propre parcours. Quatre éditions plus tard, il reste fidèle à la même promesse : que plus personne ne porte seul ce qu'il vit en silence.",
+      },
+      {
+        type: "heading",
+        text: "Et après le congrès ?",
+      },
+      {
+        type: "paragraph",
+        text: "La guérison ne s'arrête pas à la sortie de la salle. L'ONG Triomphe de l'Intérieur poursuit son accompagnement tout au long de l'année, à travers la Méthode R.A.C.I.N.E.S., des ateliers et un accompagnement individuel. Si ce reportage vous parle, ou si vous pensez à quelqu'un qui aurait besoin d'en parler, écrivez-nous : c'est souvent le premier pas qui compte le plus.",
+      },
+      {
+        type: "links",
+        heading: "Pour aller plus loin",
+        items: [
+          { label: "Regarder le reportage d'I COM sur YouTube", href: "https://youtu.be/oN71eH0b_tA" },
+          { label: "La chaîne I COM tv", href: "https://www.youtube.com/@iliassouchitou825" },
+        ],
+      },
+    ],
+  },
   {
     slug: "conference-presse-cigibm-vaccin-de-la-depression",
     type: "activite",
