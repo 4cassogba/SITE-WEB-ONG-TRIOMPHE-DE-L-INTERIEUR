@@ -93,7 +93,7 @@ export default function ParticipantsTable({ participants }: { participants: Part
               <th className="px-4 py-3">Email</th>
               <th className="px-4 py-3">Ambassadeur</th>
               <th className="px-4 py-3">Présence</th>
-              <th className="px-4 py-3">Badge « J'y serai »</th>
+              <th className="px-4 py-3">Badge « J&apos;y serai »</th>
             </tr>
           </thead>
           <tbody>

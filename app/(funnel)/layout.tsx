@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/lib/content";
 import { getLogoSrc } from "@/lib/media";
-import RegistrationPopup from "@/components/RegistrationPopup";
+import OptInPopup from "@/components/OptInPopup";
 
 // Layout "tunnel" : volontairement dépouillé de la navigation complète du
 // site. Une seule sortie discrète vers l'accueil, aucun menu qui détourne
@@ -36,7 +36,7 @@ export default function FunnelLayout({ children }: { children: ReactNode }) {
       </footer>
 
       <Suspense fallback={null}>
-        <RegistrationPopup />
+        <OptInPopup />
       </Suspense>
     </>
   );

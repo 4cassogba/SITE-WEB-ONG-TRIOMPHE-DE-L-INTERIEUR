@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { getDashboardStats } from "@/lib/admin/dashboard";
+import { countLeadsToContact } from "@/lib/admin/leads";
 
 export default async function AdminDashboardPage() {
-  const stats = await getDashboardStats();
+  const [stats, leads] = await Promise.all([getDashboardStats(), countLeadsToContact()]);
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -24,6 +25,21 @@ export default async function AdminDashboardPage() {
         className="mt-4 flex min-h-14 items-center justify-center rounded-2xl bg-leaf-600 text-base font-semibold text-mist-50 active:bg-leaf-700 lg:hidden"
       >
         Ouvrir le scanner d&apos;entrée
+      </Link>
+
+      <Link
+        href="/admin/leads"
+        className={`mt-4 flex items-center justify-between gap-3 rounded-2xl border px-4 py-4 transition-colors active:bg-leaf-50 ${
+          leads.needsHelp > 0 ? "border-amber-400 bg-amber-50/70" : "border-ink/8 bg-mist-50"
+        }`}
+      >
+        <span>
+          <span className="block text-sm font-semibold text-leaf-900">Contacts à rappeler</span>
+          <span className="block text-xs text-ink/55">
+            {leads.total === 0 ? "Personne en attente" : `${leads.total} en attente${leads.needsHelp > 0 ? ` · dont ${leads.needsHelp} qui demandent de l'aide` : ""}`}
+          </span>
+        </span>
+        <span className="font-display text-3xl text-leaf-900">{leads.total}</span>
       </Link>
 
       <div className="mt-8">

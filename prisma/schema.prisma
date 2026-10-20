@@ -121,3 +121,25 @@ model MessagingLog {
   @@index([participantId])
   @@index([batchId])
 }
+
+enum LeadChannel {
+  email
+  whatsapp
+}
+
+// Personne qui a laissé ses coordonnées via le pop-up « bien-être mental » :
+// pas une inscription à un événement, juste « recontactez-moi ». Un seul
+// canal par personne (celui qu'elle a choisi), jamais les deux.
+model Lead {
+  id          String      @id @default(uuid())
+  fullName    String
+  channel     LeadChannel
+  email       String?
+  whatsapp    String?
+  needsHelp   Boolean     @default(false)
+  sourcePath  String?
+  createdAt   DateTime    @default(now())
+  contactedAt DateTime?
+
+  @@index([createdAt])
+}

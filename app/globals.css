@@ -128,3 +128,18 @@ body {
     opacity: 0;
   }
 }
+
+/* Pop-up d'opt-in : entrée de la carte et fondu entre les étapes. */
+@keyframes optin-rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes optin-fade {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.optin-card { animation: optin-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.optin-step { animation: optin-fade 0.35s ease both; }
+@media (prefers-reduced-motion: reduce) {
+  .optin-card, .optin-step { animation: none; }
+}

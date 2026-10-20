@@ -49,6 +49,14 @@ function ScanIcon({ className }: { className?: string }) {
   );
 }
 
+function PhoneIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
+      <path d="M6.5 4h3l1.5 4-2 1.3a11 11 0 0 0 5.7 5.7l1.3-2 4 1.5v3a2 2 0 0 1-2 2A15 15 0 0 1 4.5 6a2 2 0 0 1 2-2Z" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function KeyIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
@@ -58,11 +66,14 @@ function KeyIcon({ className }: { className?: string }) {
   );
 }
 
-const navItems = [
+// sidebarOnly : absent de la barre du bas mobile, déjà chargée à 6 entrées ; sur
+// téléphone on y accède par la carte « À rappeler » du tableau de bord.
+const navItems: { href: string; label: string; shortLabel: string; Icon: (p: { className?: string }) => React.ReactElement; exact?: boolean; sidebarOnly?: boolean }[] = [
   { href: "/admin", label: "Tableau de bord", shortLabel: "Accueil", Icon: HomeIcon, exact: true },
   { href: "/admin/participants", label: "Participants", shortLabel: "Participants", Icon: PeopleIcon },
   { href: "/admin/ambassadors", label: "Ambassadeurs", shortLabel: "Ambassad.", Icon: StarIcon },
   { href: "/admin/messages", label: "Messages", shortLabel: "Messages", Icon: MailIcon },
+  { href: "/admin/leads", label: "Contacts à rappeler", shortLabel: "Contacts", Icon: PhoneIcon, sidebarOnly: true },
   { href: "/admin/team", label: "Équipe", shortLabel: "Équipe", Icon: KeyIcon },
   { href: "/admin/scan", label: "Scanner", shortLabel: "Scanner", Icon: ScanIcon },
 ];
