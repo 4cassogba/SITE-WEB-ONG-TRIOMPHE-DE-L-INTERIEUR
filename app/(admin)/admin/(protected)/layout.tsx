@@ -27,8 +27,9 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
       {/* Barre latérale desktop uniquement — sur mobile, la navigation
           principale vit dans AdminBottomNav (barre du bas), et l'en-tête
           ci-dessous ne porte plus que la marque et la déconnexion. */}
-      <aside className="hidden w-56 shrink-0 border-r border-ink/8 bg-mist-50 p-6 lg:block">
-        <p className="font-display text-lg text-leaf-900">Admin CIGIBM</p>
+      <aside className="hidden w-60 shrink-0 border-r border-ink/8 bg-mist-50 p-6 lg:block">
+        <p className="font-display text-lg leading-tight text-leaf-900">Triomphe de l&apos;Intérieur</p>
+        <p className="text-[11px] uppercase tracking-[0.14em] text-ink/45">Administration</p>
         <AdminSidebarNav />
         <div className="mt-10 border-t border-ink/8 pt-4 text-xs text-ink/50">
           <p>{session.fullName}</p>
@@ -43,7 +44,7 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-ink/8 bg-mist-50/95 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur lg:hidden">
-          <p className="font-display text-base text-leaf-900">Admin CIGIBM</p>
+          <p className="font-display text-base text-leaf-900">Admin Triomphe</p>
           <form action={signOut}>
             <button type="submit" className="min-h-11 px-2 text-sm font-medium text-leaf-700 underline underline-offset-2">
               Déconnexion

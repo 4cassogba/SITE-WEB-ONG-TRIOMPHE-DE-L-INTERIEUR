@@ -36,6 +36,8 @@ model Edition {
   dates              String
   venue              String
   hasParticipantData Boolean       @default(false)
+  // Jour principal de l'édition : sert au compte à rebours et aux échéances de la checklist du hub CIGIBM.
+  eventDate          DateTime?
   participants       Participant[]
   createdAt          DateTime      @default(now())
 }
@@ -177,4 +179,71 @@ model Activity {
   updatedAt    DateTime       @updatedAt
 
   @@index([axis, sortOrder])
+}
+
+enum ResourceKind {
+  note
+  file
+}
+
+enum ResourceCategory {
+  cigibm
+  ong
+  institutionnel
+  communication
+  autre
+}
+
+// Dossier ressources de l'admin. Une note est un texte Markdown lu et modifié
+// directement dans l'admin ; un fichier est un fichier du bucket privé « ressources »
+// (jamais d'URL publique : lien signé de courte durée, voir lib/admin/resources.ts).
+model Resource {
+  id            String           @id @default(uuid())
+  title         String
+  category      ResourceCategory @default(autre)
+  kind          ResourceKind
+  body          String?
+  filePath      String?
+  fileName      String?
+  mimeType      String?
+  sizeBytes     Int?
+  editionNumber Int?
+  updatedByName String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([category])
+  @@index([editionNumber])
+}
+
+enum TaskStatus {
+  todo
+  doing
+  done
+}
+
+enum TaskCategory {
+  programme
+  logistique
+  communication
+  partenaires
+  finances
+  bilan
+}
+
+// Checklist de préparation d'une édition du CIGIBM (hub /admin/cigibm).
+model CigibmTask {
+  id            String       @id @default(uuid())
+  editionNumber Int
+  title         String
+  category      TaskCategory
+  status        TaskStatus   @default(todo)
+  dueDate       DateTime?
+  owner         String?
+  notes         String?
+  sortOrder     Int          @default(0)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([editionNumber, category])
 }

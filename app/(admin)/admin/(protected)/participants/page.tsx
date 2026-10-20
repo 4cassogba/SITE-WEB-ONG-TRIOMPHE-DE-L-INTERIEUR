@@ -1,7 +1,7 @@
 import { getParticipantsForEdition } from "@/lib/admin/participants";
+import { db } from "@/lib/db";
 import ParticipantsTable from "./ParticipantsTable";
 
-const EDITIONS = [1, 2, 3, 4];
 
 export default async function ParticipantsPage({
   searchParams,
@@ -10,9 +10,10 @@ export default async function ParticipantsPage({
 }) {
   const { edition } = await searchParams;
   const requestedEdition = Number(edition) || 4;
-  // Le sélecteur ne propose que les éditions 1 à 4 : toute autre valeur dans
-  // l'URL (typo, lien obsolète) retombe sur l'édition 4 plutôt que de faire
-  // planter la page — getParticipantsForEdition lève pour un numéro inconnu.
+  // Éditions lues en base : une édition créée depuis le hub CIGIBM apparaît ici
+  // aussitôt. Toute autre valeur dans l'URL retombe sur l'édition 4 plutôt que
+  // de faire planter la page (getParticipantsForEdition lève pour un numéro inconnu).
+  const EDITIONS = (await db.edition.findMany({ select: { number: true }, orderBy: { number: "asc" } })).map((e) => e.number);
   const editionNumber = EDITIONS.includes(requestedEdition) ? requestedEdition : 4;
   const result = await getParticipantsForEdition(editionNumber);
 
