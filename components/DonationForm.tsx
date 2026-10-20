@@ -250,7 +250,7 @@ export default function DonationForm() {
           value={otp}
           onChange={(e) => setOtp(e.target.value)}
           placeholder="Code reçu par SMS"
-          className="mt-4 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm"
+          className="mt-4 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base sm:text-sm"
         />
         {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
         <button
@@ -280,7 +280,7 @@ export default function DonationForm() {
               setIsCustom(false);
               setSelectedAmount(preset);
             }}
-            className={`rounded-xl border px-3 py-3 text-sm font-semibold transition-colors ${
+            className={`min-h-12 rounded-xl border px-3 py-3 text-sm font-semibold transition-colors ${
               !isCustom && selectedAmount === preset
                 ? "border-leaf-600 bg-leaf-600 text-mist-50"
                 : "border-ink/12 bg-white text-ink hover:border-leaf-600/40"
@@ -292,7 +292,7 @@ export default function DonationForm() {
         <button
           type="button"
           onClick={() => setIsCustom(true)}
-          className={`rounded-xl border px-3 py-3 text-sm font-semibold transition-colors ${
+          className={`min-h-12 rounded-xl border px-3 py-3 text-sm font-semibold transition-colors ${
             isCustom ? "border-leaf-600 bg-leaf-600 text-mist-50" : "border-ink/12 bg-white text-ink hover:border-leaf-600/40"
           }`}
         >
@@ -310,7 +310,7 @@ export default function DonationForm() {
             value={customAmount}
             onChange={(e) => setCustomAmount(e.target.value)}
             placeholder="Montant en XOF"
-            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm"
+            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base sm:text-sm"
           />
         </div>
       )}
@@ -326,7 +326,7 @@ export default function DonationForm() {
                 setCountryCode(c.code);
                 setOperator(c.operators[0] ?? null);
               }}
-              className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+              className={`min-h-11 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                 countryCode === c.code
                   ? "border-leaf-600 bg-leaf-600 text-mist-50"
                   : "border-ink/12 bg-white text-ink hover:border-leaf-600/40"
@@ -369,7 +369,7 @@ export default function DonationForm() {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="XX XX XX XX"
-            className="w-full px-4 py-3 text-sm outline-none"
+            className="w-full px-4 py-3 text-base outline-none sm:text-sm"
           />
         </div>
       </div>

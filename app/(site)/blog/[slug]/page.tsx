@@ -250,7 +250,7 @@ export default async function BlogPostPage({
           <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-leaf-950 via-leaf-950/60 to-transparent" />
         </div>
         <Container className="relative -mt-24 pb-12 sm:-mt-28">
-          <Reveal>
+          <div>
             <h1 className="font-display text-3xl leading-tight text-mist-50 sm:text-4xl md:text-5xl">
               {post.title}
             </h1>
@@ -274,7 +274,7 @@ export default async function BlogPostPage({
                 </p>
               </div>
             </div>
-          </Reveal>
+          </div>
         </Container>
       </section>
 

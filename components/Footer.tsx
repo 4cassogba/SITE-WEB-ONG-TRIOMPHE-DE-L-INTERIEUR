@@ -70,12 +70,12 @@ export default function Footer({ logoSrc }: { logoSrc: string | null }) {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-leaf-300">
             Navigation
           </p>
-          <ul className="mt-4 space-y-2">
+          <ul className="mt-3">
             {navigation.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm text-mist-100/70 transition-colors hover:text-mist-50"
+                  className="inline-flex min-h-11 items-center text-sm text-mist-100/70 transition-colors hover:text-mist-50"
                 >
                   {item.label}
                 </Link>
@@ -88,15 +88,15 @@ export default function Footer({ logoSrc }: { logoSrc: string | null }) {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-leaf-300">
             Contact
           </p>
-          <ul className="mt-4 space-y-2 text-sm text-mist-100/70">
+          <ul className="mt-3 text-sm text-mist-100/70">
             <li>{siteConfig.location}</li>
             <li>
-              <a href={`mailto:${siteConfig.email}`} className="hover:text-mist-50">
+              <a href={`mailto:${siteConfig.email}`} className="inline-flex min-h-11 items-center hover:text-mist-50">
                 {siteConfig.email}
               </a>
             </li>
             <li>
-              <a href={siteConfig.phoneHref} className="hover:text-mist-50">
+              <a href={siteConfig.phoneHref} className="inline-flex min-h-11 items-center hover:text-mist-50">
                 {siteConfig.phone}
               </a>
             </li>
@@ -109,7 +109,7 @@ export default function Footer({ logoSrc }: { logoSrc: string | null }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-mist-50/20 text-mist-100/80 transition-colors hover:border-leaf-300/60 hover:bg-mist-50/5 hover:text-leaf-300"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-mist-50/20 text-mist-100/80 transition-colors hover:border-leaf-300/60 hover:bg-mist-50/5 hover:text-leaf-300"
               >
                 <Icon />
               </a>
@@ -127,7 +127,7 @@ export default function Footer({ logoSrc }: { logoSrc: string | null }) {
             href={creditLinkedIn}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-mist-100/40 transition-colors hover:text-mist-100/70"
+            className="inline-flex min-h-11 items-center text-mist-100/40 transition-colors hover:text-mist-100/70"
           >
             Propulsé par Eloïse Zodekon
           </a>

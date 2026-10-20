@@ -8,7 +8,7 @@ import { cigibm } from "@/lib/content";
 export default function RegistrationForm({ id, idPrefix = "reg" }: { id?: string; idPrefix?: string }) {
   const phones = cigibm.nextEdition.registrationPhones;
   const inputClass =
-    "w-full rounded-xl border border-mist-50/20 bg-mist-50/10 px-4 py-3.5 text-sm text-mist-50 placeholder:text-mist-100/40 outline-none transition-colors focus:border-azure-400 focus:bg-mist-50/15";
+    "w-full rounded-xl border border-mist-50/20 bg-mist-50/10 px-4 py-3.5 text-base sm:text-sm text-mist-50 placeholder:text-mist-100/40 outline-none transition-colors focus:border-azure-400 focus:bg-mist-50/15";
 
   return (
     <div id={id} className="rounded-3xl border border-mist-50/12 bg-leaf-900/60 p-6 backdrop-blur sm:p-8">

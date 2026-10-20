@@ -20,7 +20,7 @@ export default function ContactForm() {
   }
 
   const inputClass =
-    "w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-sm text-ink placeholder:text-ink/40 outline-none transition-colors focus:border-leaf-500";
+    "w-full rounded-xl border border-ink/15 bg-mist-50 px-4 py-3 text-base sm:text-sm text-ink placeholder:text-ink/40 outline-none transition-colors focus:border-leaf-500";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">

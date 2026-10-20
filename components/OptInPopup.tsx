@@ -6,8 +6,12 @@ import { usePathname, useSearchParams } from "next/navigation";
 
 const STORAGE_KEY = "optin-bien-etre-v1";
 const DISMISS_COOLDOWN_MS = 14 * 24 * 60 * 60 * 1000;
-const TRIGGER_SCROLL_RATIO = 0.35;
-const TRIGGER_DELAY_MS = 8000;
+// Pas d'ouverture automatique sur téléphone : Google pénalise les fenêtres
+// plein écran qui s'ouvrent seules sur mobile. Les boutons « Être prévenu(e) »
+// restent disponibles partout. Sur ordinateur : plus tard et plus bas dans la page.
+const AUTO_OPEN_MIN_WIDTH = 768;
+const TRIGGER_SCROLL_RATIO = 0.5;
+const TRIGGER_DELAY_MS = 25000;
 // Pages où une personne est déjà en plein parcours d'inscription ou possède
 // déjà son badge : lui proposer une newsletter par-dessus serait hors sujet.
 const SUPPRESSED_PATHS = ["/cigibm-2026/inscription"];
@@ -58,6 +62,7 @@ export default function OptInPopup() {
 
   useEffect(() => {
     if (suppressed) return;
+    if (window.innerWidth < AUTO_OPEN_MIN_WIDTH) return;
     const saved = readStorage();
     if (saved?.state === "done") return;
     if (saved?.state === "dismissed" && Date.now() - saved.at < DISMISS_COOLDOWN_MS) return;

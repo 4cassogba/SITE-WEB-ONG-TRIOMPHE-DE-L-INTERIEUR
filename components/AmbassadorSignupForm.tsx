@@ -6,7 +6,7 @@ import { compressPhoto } from "@/lib/client/compressImage";
 export default function AmbassadorSignupForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const inputClass =
-    "w-full rounded-xl border border-mist-50/20 bg-mist-50/10 px-4 py-3.5 text-sm text-mist-50 placeholder:text-mist-100/40 outline-none transition-colors focus:border-azure-400 focus:bg-mist-50/15";
+    "w-full rounded-xl border border-mist-50/20 bg-mist-50/10 px-4 py-3.5 text-base sm:text-sm text-mist-50 placeholder:text-mist-100/40 outline-none transition-colors focus:border-azure-400 focus:bg-mist-50/15";
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

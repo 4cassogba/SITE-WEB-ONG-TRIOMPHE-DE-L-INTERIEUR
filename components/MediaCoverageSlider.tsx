@@ -63,7 +63,7 @@ export default function MediaCoverageSlider() {
           type="button"
           onClick={() => scrollBy(-1)}
           aria-label="Article précédent"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/12 text-leaf-700 transition-colors hover:border-leaf-400 hover:bg-leaf-50"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/12 text-leaf-700 transition-colors hover:border-leaf-400 hover:bg-leaf-50"
         >
           ←
         </button>
@@ -71,7 +71,7 @@ export default function MediaCoverageSlider() {
           type="button"
           onClick={() => scrollBy(1)}
           aria-label="Article suivant"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/12 text-leaf-700 transition-colors hover:border-leaf-400 hover:bg-leaf-50"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/12 text-leaf-700 transition-colors hover:border-leaf-400 hover:bg-leaf-50"
         >
           →
         </button>

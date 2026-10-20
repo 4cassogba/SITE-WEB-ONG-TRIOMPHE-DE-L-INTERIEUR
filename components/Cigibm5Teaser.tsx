@@ -268,7 +268,7 @@ export function Cigibm5Strip() {
           <button type="button" onClick={openOptIn} className={`${ctaPrimary} !min-h-12 !px-6 !text-sm`}>
             Être prévenu(e) en premier
           </button>
-          <a href="/cigibm" className="px-3 text-sm font-semibold text-mist-100/80 underline decoration-mist-50/30 underline-offset-4 hover:text-mist-50">
+          <a href="/cigibm" className="inline-flex min-h-11 items-center px-3 text-sm font-semibold text-mist-100/80 underline decoration-mist-50/30 underline-offset-4 hover:text-mist-50">
             Voir le teaser
           </a>
         </div>

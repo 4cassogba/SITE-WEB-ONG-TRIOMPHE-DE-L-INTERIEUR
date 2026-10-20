@@ -82,7 +82,7 @@ export default function AmbassadorSlider({ ambassadors }: { ambassadors: PublicA
           type="button"
           onClick={() => scrollBy(-1)}
           aria-label="Ambassadeur précédent"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-mist-50/20 text-mist-50 transition-colors hover:border-leaf-300 hover:bg-mist-50/10"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-mist-50/20 text-mist-50 transition-colors hover:border-leaf-300 hover:bg-mist-50/10"
         >
           ‹
         </button>
@@ -90,7 +90,7 @@ export default function AmbassadorSlider({ ambassadors }: { ambassadors: PublicA
           type="button"
           onClick={() => scrollBy(1)}
           aria-label="Ambassadeur suivant"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-mist-50/20 text-mist-50 transition-colors hover:border-leaf-300 hover:bg-mist-50/10"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-mist-50/20 text-mist-50 transition-colors hover:border-leaf-300 hover:bg-mist-50/10"
         >
           ›
         </button>

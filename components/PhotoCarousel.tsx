@@ -49,17 +49,22 @@ export default function PhotoCarousel({
       </AnimatePresence>
 
       {images.length > 1 && (
-        <div className="absolute inset-x-0 bottom-3 flex justify-center gap-1.5">
+        <div className="absolute inset-x-0 bottom-0 flex justify-center">
           {images.map((src, i) => (
             <button
               key={src}
               type="button"
               aria-label={`Photo ${i + 1}`}
+              aria-current={i === index}
               onClick={() => setIndex(i)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === index ? "w-5 bg-mist-50" : "w-1.5 bg-mist-50/50"
-              }`}
-            />
+              className="flex h-11 w-7 items-center justify-center"
+            >
+              <span
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === index ? "w-5 bg-mist-50" : "w-1.5 bg-mist-50/50"
+                }`}
+              />
+            </button>
           ))}
         </div>
       )}

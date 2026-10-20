@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import Container from "./Container";
-import Reveal from "./Reveal";
 
 export default function Hero({
   eyebrow,
@@ -28,7 +27,7 @@ export default function Hero({
       <Container
         className={`relative ${compact ? "py-24 sm:py-28" : "py-32 sm:py-40"}`}
       >
-        <Reveal className="max-w-3xl">
+        <div className="max-w-3xl">
           {eyebrow && (
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-leaf-300">
               {eyebrow}
@@ -45,7 +44,7 @@ export default function Hero({
           {actions && (
             <div className="mt-10 flex flex-wrap gap-4">{actions}</div>
           )}
-        </Reveal>
+        </div>
       </Container>
     </section>
   );
