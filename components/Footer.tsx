@@ -91,7 +91,7 @@ export default function Footer({ logoSrc }: { logoSrc: string | null }) {
           <ul className="mt-3 text-sm text-mist-100/70">
             <li>{siteConfig.location}</li>
             <li>
-              <a href={`mailto:${siteConfig.email}`} className="inline-flex min-h-11 items-center hover:text-mist-50">
+              <a href={`mailto:${siteConfig.email}`} className="inline-flex min-h-11 items-center [overflow-wrap:anywhere] hover:text-mist-50">
                 {siteConfig.email}
               </a>
             </li>

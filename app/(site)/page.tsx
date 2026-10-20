@@ -8,6 +8,7 @@ import StatCounter from "@/components/StatCounter";
 import QuoteBlock from "@/components/QuoteBlock";
 import MediaCoverageSlider from "@/components/MediaCoverageSlider";
 import Photo from "@/components/Photo";
+import RacinesWord from "@/components/RacinesWord";
 import Reveal from "@/components/Reveal";
 import { Cigibm5Strip, OptInButton } from "@/components/Cigibm5Teaser";
 import {
@@ -158,15 +159,8 @@ export default function Home() {
             title={methodeRacines.fullTitle}
             description="Un cadre simple, né de six ans de terrain : comprendre d'où ça vient, puis reconstruire, étape par étape. Sept lettres, sept pas."
           />
-          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-7">
-            {methodeRacines.steps.map((step, i) => (
-              <Reveal key={step.letter} delay={i * 0.05}>
-                <div className="flex h-full flex-col items-center rounded-2xl border border-ink/8 bg-mist-50 p-4 text-center">
-                  <span className="font-display text-2xl text-leaf-500">{step.letter}</span>
-                  <p className="mt-1 text-xs font-medium text-leaf-900">{step.title}</p>
-                </div>
-              </Reveal>
-            ))}
+          <div className="mt-12">
+            <RacinesWord steps={methodeRacines.steps} />
           </div>
           <Reveal delay={0.2} className="mt-10">
             <Button href="/methode-racines" variant="secondary">
