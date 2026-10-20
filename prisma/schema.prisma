@@ -143,3 +143,38 @@ model Lead {
 
   @@index([createdAt])
 }
+
+enum ActivityAxis {
+  humanitaire
+  guerison
+  autonomisation
+}
+
+enum ActivityStatus {
+  en_cours
+  en_projet
+  terminee
+}
+
+// Une activité de l'ONG. Les trois axes reprennent l'objet déclaré au
+// ministère de l'Intérieur (soutien humanitaire, guérison intérieure et
+// bien-être mental, autonomisation). Rien n'apparaît sur le site tant que
+// `published` est faux ; `internalNote` n'est jamais affichée au public.
+model Activity {
+  id           String         @id @default(uuid())
+  slug         String         @unique
+  title        String
+  summary      String
+  description  String?
+  axis         ActivityAxis
+  audience     String?
+  status       ActivityStatus @default(en_projet)
+  published    Boolean        @default(false)
+  sortOrder    Int            @default(0)
+  href         String?
+  internalNote String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([axis, sortOrder])
+}

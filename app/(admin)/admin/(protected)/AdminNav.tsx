@@ -57,6 +57,17 @@ function PhoneIcon({ className }: { className?: string }) {
   );
 }
 
+function ListIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
+      <path d="M9 6h11M9 12h11M9 18h11" strokeLinecap="round" />
+      <circle cx="4.5" cy="6" r="1.2" />
+      <circle cx="4.5" cy="12" r="1.2" />
+      <circle cx="4.5" cy="18" r="1.2" />
+    </svg>
+  );
+}
+
 function KeyIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
@@ -73,6 +84,7 @@ const navItems: { href: string; label: string; shortLabel: string; Icon: (p: { c
   { href: "/admin/participants", label: "Participants", shortLabel: "Participants", Icon: PeopleIcon },
   { href: "/admin/ambassadors", label: "Ambassadeurs", shortLabel: "Ambassad.", Icon: StarIcon },
   { href: "/admin/messages", label: "Messages", shortLabel: "Messages", Icon: MailIcon },
+  { href: "/admin/activities", label: "Activités", shortLabel: "Activités", Icon: ListIcon, sidebarOnly: true },
   { href: "/admin/leads", label: "Contacts à rappeler", shortLabel: "Contacts", Icon: PhoneIcon, sidebarOnly: true },
   { href: "/admin/team", label: "Équipe", shortLabel: "Équipe", Icon: KeyIcon },
   { href: "/admin/scan", label: "Scanner", shortLabel: "Scanner", Icon: ScanIcon },
@@ -116,7 +128,7 @@ export function AdminBottomNav() {
       aria-label="Navigation principale"
       className="fixed inset-x-0 bottom-0 z-40 flex border-t border-ink/10 bg-mist-50/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
     >
-      {navItems.map((item) => {
+      {navItems.filter((item) => !item.sidebarOnly).map((item) => {
         const active = isActive(pathname, item.href, item.exact);
         return (
           <Link

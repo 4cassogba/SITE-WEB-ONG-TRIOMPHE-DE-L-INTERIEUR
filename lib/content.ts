@@ -15,7 +15,8 @@ export const siteConfig = {
     "On ne va pas se mentir : au Bénin comme ailleurs, on apprend à tenir, à sourire, à ne pas déranger. Nous, on fait l'inverse. Depuis six ans, l'ONG Triomphe de l'Intérieur écoute, accompagne et outille celles et ceux qui portent seuls ce qui pèse trop lourd.",
   founder: "Christelle Eugénie Gnimassou",
   founderTitle: "Présidente-fondatrice & coach",
-  location: "Godomey, Abomey-Calavi, Bénin", // [PLACEHOLDER] adresse précise à confirmer
+  // Siège déclaré au ministère de l'Intérieur (attestation de dépôt du 3 août 2026).
+  location: "Cadjèhoun-Gare, Cotonou, Bénin",
   email: "contact@ongtriomphedelinterieur.com",
   phone: "01 68 28 06 75",
   phoneHref: "tel:+2290168280675",
@@ -134,9 +135,9 @@ export const missionPillars = [
     title: "Guérison intérieure & bien-être mental",
     punchline: "Une blessure qu'on ne nomme pas ne guérit pas.",
     description:
-      "Une blessure qu'on ne nomme pas ne guérit pas. Nous créons les espaces, écoute, ateliers, accompagnement, où elle peut enfin se dire, puis se traverser.",
+      "Une blessure qu'on ne nomme pas ne guérit pas. Nous créons, pour les femmes et les jeunes, les espaces, écoute, ateliers, accompagnement, où elle peut enfin se dire, puis se traverser.",
     points: [
-      "Des espaces d'écoute et un accompagnement individuel",
+      "Des espaces d'écoute et un accompagnement individuel pour les femmes et les jeunes",
       "La Méthode R.A.C.I.N.E.S., notre cadre pour traverser les blessures",
       "Le CIGIBM, un congrès annuel ouvert à tous",
     ],
@@ -147,7 +148,7 @@ export const missionPillars = [
     title: "Autonomisation",
     punchline: "Des outils, pour tenir debout sans nous.",
     description:
-      "Nous ne distribuons pas de solutions toutes faites. Nous transmettons des outils, pour que chacun·e reparte capable de tenir debout sans nous.",
+      "Nous ne distribuons pas de solutions toutes faites. Nous transmettons des outils, pour que les femmes et les jeunes repartent capables de tenir debout sans nous.",
     points: [
       "Des outils concrets de régulation émotionnelle",
       "Des conférences et des formations pour passer à l'action",
