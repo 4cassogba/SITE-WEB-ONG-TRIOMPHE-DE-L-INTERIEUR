@@ -77,6 +77,14 @@ function KeyIcon({ className }: { className?: string }) {
   );
 }
 
+function FolderIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
+      <path d="M3.5 7.5A1.5 1.5 0 0 1 5 6h4l2 2.5h8A1.5 1.5 0 0 1 20.5 10v8a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 18Z" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 // sidebarOnly : absent de la barre du bas mobile, déjà chargée à 6 entrées ; sur
 // téléphone on y accède par la carte « À rappeler » du tableau de bord.
 const navItems: { href: string; label: string; shortLabel: string; Icon: (p: { className?: string }) => React.ReactElement; exact?: boolean; sidebarOnly?: boolean }[] = [
@@ -86,6 +94,7 @@ const navItems: { href: string; label: string; shortLabel: string; Icon: (p: { c
   { href: "/admin/messages", label: "Messages", shortLabel: "Messages", Icon: MailIcon },
   { href: "/admin/activities", label: "Activités", shortLabel: "Activités", Icon: ListIcon, sidebarOnly: true },
   { href: "/admin/leads", label: "Contacts à rappeler", shortLabel: "Contacts", Icon: PhoneIcon, sidebarOnly: true },
+  { href: "/admin/resources", label: "Dossier ressources", shortLabel: "Ressources", Icon: FolderIcon, sidebarOnly: true },
   { href: "/admin/team", label: "Équipe", shortLabel: "Équipe", Icon: KeyIcon },
   { href: "/admin/scan", label: "Scanner", shortLabel: "Scanner", Icon: ScanIcon },
 ];
