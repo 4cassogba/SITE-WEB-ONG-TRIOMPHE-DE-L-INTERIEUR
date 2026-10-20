@@ -4,18 +4,27 @@
 // pour pouvoir alterner paragraphes, listes, citations et sections
 // image-à-côté-du-texte quand un article est long.
 
+// Dans les textes (paragraphes, listes, imageText), `[libellé](/chemin)` ou
+// `[libellé](https://…)` devient un lien : interne si le chemin commence par
+// « / », externe (nouvel onglet) sinon.
 export type BlogBlock =
   | { type: "paragraph"; text: string }
   | { type: "heading"; text: string }
   | { type: "list"; items: string[] }
-  | { type: "quote"; text: string }
+  // `cite` : auteur et source d'une citation réelle. Sans `cite`, la citation
+  // est une phrase de l'ONG elle-même.
+  | { type: "quote"; text: string; cite?: string }
   | {
       type: "imageText";
       image: { src: string; alt: string };
       imagePosition: "left" | "right";
+      // "portrait" pour une une de journal ou un portrait, sinon paysage 4/3.
+      imageAspect?: "landscape" | "portrait";
+      caption?: string;
       heading?: string;
       paragraphs: string[];
     }
+  | { type: "references"; heading?: string; items: { label: string; href?: string }[] }
   | {
       type: "links";
       heading?: string;
@@ -40,6 +49,142 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "revue-de-presse-cigibm-2026-la-droiture-l-emergent",
+    type: "article",
+    title: "Revue de presse : le CIGIBM 2026 à la une de La Droiture et de L'Émergent",
+    excerpt:
+      "Au lendemain du lancement de la 4ème édition, deux quotidiens béninois ont consacré leur une du lundi 19 octobre 2026 au CIGIBM, à la résilience face à la dépression et à l'engagement de sa promotrice, Christelle Gnimassou.",
+    date: "20 octobre 2026",
+    isoDate: "2026-10-20",
+    readTime: "5 min",
+    author: "ONG Triomphe de l'Intérieur",
+    authorRole: "Équipe de communication",
+    authorAvatar: "/images/logo-mark.png",
+    featuredImage: {
+      src: "/images/cigibm/revue-presse-19-octobre-2026.jpg",
+      alt: "Les unes de La Droiture et de L'Émergent du lundi 19 octobre 2026, consacrées au CIGIBM",
+    },
+    body: [
+      {
+        type: "paragraph",
+        text: "Deux jours après le [coup d'envoi du CIGIBM 2026 au Palais des Congrès de Cotonou](/blog/cigibm-2026-coup-d-envoi-palais-des-congres), la presse écrite béninoise s'est emparée du sujet. Dans leurs éditions du lundi 19 octobre 2026, La Droiture et L'Émergent ont chacun placé le congrès en une : l'un sous l'angle de la résilience face à la dépression, l'autre sous celui de l'engagement de sa promotrice et de la parole de sa marraine.",
+      },
+      {
+        type: "heading",
+        text: "La Droiture : « Le CIGIBM mise sur la résilience face à la dépression »",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/press1.jpeg",
+          alt: "Une de La Droiture, n° 0015 du lundi 19 octobre 2026, avec l'encadré « Le CIGIBM mise sur la résilience face à la dépression »",
+        },
+        imagePosition: "left",
+        imageAspect: "portrait",
+        caption: "La Droiture, n° 0015, lundi 19 octobre 2026, une.",
+        paragraphs: [
+          "Le quotidien béninois d'informations, d'analyses et d'investigations ouvre son édition n° 0015 sur un encadré « Santé mentale et bien-être », qui renvoie à un article en page 10 : « Le CIGIBM mise sur la résilience face à la dépression ».",
+          "Le choix du mot est juste. La résilience est précisément ce que le thème de cette édition, « Le vaccin de la dépression », cherche à renforcer : se donner, avant la crise, les ressources pour la traverser, plutôt que d'attendre que la souffrance s'installe.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "L'Émergent : la promotrice et la marraine à la une",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/press2.jpeg",
+          alt: "Une de L'Émergent, n° 983 du lundi 19 octobre 2026, avec en manchette l'engagement de Christelle Gnimassou",
+        },
+        imagePosition: "right",
+        imageAspect: "portrait",
+        caption: "L'Émergent, n° 983, lundi 19 octobre 2026, une.",
+        paragraphs: [
+          "L'Émergent consacre la manchette de son édition n° 983 à la promotrice du congrès : « La promotrice Christelle GNIMASSOU, un engagement renouvelé pour briser le silence autour de la dépression et promouvoir la guérison intérieure ».",
+          "En bas de la même une, le journal relaie les mots de la marraine de cette 4ème édition, Ella Mara Wama, qui résument à eux seuls la raison d'être du congrès.",
+        ],
+      },
+      {
+        type: "quote",
+        text: "Nous soignons les corps tout en laissant les esprits saigner en silence.",
+        cite: "Ella Mara Wama, marraine de la 4ème édition du CIGIBM, citée par L'Émergent (n° 983, 19 octobre 2026)",
+      },
+      {
+        type: "heading",
+        text: "Pourquoi cette couverture compte",
+      },
+      {
+        type: "paragraph",
+        text: "Selon l'[Organisation mondiale de la Santé](https://www.who.int/fr/news-room/fact-sheets/detail/depression), la dépression touche environ 322 millions de personnes dans le monde, soit 5,2 % des adultes, alors même qu'il existe des traitements efficaces. Entre ces deux réalités, il y a le silence : celui qui retarde le moment de demander de l'aide. Chaque article qui nomme la dépression dans un journal grand public contribue à le rompre.",
+      },
+      {
+        type: "paragraph",
+        text: "Pour l'[ONG Triomphe de l'Intérieur](/a-propos), cette visibilité prolonge un travail de fond : sensibiliser avant que la souffrance ne s'installe, puis accompagner dans la durée grâce à la [Méthode R.A.C.I.N.E.S.](/methode-racines), notre cadre d'accompagnement en guérison intérieure.",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/Coach Christelle.jpg",
+          alt: "Portrait de Christelle Eugénie Gnimassou, promotrice du CIGIBM et présidente-fondatrice de l'ONG Triomphe de l'Intérieur",
+        },
+        imagePosition: "left",
+        imageAspect: "portrait",
+        heading: "Christelle Gnimassou, quatre éditions au service du même combat",
+        paragraphs: [
+          "Présidente-fondatrice de l'ONG Triomphe de l'Intérieur, Christelle Eugénie Gnimassou porte le [CIGIBM](/cigibm) depuis sa toute première édition. L'« engagement renouvelé » que salue L'Émergent se lit dans la continuité des thèmes, édition après édition.",
+        ],
+      },
+      {
+        type: "list",
+        items: [
+          "2023, 1ère édition : « La dépression, parlons-en ».",
+          "2024, 2ème édition : « Réinvente-toi ».",
+          "2025, 3ème édition : « Équilibre ».",
+          "2026, 4ème édition : « Le vaccin de la dépression », les 17 et 18 octobre au Palais des Congrès de Cotonou.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Une édition suivie de bout en bout par les médias",
+      },
+      {
+        type: "paragraph",
+        text: "Ces deux unes s'ajoutent à la couverture qui a accompagné cette édition depuis sa [conférence de presse du 10 octobre](/blog/conference-presse-cigibm-vaccin-de-la-depression), puis le [reportage vidéo d'I COM](https://youtu.be/oN71eH0b_tA) sur le lancement. Les éditions précédentes avaient déjà été relayées, notamment par [Matin Libre](https://matinlibre.com/2025/11/13/congres-international-de-guerison-interieure-et-du-bien-etre-mental-la-3eme-edition-sannonce-sous-le-sceau-de-lequilibre/), [L'Économiste du Bénin](https://leconomistebenin.bj/long-triomphe-de-linterieur-sensibilise-sur-lequilibre/) et [Economia24](https://economia24.bj/2025/11/30/cigibm-2025-christelle-gnimassou-pour-le-bien-etre-mental-de-tous/).",
+      },
+      {
+        type: "paragraph",
+        text: "À toutes les rédactions qui ont relayé ce message : merci. Journalistes, pour une interview ou des informations sur le CIGIBM, [contactez l'ONG](/contact).",
+      },
+      {
+        type: "references",
+        heading: "Sources",
+        items: [
+          {
+            label:
+              "La Droiture, n° 0015, lundi 19 octobre 2026, une : « Le CIGIBM mise sur la résilience face à la dépression » (article en page 10).",
+          },
+          {
+            label:
+              "L'Émergent, n° 983, lundi 19 octobre 2026, une : « La promotrice Christelle GNIMASSOU, un engagement renouvelé pour briser le silence autour de la dépression et promouvoir la guérison intérieure ».",
+          },
+          {
+            label:
+              "L'Émergent, n° 983, lundi 19 octobre 2026, une : « “Nous soignons les corps tout en laissant les esprits saigner en silence” dixit la marraine Ella Mara WAMA ».",
+          },
+          {
+            label: "Organisation mondiale de la Santé, « Trouble dépressif (dépression) », principaux repères, 11 septembre 2026.",
+            href: "https://www.who.int/fr/news-room/fact-sheets/detail/depression",
+          },
+          {
+            label: "I COM tv, « Guérison intérieure et santé mentale : coup d'envoi de la 4e éd. du CIGBM », YouTube.",
+            href: "https://youtu.be/oN71eH0b_tA",
+          },
+        ],
+      },
+    ],
+  },
+  {
     slug: "cigibm-2026-coup-d-envoi-palais-des-congres",
     type: "activite",
     title: "CIGIBM 2026 : coup d'envoi au Palais des Congrès pour guérir les blessures invisibles",
@@ -52,9 +197,8 @@ export const blogPosts: BlogPost[] = [
     authorRole: "Équipe de communication",
     authorAvatar: "/images/logo-mark.png",
     featuredImage: {
-      src: "/images/cigibm-edition-4/lancement/reportage-icom.jpg",
-      alt: "Public assis dans l'auditorium du Palais des Congrès de Cotonou lors du lancement du CIGIBM 2026",
-      credit: "Image : I COM",
+      src: "/images/cigibm/Cover CIGIBM1 2026.png",
+      alt: "Christelle Eugénie Gnimassou, au centre, devant le panneau officiel du CIGIBM 2026 lors du lancement de la 4ème édition",
     },
     body: [
       {

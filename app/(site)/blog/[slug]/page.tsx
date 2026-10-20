@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import Button from "@/components/Button";
@@ -30,6 +32,36 @@ export async function generateMetadata({
   });
 }
 
+const INLINE_LINK = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+const inlineLinkClass =
+  "font-medium text-leaf-700 underline decoration-leaf-300 underline-offset-4 transition-colors hover:text-leaf-900 hover:decoration-leaf-600";
+
+// `[libellé](href)` -> lien (cf. BlogBlock). Les éléments React sont construits
+// ici : aucun HTML brut n'est injecté.
+function renderInline(text: string): ReactNode {
+  const parts: ReactNode[] = [];
+  let last = 0;
+  for (const match of text.matchAll(INLINE_LINK)) {
+    const [whole, label, href] = match;
+    const index = match.index ?? 0;
+    if (index > last) parts.push(text.slice(last, index));
+    parts.push(
+      href.startsWith("/") ? (
+        <Link key={index} href={href} className={inlineLinkClass}>
+          {label}
+        </Link>
+      ) : (
+        <a key={index} href={href} target="_blank" rel="noopener noreferrer" className={inlineLinkClass}>
+          {label}
+        </a>
+      )
+    );
+    last = index + whole.length;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return parts;
+}
+
 function Block({ block }: { block: BlogBlock }) {
   switch (block.type) {
     case "heading":
@@ -44,8 +76,37 @@ function Block({ block }: { block: BlogBlock }) {
       return (
         <Reveal>
           <p className="mt-5 text-base leading-relaxed text-ink/80 sm:text-lg">
-            {block.text}
+            {renderInline(block.text)}
           </p>
+        </Reveal>
+      );
+    case "references":
+      return (
+        <Reveal>
+          <section className="mt-12 border-t border-ink/10 pt-6">
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-ink/50">
+              {block.heading ?? "Sources"}
+            </h2>
+            <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-ink/70 marker:text-ink/40">
+              {block.items.map((item) => (
+                <li key={item.label}>
+                  {item.href ? (
+                    item.href.startsWith("/") ? (
+                      <Link href={item.href} className={inlineLinkClass}>
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a href={item.href} target="_blank" rel="noopener noreferrer" className={inlineLinkClass}>
+                        {item.label}
+                      </a>
+                    )
+                  ) : (
+                    item.label
+                  )}
+                </li>
+              ))}
+            </ol>
+          </section>
         </Reveal>
       );
     case "list":
@@ -57,7 +118,7 @@ function Block({ block }: { block: BlogBlock }) {
                 <span aria-hidden className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-leaf-100 text-xs font-bold text-leaf-700">
                   ✓
                 </span>
-                {item}
+                <span>{renderInline(item)}</span>
               </li>
             ))}
           </ul>
@@ -66,17 +127,25 @@ function Block({ block }: { block: BlogBlock }) {
     case "quote":
       return (
         <Reveal>
-          <blockquote className="mt-8 border-l-2 border-leaf-400 py-2 pl-6 font-display text-xl leading-snug text-leaf-900 sm:text-2xl">
-            « {block.text} »
-          </blockquote>
+          <figure className="mt-8 border-l-2 border-leaf-400 py-2 pl-6">
+            <blockquote className="font-display text-xl leading-snug text-leaf-900 sm:text-2xl">« {block.text} »</blockquote>
+            {block.cite && <figcaption className="mt-3 text-sm text-ink/55">— {block.cite}</figcaption>}
+          </figure>
         </Reveal>
       );
-    case "imageText":
+    case "imageText": {
+      const portrait = block.imageAspect === "portrait";
       return (
         <Reveal>
           <div className="mt-10 grid items-center gap-8 sm:grid-cols-2">
-            <div className={block.imagePosition === "right" ? "sm:order-2" : "sm:order-1"}>
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem]">
+            <figure className={block.imagePosition === "right" ? "sm:order-2" : "sm:order-1"}>
+              <div
+                className={`relative overflow-hidden ${
+                  portrait
+                    ? "mx-auto aspect-[5/7] max-w-sm rounded-xl shadow-xl shadow-ink/20 ring-1 ring-ink/10"
+                    : "aspect-[4/3] rounded-[2rem]"
+                }`}
+              >
                 <Image
                   src={block.image.src}
                   alt={block.image.alt}
@@ -85,7 +154,10 @@ function Block({ block }: { block: BlogBlock }) {
                   className="object-cover"
                 />
               </div>
-            </div>
+              {block.caption && (
+                <figcaption className="mt-3 text-center text-xs leading-relaxed text-ink/55">{block.caption}</figcaption>
+              )}
+            </figure>
             <div className={block.imagePosition === "right" ? "sm:order-1" : "sm:order-2"}>
               {block.heading && (
                 <h3 className="font-display text-xl leading-snug text-leaf-900 sm:text-2xl">
@@ -95,7 +167,7 @@ function Block({ block }: { block: BlogBlock }) {
               <div className="mt-3 space-y-4">
                 {block.paragraphs.map((p) => (
                   <p key={p} className="text-base leading-relaxed text-ink/80">
-                    {p}
+                    {renderInline(p)}
                   </p>
                 ))}
               </div>
@@ -103,6 +175,7 @@ function Block({ block }: { block: BlogBlock }) {
           </div>
         </Reveal>
       );
+    }
     case "video":
       // youtube-nocookie : pas de cookie de suivi tant que le lecteur n'est
       // pas lancé. loading="lazy" : rien n'est chargé avant le défilement.
