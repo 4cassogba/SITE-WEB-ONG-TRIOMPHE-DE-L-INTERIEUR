@@ -38,7 +38,7 @@ export default function StatCounter({
         ref={ref}
         className="font-display text-4xl text-leaf-900 sm:text-5xl"
       >
-        {display}
+        {display.toLocaleString("fr-FR")}
         {suffix}
       </span>
       <p className="mt-2 text-sm text-ink/60">{label}</p>

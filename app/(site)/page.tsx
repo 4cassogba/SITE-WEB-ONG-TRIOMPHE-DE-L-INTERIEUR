@@ -1,24 +1,25 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Hero from "@/components/Hero";
 import Container from "@/components/Container";
 import SectionHeading from "@/components/SectionHeading";
-import Card from "@/components/Card";
 import Button from "@/components/Button";
 import StatCounter from "@/components/StatCounter";
 import QuoteBlock from "@/components/QuoteBlock";
 import MediaCoverageSlider from "@/components/MediaCoverageSlider";
-import ImagePlaceholder from "@/components/ImagePlaceholder";
 import Photo from "@/components/Photo";
 import Reveal from "@/components/Reveal";
+import { Cigibm5Strip, OptInButton } from "@/components/Cigibm5Teaser";
 import {
   cigibm,
   impactStats,
+  mentalHealthStats,
   methodeRacines,
   missionPillars,
   presidentQuote,
   siteConfig,
 } from "@/lib/content";
-import { getGalleryImages, getNamedImage } from "@/lib/media";
+import { getNamedImage } from "@/lib/media";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -27,20 +28,42 @@ export const metadata: Metadata = pageMetadata({
   path: "/",
 });
 
+const missionIcons = [
+  // Mains qui portent un cœur : l'humanitaire
+  <svg key="h" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="h-9 w-9">
+    <path d="M24 31s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 32 20c0 6-8 11-8 11Z" />
+    <path d="M5 33h6l7 5h11l9-5c1.5-.9 3-.2 3.4 1.2-.1.9-.6 1.7-1.4 2.2L30 43H17l-6-3H5" />
+  </svg>,
+  // Papillon / esprit qui s'ouvre : la guérison intérieure
+  <svg key="g" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="h-9 w-9">
+    <path d="M24 14v22" />
+    <path d="M24 20c-3-8-11-9-15-6 0 8 5 11 15 6Z" />
+    <path d="M24 20c3-8 11-9 15-6 0 8-5 11-15 6Z" />
+    <path d="M24 28c-3 6-9 8-12 6 .5-6 5-9 12-6Z" />
+    <path d="M24 28c3 6 9 8 12 6-.5-6-5-9-12-6Z" />
+  </svg>,
+  // Marches qui montent : l'autonomisation
+  <svg key="a" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="h-9 w-9">
+    <path d="M6 40h9v-8h9v-8h9v-8h9" />
+    <path d="M30 8h12v12" />
+    <path d="m42 8-14 14" />
+  </svg>,
+];
+
 export default function Home() {
-  const cigibmPhoto =
-    getNamedImage("cigibm-featured") ?? getGalleryImages("cigibm-edition-3")[0];
+  const cigibmPhoto = getNamedImage("cigibm-featured") ?? "/images/cigibm/Cover CIGIBM1 2026.png";
+  const urgencyStats = mentalHealthStats.slice(1, 4);
 
   return (
     <>
       <Hero
-        eyebrow={siteConfig.founder}
-        title={siteConfig.tagline}
+        eyebrow="ONG Triomphe de l'Intérieur · Bénin"
+        title="Prendre soin de ce qu'on ne voit pas."
         description={siteConfig.homeHeroLede}
         actions={
           <>
-            <Button href="/cigibm-2026" variant="primary">
-              Réserver ma place au CIGIBM 2026
+            <Button href="#missions" variant="primary">
+              Découvrir nos missions
             </Button>
             <Button href="/nous-soutenir" variant="ghost" className="!border-mist-50/30 !text-mist-50 hover:!bg-mist-50/10">
               Nous soutenir
@@ -49,54 +72,76 @@ export default function Home() {
         }
       />
 
-      {/* Bandeau CIGIBM 2026, chemin de conversion prioritaire */}
-      <div className="relative overflow-hidden border-b border-mist-50/10 bg-gradient-to-r from-leaf-950 via-leaf-900 to-azure-900">
-        <div aria-hidden className="pointer-events-none absolute -top-20 left-[15%] h-56 w-56 rounded-full bg-leaf-500/25 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -bottom-24 right-[10%] h-56 w-56 rounded-full bg-azure-400/25 blur-3xl" />
-        <div
-          aria-hidden
-          className="animate-shine pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-transparent via-mist-50/15 to-transparent"
-        />
+      <Cigibm5Strip />
 
-        <Container className="relative flex flex-col items-center justify-between gap-5 py-6 sm:flex-row">
-          <div className="flex items-center gap-3 text-center sm:text-left">
-            <span className="relative hidden h-2.5 w-2.5 shrink-0 sm:flex">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-leaf-400 opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-leaf-400" />
-            </span>
-            <p className="text-sm leading-relaxed text-mist-100/90 sm:text-base">
-              <span className="font-display font-semibold text-mist-50">
-                {cigibm.nextEdition.edition} du CIGIBM
-              </span>
-              , « {cigibm.nextEdition.theme} », {cigibm.nextEdition.dates} à
-              Cotonou. Participation gratuite.
-            </p>
-          </div>
-          <Button
-            href="/cigibm-2026"
-            variant="primary"
-            className="!shrink-0 !px-7 !py-3.5 !shadow-xl !shadow-azure-950/40 ring-1 ring-mist-50/15"
-          >
-            Réserver ma place
-          </Button>
-        </Container>
-      </div>
-
-      {/* Mission */}
-      <Container className="py-24 sm:py-28">
+      {/* Missions */}
+      <Container className="scroll-mt-24 py-24 sm:py-28">
+        <div id="missions" className="scroll-mt-24" />
         <SectionHeading
-          eyebrow="Notre mission"
-          title="Parce que personne ne devrait souffrir seul·e"
-          description="Au Bénin, on apprend très tôt à serrer les dents. À tenir. À ne pas déranger avec ses états d'âme. Nous existons pour dire l'inverse : votre santé mentale n'est pas un caprice, et demander de l'aide n'a jamais été une faiblesse."
+          eyebrow="Nos missions"
+          title="Trois missions, un seul fil : vous remettre debout"
+          description="Pas de grands discours. Ce qu'on fait, concrètement, et pour qui : celles et ceux qui tiennent debout en apparence, mais qui n'en peuvent plus."
         />
-        <div className="mt-12 grid gap-6 sm:grid-cols-3">
+        <div className="mt-14 grid gap-6 lg:grid-cols-3">
           {missionPillars.map((pillar, i) => (
-            <Card key={pillar.title} index={i} title={pillar.title} description={pillar.description} />
+            <Reveal key={pillar.title} delay={i * 0.08}>
+              <article className="group flex h-full flex-col rounded-3xl border border-ink/8 bg-mist-50 p-7 shadow-sm shadow-ink/5 transition-all duration-300 hover:-translate-y-1 hover:border-leaf-200 hover:shadow-xl hover:shadow-ink/10 sm:p-8">
+                <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-leaf-100 text-leaf-700 transition-colors duration-300 group-hover:bg-leaf-600 group-hover:text-mist-50">
+                  {missionIcons[i]}
+                </span>
+                <h3 className="mt-6 font-display text-2xl leading-snug text-leaf-900">{pillar.title}</h3>
+                <p className="mt-2 text-base font-semibold text-leaf-700">{pillar.punchline}</p>
+                <p className="mt-3 text-sm leading-relaxed text-ink/70">{pillar.description}</p>
+                <ul className="mt-5 space-y-2.5">
+                  {pillar.points.map((point) => (
+                    <li key={point} className="flex items-start gap-2.5 text-sm leading-relaxed text-ink/80">
+                      <span aria-hidden className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-leaf-500" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href={pillar.href}
+                  className="mt-auto pt-7 text-sm font-semibold text-leaf-700 underline decoration-leaf-300 underline-offset-4 transition-colors hover:text-leaf-900"
+                >
+                  {pillar.cta} →
+                </Link>
+              </article>
+            </Reveal>
           ))}
         </div>
       </Container>
 
-      {/* Stats */}
+      {/* Pourquoi c'est urgent */}
+      <div className="bg-leaf-950">
+        <Container className="py-20 sm:py-24">
+          <Reveal className="max-w-2xl">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-leaf-300">Pourquoi on fait ça</p>
+            <h2 className="font-display text-3xl leading-tight text-mist-50 sm:text-4xl">
+              Parce que les chiffres ne mentent pas, et qu&apos;ils sont durs.
+            </h2>
+          </Reveal>
+          <div className="mt-12 grid gap-5 sm:grid-cols-3">
+            {urgencyStats.map((stat, i) => (
+              <Reveal key={stat.value} delay={i * 0.08}>
+                <div className="h-full rounded-2xl border border-mist-50/12 bg-mist-50/5 p-6">
+                  <p className="font-display text-4xl text-leaf-300">{stat.value}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-mist-100/85">{stat.label}</p>
+                  <p className="mt-4 text-xs text-mist-100/45">{stat.source}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal delay={0.2} className="mt-10">
+            <p className="max-w-2xl text-base leading-relaxed text-mist-100/75">
+              Face à ça, on ne peut pas attendre que les choses s&apos;arrangent toutes seules. C&apos;est pour cela que
+              nous agissons en amont, avant la crise, au plus près des gens.
+            </p>
+          </Reveal>
+        </Container>
+      </div>
+
+      {/* Chiffres de preuve */}
       <div className="bg-mist-200">
         <Container className="grid grid-cols-1 gap-10 py-16 sm:grid-cols-3">
           {impactStats.map((stat) => (
@@ -105,74 +150,20 @@ export default function Home() {
         </Container>
       </div>
 
-      {/* CIGIBM preview */}
-      <Container className="py-24 sm:py-28">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <Reveal>
-            {cigibmPhoto ? (
-              <Photo src={cigibmPhoto} alt="Congrès CIGIBM" />
-            ) : (
-              <ImagePlaceholder label="Photo, Congrès CIGIBM" />
-            )}
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-leaf-600">
-              Événement phare
-            </p>
-            <h2 className="font-display text-3xl leading-tight text-leaf-900 sm:text-4xl">
-              {cigibm.acronym}, {cigibm.edition}
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-ink/70 sm:text-lg">
-              Une fois par an, le {cigibm.fullName} réunit celles et ceux qui
-              ont décidé de ne plus faire semblant. La dernière édition a
-              rassemblé 1 100 personnes sur place et 34 200 en ligne autour du
-              thème « {cigibm.theme} », deux jours d&apos;ateliers, de
-              conférences et de témoignages, entièrement gratuits.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Button href="/cigibm-2026" variant="primary">
-                Réserver ma place 2026
-              </Button>
-              <Button href="/cigibm" variant="ghost">
-                Découvrir le congrès
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </Container>
-
-      {/* Couverture médiatique */}
-      <div className="bg-mist-200">
-        <Container className="py-24 sm:py-28">
-          <SectionHeading
-            eyebrow="Couverture médiatique"
-            title="Ils en parlent"
-            description="La presse béninoise et des voix internationales relaient le travail de l'ONG et du CIGIBM."
-          />
-          <div className="mt-12">
-            <MediaCoverageSlider />
-          </div>
-        </Container>
-      </div>
-
-      {/* Méthode R.A.C.I.N.E.S. preview */}
+      {/* Méthode */}
       <div className="bg-mist-warm">
         <Container className="py-24 sm:py-28">
           <SectionHeading
-            eyebrow="Notre approche"
+            eyebrow="Notre façon de faire"
             title={methodeRacines.fullTitle}
-            description={methodeRacines.subtitle}
+            description="Un cadre simple, né de six ans de terrain : comprendre d'où ça vient, puis reconstruire, étape par étape. Sept lettres, sept pas."
           />
           <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-7">
             {methodeRacines.steps.map((step, i) => (
               <Reveal key={step.letter} delay={i * 0.05}>
                 <div className="flex h-full flex-col items-center rounded-2xl border border-ink/8 bg-mist-50 p-4 text-center">
-                  <span className="font-display text-2xl text-leaf-500">
-                    {step.letter}
-                  </span>
-                  <p className="mt-1 text-xs font-medium text-leaf-900">
-                    {step.title}
-                  </p>
+                  <span className="font-display text-2xl text-leaf-500">{step.letter}</span>
+                  <p className="mt-1 text-xs font-medium text-leaf-900">{step.title}</p>
                 </div>
               </Reveal>
             ))}
@@ -185,29 +176,92 @@ export default function Home() {
         </Container>
       </div>
 
-      {/* Quote */}
+      {/* CIGIBM */}
+      <Container className="py-24 sm:py-28">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <Reveal>
+            <Photo src={cigibmPhoto} alt="Christelle Gnimassou et deux invitées lors du lancement de la 4ème édition du CIGIBM" />
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-leaf-600">Notre événement phare</p>
+            <h2 className="font-display text-3xl leading-tight text-leaf-900 sm:text-4xl">
+              {cigibm.acronym} : le rendez-vous de ceux qui ne font plus semblant
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-ink/70 sm:text-lg">
+              Chaque année, le {cigibm.fullName} réunit des milliers de personnes, sur place et en ligne, autour d&apos;une
+              idée simple : on a le droit d&apos;aller mal, et le droit de s&apos;en sortir. La 4ème édition vient de se
+              tenir à Cotonou. La 5ème se prépare, et chut : date et lieu arrivent très bientôt.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Button href="/cigibm" variant="primary">
+                Découvrir le congrès
+              </Button>
+              <Button href="/cigibm#retour-4e-edition" variant="ghost">
+                Revivre la 4ème édition
+              </Button>
+            </div>
+          </Reveal>
+        </div>
+      </Container>
+
+      {/* Presse */}
+      <div className="bg-mist-200">
+        <Container className="py-24 sm:py-28">
+          <SectionHeading
+            eyebrow="Couverture médiatique"
+            title="Ils en parlent"
+            description="La presse béninoise relaie notre travail. Un signe que le sujet avance."
+          />
+          <div className="mt-12">
+            <MediaCoverageSlider />
+          </div>
+        </Container>
+      </div>
+
+      {/* Citation */}
       <Container className="py-24 sm:py-28">
         <QuoteBlock {...presidentQuote} />
       </Container>
 
-      {/* Final CTA */}
+      {/* Comment nous rejoindre */}
       <div className="bg-leaf-950">
-        <Container className="flex flex-col items-center gap-6 py-20 text-center">
-          <h2 className="font-display text-3xl text-mist-50 sm:text-4xl">
-            Ensemble, triomphons de l&apos;intérieur
-          </h2>
-          <p className="max-w-xl leading-relaxed text-mist-100/80">
-            Un don, un week-end de votre temps, un partage à quelqu&apos;un qui
-            en a besoin : c&apos;est ce qui nous permet de continuer à offrir
-            cet accompagnement gratuitement.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button href="/nous-soutenir" variant="secondary">
-              Nous soutenir
-            </Button>
-            <Button href="/contact" variant="ghost" className="!border-mist-50/40 !text-mist-50 hover:!bg-mist-50/10">
-              Nous contacter
-            </Button>
+        <Container className="py-20 sm:py-24">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <h2 className="font-display text-3xl text-mist-50 sm:text-4xl">Ensemble, triomphons de l&apos;intérieur</h2>
+            <p className="mt-4 leading-relaxed text-mist-100/80">
+              Trois façons simples d&apos;avancer avec nous. Choisissez celle qui vous ressemble.
+            </p>
+          </Reveal>
+          <div className="mt-12 grid gap-5 sm:grid-cols-3">
+            {[
+              {
+                title: "J'ai besoin d'en parler",
+                text: "Écrivez-nous, sans pression. Un premier échange, c'est déjà un premier pas.",
+                action: <Button href="/contact" variant="secondary">Nous écrire</Button>,
+              },
+              {
+                title: "Je veux aider",
+                text: "Un don, du temps, un partage : tout ce qui nous permet de rester gratuits pour ceux qui en ont besoin.",
+                action: <Button href="/nous-soutenir" variant="secondary">Nous soutenir</Button>,
+              },
+              {
+                title: "Je veux rester informé(e)",
+                text: "Nos événements, les nouvelles du CIGIBM et des astuces bien-être, par WhatsApp ou par email.",
+                action: (
+                  <OptInButton className="inline-flex min-h-12 items-center justify-center rounded-full border border-mist-50/40 px-6 text-sm font-semibold text-mist-50 transition-colors hover:bg-mist-50/10">
+                    Être prévenu(e)
+                  </OptInButton>
+                ),
+              },
+            ].map((card, i) => (
+              <Reveal key={card.title} delay={i * 0.08}>
+                <div className="flex h-full flex-col rounded-2xl border border-mist-50/12 bg-mist-50/5 p-6 text-center">
+                  <h3 className="font-display text-xl text-mist-50">{card.title}</h3>
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-mist-100/75">{card.text}</p>
+                  <div className="mt-6 flex justify-center">{card.action}</div>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </Container>
       </div>

@@ -12,7 +12,7 @@ export const siteConfig = {
   // Accroche émotionnelle du hero d'accueil, distincte de la description
   // factuelle ci-dessus, utilisée pour les meta-tags.
   homeHeroLede:
-    "Certaines blessures ne se voient pas. On les porte en silence, on fait bonne figure, et on finit par croire que c'est normal. Depuis six ans, nous ouvrons des espaces où la parole se libère enfin, et où l'équilibre redevient possible.",
+    "On ne va pas se mentir : au Bénin comme ailleurs, on apprend à tenir, à sourire, à ne pas déranger. Nous, on fait l'inverse. Depuis six ans, l'ONG Triomphe de l'Intérieur écoute, accompagne et outille celles et ceux qui portent seuls ce qui pèse trop lourd.",
   founder: "Christelle Eugénie Gnimassou",
   founderTitle: "Présidente-fondatrice & coach",
   location: "Godomey, Abomey-Calavi, Bénin", // [PLACEHOLDER] adresse précise à confirmer
@@ -60,6 +60,23 @@ export const presidentQuote = {
 // URL) avant d'être ajouté ici. Ne pas ajouter d'URL non vérifiée.
 export const pressMentions = [
   {
+    outlet: "Fraternité",
+    title: "4e édition du CIGIBM : mettre le « vaccin de la dépression » au cœur des priorités",
+    date: "12 octobre 2026",
+    excerpt:
+      "Le quotidien relaie la conférence de presse du 10 octobre et explique la métaphore du « vaccin » : renforcer sa résilience avant l'effondrement.",
+    url: "https://fraternite.bj/4e-edition-du-congres-international-de-guerison-interieure-et-de-bien-etre-mental-mettre-le-vaccin-de-la-depression-au-coeur-des-priorites/",
+    image: "/images/cigibm/fraternite-equipe-benevoles.jpg",
+  },
+  {
+    outlet: "I COM tv",
+    title: "Guérison intérieure et santé mentale : coup d'envoi de la 4e édition du CIGIBM",
+    date: "17 octobre 2026",
+    excerpt: "Reportage vidéo sur l'ouverture du congrès au Palais des Congrès de Cotonou.",
+    url: "https://youtu.be/oN71eH0b_tA",
+    image: "/images/cigibm/Cover CIGIBM1 2026.png",
+  },
+  {
     outlet: "Matin Libre",
     title:
       "Congrès international de guérison intérieure et du bien-être mental : la 3ème édition s'annonce sous le sceau de l'équilibre",
@@ -102,23 +119,47 @@ export const pressMentions = [
 export const missionPillars = [
   {
     title: "Actions humanitaires",
+    punchline: "On agit là où ça ne peut pas attendre.",
     description:
       "Derrière chaque geste, un visage : celui d'un orphelin, d'une veuve, d'un enfant en difficulté. Nous agissons là où l'urgence ne peut pas attendre.",
+    points: [
+      "Un soutien aux orphelins, aux veuves et aux enfants en difficulté",
+      "Une présence de terrain, au plus près des familles",
+      "Des actions menées avec nos partenaires et nos bénévoles",
+    ],
+    cta: "Soutenir nos actions",
+    href: "/nous-soutenir",
   },
   {
     title: "Guérison intérieure & bien-être mental",
+    punchline: "Une blessure qu'on ne nomme pas ne guérit pas.",
     description:
       "Une blessure qu'on ne nomme pas ne guérit pas. Nous créons les espaces, écoute, ateliers, accompagnement, où elle peut enfin se dire, puis se traverser.",
+    points: [
+      "Des espaces d'écoute et un accompagnement individuel",
+      "La Méthode R.A.C.I.N.E.S., notre cadre pour traverser les blessures",
+      "Le CIGIBM, un congrès annuel ouvert à tous",
+    ],
+    cta: "Découvrir la méthode",
+    href: "/methode-racines",
   },
   {
     title: "Autonomisation",
+    punchline: "Des outils, pour tenir debout sans nous.",
     description:
       "Nous ne distribuons pas de solutions toutes faites. Nous transmettons des outils, pour que chacun·e reparte capable de tenir debout sans nous.",
+    points: [
+      "Des outils concrets de régulation émotionnelle",
+      "Des conférences et des formations pour passer à l'action",
+      "Des relais et ambassadeurs qui portent le message dans leur communauté",
+    ],
+    cta: "Nous rejoindre",
+    href: "/contact",
   },
 ];
 
 export const impactStats = [
-  { value: 3, suffix: "", label: "éditions du CIGIBM organisées" },
+  { value: 4, suffix: "", label: "éditions du CIGIBM organisées" },
   { value: 58000, suffix: "+", label: "personnes touchées (présentiel + en ligne)" },
   { value: 6, suffix: "+", label: "années d'accompagnement de terrain" },
 ];
@@ -229,6 +270,17 @@ export const cigibm = {
       attendance: "1 100 personnes en présentiel · 34 200 en ligne",
       description:
         "Parrainage de Steeve Facia. Ateliers, conférences, témoignages, moments de prière et de méditation sensibilisant sur le bien-être mental, la gestion du stress et le développement personnel.",
+    },
+    {
+      // Photos dédiées : public/images/cigibm-edition-4/
+      id: "edition-4",
+      edition: "4ème édition",
+      year: "17 octobre 2026",
+      theme: "Le vaccin de la dépression",
+      location: "Palais des Congrès, Cotonou",
+      attendance: "Bilan de fréquentation à venir",
+      description:
+        "Parrainée par Ella Wama, experte en genre. Ouverture à la Salle Rouge du Palais des Congrès, interventions sur les origines de la souffrance, la confiance en soi, le burn-out et les piliers de la résilience, remise de distinctions aux ambassadeurs. Couverte par Fraternité, La Droiture, L'Émergent et I COM tv.",
     },
   ],
   // Prochaine édition annoncée, dates à confirmer avec l'ONG (affiche reçue

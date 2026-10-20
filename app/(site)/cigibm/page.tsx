@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Avatar from "@/components/Avatar";
-import Hero from "@/components/Hero";
+import { Cigibm5Hero, OptInButton } from "@/components/Cigibm5Teaser";
 import Container from "@/components/Container";
 import SectionHeading from "@/components/SectionHeading";
 import Card from "@/components/Card";
@@ -44,7 +44,7 @@ const ambassadorBenefits = [
 export const metadata: Metadata = pageMetadata({
   title: "CIGIBM",
   description:
-    "Le Congrès International de Guérison Intérieure et de Bien-être Mental (CIGIBM), organisé par l'ONG Triomphe de l'Intérieur. Trois éditions, plus de 58 000 personnes touchées.",
+    "Le Congrès International de Guérison Intérieure et de Bien-être Mental (CIGIBM), organisé par l'ONG Triomphe de l'Intérieur. Quatre éditions, plus de 58 000 personnes touchées depuis 2023.",
   path: "/cigibm",
   image: { url: "/images/cigibm-featured.jpg", alt: "Congrès CIGIBM" },
 });
@@ -74,35 +74,7 @@ export default async function CigibmPage({
 
   return (
     <>
-      <Hero
-        compact
-        eyebrow={`${cigibm.nextEdition.edition} · ${cigibm.nextEdition.dates}`}
-        title={`${cigibm.acronym}, Thème « ${cigibm.nextEdition.theme} »`}
-        description={`Une fois par an, le ${cigibm.fullName} rassemble celles et ceux qui ont décidé de ne plus subir leurs blessures, mais de les traverser. Trois éditions déjà tenues, plus de 58 000 personnes touchées, et toujours la même règle : c'est gratuit.`}
-        actions={
-          <Button href="/cigibm-2026" variant="primary">
-            Réserver ma place, édition 2026
-          </Button>
-        }
-      />
-
-      {/* Key facts */}
-      <Container className="py-20">
-        <div className="grid gap-6 sm:grid-cols-3">
-          <Reveal className="rounded-2xl border border-ink/8 bg-mist-50 p-6">
-            <p className="text-xs font-semibold uppercase tracking-wide text-leaf-600">Dates</p>
-            <p className="mt-2 font-display text-xl text-leaf-900">{cigibm.nextEdition.dates}</p>
-          </Reveal>
-          <Reveal delay={0.08} className="rounded-2xl border border-ink/8 bg-mist-50 p-6">
-            <p className="text-xs font-semibold uppercase tracking-wide text-leaf-600">Lieu</p>
-            <p className="mt-2 font-display text-base text-leaf-900">{cigibm.nextEdition.venue}</p>
-          </Reveal>
-          <Reveal delay={0.16} className="rounded-2xl border border-ink/8 bg-mist-50 p-6">
-            <p className="text-xs font-semibold uppercase tracking-wide text-leaf-600">Participation</p>
-            <p className="mt-2 font-display text-xl text-leaf-900">Gratuite, sur inscription</p>
-          </Reveal>
-        </div>
-      </Container>
+      <Cigibm5Hero />
 
       {/* Founding story */}
       <div className="bg-mist-warm">
@@ -132,7 +104,7 @@ export default async function CigibmPage({
         <Container className="py-20 sm:py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
             <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-leaf-300">
-              Pourquoi c'est urgent
+              Pourquoi c&apos;est urgent
             </p>
             <h2 className="font-display text-2xl leading-snug text-mist-50 sm:text-3xl">
               Le silence a un coût, humain et économique
@@ -194,8 +166,8 @@ export default async function CigibmPage({
         </div>
       </Container>
 
-      {/* Next edition */}
-      <div className="bg-leaf-950">
+      {/* Retour sur la 4ème édition */}
+      <div id="retour-4e-edition" className="scroll-mt-24 bg-leaf-950">
         <Container className="py-24 sm:py-28">
           <div className={`grid items-start gap-12 ${poster ? "lg:grid-cols-2" : ""}`}>
             {poster && (
@@ -206,11 +178,11 @@ export default async function CigibmPage({
                 {nextEditionPhotos.length > 0 && (
                   <Reveal delay={0.06}>
                     <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-leaf-300">
-                      Aperçu des préparatifs
+                      En coulisses
                     </p>
                     <PhotoCarousel
                       images={nextEditionPhotos}
-                      alt="Photo, préparatifs de la 4ème édition du CIGIBM"
+                      alt="Photo, 4ème édition du CIGIBM"
                       ratio="aspect-[4/5]"
                       className="rounded-2xl"
                     />
@@ -220,20 +192,25 @@ export default async function CigibmPage({
             )}
             <Reveal delay={poster ? 0.1 : 0} className={poster ? "" : "mx-auto max-w-2xl text-center"}>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-leaf-300">
-                À venir
+                C&apos;était il y a quelques jours
               </p>
               <h2 className="font-display text-3xl leading-tight text-mist-50 sm:text-4xl">
                 {cigibm.nextEdition.edition}, « {cigibm.nextEdition.theme} »
               </h2>
               <p className="mt-5 text-base text-mist-100/80">
-                {cigibm.nextEdition.dates} · {cigibm.nextEdition.venue}
+                17 octobre 2026 · {cigibm.nextEdition.venue}
               </p>
-              <p className="mt-2 text-sm text-mist-100/60">
-                {cigibm.nextEdition.note}
+              <p className="mt-4 max-w-xl text-base leading-relaxed text-mist-100/70">
+                Une salle pleine, des intervenants engagés et une idée simple : on se protège de la
+                dépression avant la crise, pas seulement après. La presse béninoise en a parlé, et on vous
+                raconte tout.
               </p>
-              <div className="mt-8">
-                <Button href="/cigibm-2026" variant="primary">
-                  Réserver ma place gratuite
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Button href="/blog/fraternite-reportage-cigibm-2026-guerison-interieure" variant="primary">
+                  Lire le reportage de Fraternité
+                </Button>
+                <Button href="/blog/cigibm-2026-coup-d-envoi-palais-des-congres" variant="ghost" className="!border-mist-50/30 !text-mist-50 hover:!bg-mist-50/10">
+                  Revoir le coup d&apos;envoi
                 </Button>
               </div>
             </Reveal>
@@ -246,7 +223,7 @@ export default async function CigibmPage({
         <Container className="py-24 sm:py-28">
           <SectionHeading
             eyebrow={cigibm.nextEdition.edition}
-            title="Intervenants confirmés"
+            title="Ils étaient sur scène"
             description="Des personnalités d'exception réunies autour d'une conviction commune : la guérison intérieure comme levier de transformation individuelle, familiale et sociétale."
           />
 
@@ -288,11 +265,11 @@ export default async function CigibmPage({
           )}
 
           <Reveal delay={0.2} className="mt-14 flex flex-col items-center gap-3 text-center">
-            <Button href="/cigibm-2026" variant="primary" className="!px-8 !py-4 !text-base">
-              Inscris-toi maintenant
-            </Button>
+            <OptInButton className="inline-flex min-h-14 items-center justify-center rounded-full bg-azure-500 px-8 text-base font-bold text-mist-50 shadow-lg shadow-azure-950/20 transition-colors hover:bg-azure-400 active:bg-azure-600">
+              Être prévenu(e) de la 5ème édition
+            </OptInButton>
             <p className="text-sm font-medium text-leaf-700">
-              Seulement quelques places restantes
+              Les intervenants de la prochaine édition seront dévoilés avec la date.
             </p>
           </Reveal>
         </Container>

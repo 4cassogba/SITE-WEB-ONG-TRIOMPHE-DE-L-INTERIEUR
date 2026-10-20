@@ -90,6 +90,18 @@ export default function OptInPopup() {
     };
   }, [suppressed]);
 
+  // Ouverture à la demande (ex. « Être prévenu(e) en premier » du teaser) :
+  // ignore les règles de déclenchement automatique et le délai de 14 jours.
+  useEffect(() => {
+    const onOpen = () => {
+      setStep("name");
+      setError(null);
+      setOpen(true);
+    };
+    window.addEventListener("optin:open", onOpen);
+    return () => window.removeEventListener("optin:open", onOpen);
+  }, []);
+
   function close() {
     if (step !== "done") writeStorage("dismissed");
     setOpen(false);
@@ -182,16 +194,17 @@ export default function OptInPopup() {
           ✕
         </button>
 
-        <div className="relative h-44 shrink-0 sm:h-52">
+        <div className="relative h-48 shrink-0 sm:h-56">
           <Image
-            src="/images/cigibm/Coach Christelle.jpg"
-            alt="Coach Christelle Gnimassou, présidente-fondatrice de l'ONG Triomphe de l'Intérieur"
+            src="/images/cigibm/Cover CIGIBM1 2026.png"
+            alt="Christelle Gnimassou entourée de deux invitées, toutes trois souriantes, devant le panneau du CIGIBM"
             fill
             sizes="(min-width: 640px) 448px, 100vw"
             quality={90}
-            className="object-cover object-[50%_6%]"
+            priority
+            className="object-cover object-top"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-leaf-950 via-leaf-950/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-leaf-950 via-leaf-950/10 to-transparent" />
           <p className="absolute bottom-3 left-6 text-[11px] font-bold uppercase tracking-[0.2em] text-leaf-300">
             Votre bien-être mental
           </p>

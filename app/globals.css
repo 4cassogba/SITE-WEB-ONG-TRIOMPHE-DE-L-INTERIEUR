@@ -143,3 +143,62 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .optin-card, .optin-step { animation: none; }
 }
+
+/* Teaser CIGIBM 5ème édition : mode suspense. Tout est décoratif (aria-hidden) ;
+   prefers-reduced-motion fige l'ensemble sur son état final lisible. */
+@keyframes teaser-ring {
+  0% { opacity: 0; transform: scale(0.8); }
+  35% { opacity: 0.6; }
+  100% { opacity: 0; transform: scale(1.22); }
+}
+@keyframes teaser-orbit { to { transform: rotate(360deg); } }
+@keyframes teaser-float { from { transform: translateY(-8px); } to { transform: translateY(10px); } }
+@keyframes teaser-rise {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  15% { opacity: 0.9; }
+  100% { transform: translateY(-110vh) scale(1.1); opacity: 0; }
+}
+@keyframes teaser-draw { to { stroke-dashoffset: 0; } }
+@keyframes teaser-fillin { to { fill-opacity: 1; stroke-opacity: 0.25; } }
+@keyframes teaser-up {
+  from { opacity: 0; transform: translateY(18px); filter: blur(6px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes teaser-sway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+@keyframes teaser-aurora {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6%, -5%, 0) scale(1.18); }
+  100% { transform: translate3d(-4%, 4%, 0) scale(1); }
+}
+@keyframes teaser-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes teaser-blink { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+@keyframes teaser-glow { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+.teaser-ring { transform-box: fill-box; transform-origin: center; animation: teaser-ring 5.4s ease-out infinite; }
+.teaser-orbit { transform-box: view-box; transform-origin: 300px 300px; animation: teaser-orbit 38s linear infinite; }
+.teaser-orbit-rev { transform-box: view-box; transform-origin: 300px 300px; animation: teaser-orbit 56s linear infinite reverse; }
+.teaser-float { animation: teaser-float 4.6s ease-in-out infinite alternate; }
+.teaser-rise { position: absolute; bottom: -4%; border-radius: 9999px; animation: teaser-rise linear infinite; }
+.teaser-five { stroke-dasharray: 900; stroke-dashoffset: 900; fill-opacity: 0; animation: teaser-draw 2.6s 0.4s ease-out forwards, teaser-fillin 1.6s 2.4s ease-out forwards; }
+.teaser-up { opacity: 0; animation: teaser-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.teaser-sway { transform-box: fill-box; transform-origin: 50% 100%; animation: teaser-sway 6s ease-in-out infinite alternate; }
+.teaser-aurora { animation: teaser-aurora 16s ease-in-out infinite alternate; }
+.teaser-shimmer-text {
+  background: linear-gradient(100deg, #93d297 20%, #ffffff 45%, #e8c84a 55%, #93d297 80%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: teaser-shimmer 6s linear infinite;
+}
+.teaser-dot { animation: teaser-blink 1.4s ease-in-out infinite; }
+.teaser-glow { animation: teaser-glow 3.2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .teaser-ring, .teaser-orbit, .teaser-orbit-rev, .teaser-float, .teaser-rise, .teaser-sway,
+  .teaser-aurora, .teaser-shimmer-text, .teaser-dot, .teaser-glow { animation: none; }
+  .teaser-ring { opacity: 0.25; }
+  .teaser-rise { display: none; }
+  .teaser-five { animation: none; stroke-dashoffset: 0; fill-opacity: 1; stroke-opacity: 0.25; }
+  .teaser-up { animation: none; opacity: 1; }
+}
