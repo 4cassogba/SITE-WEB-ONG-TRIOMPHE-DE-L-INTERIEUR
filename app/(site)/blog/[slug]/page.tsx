@@ -199,13 +199,12 @@ function Block({ block }: { block: BlogBlock }) {
   }
 }
 
-// Encart « L'essentiel » : ce qu'un lecteur pressé doit retenir (l'événement, l'ONG,
-// la personne qui le porte). Le seul moment animé de l'en-tête : les lignes
-// apparaissent l'une après l'autre.
+// Encart « L'essentiel », en fin d'article : ce qu'il faut retenir (l'événement,
+// l'ONG, la personne qui le porte). Les lignes apparaissent l'une après l'autre.
 function Essentials({ essentials }: { essentials: NonNullable<BlogPost["essentials"]> }) {
   const { person } = essentials;
   return (
-    <aside aria-labelledby="essentiel" className="mb-8 overflow-hidden rounded-[1.75rem] bg-mist-50 shadow-xl shadow-leaf-950/10 ring-1 ring-leaf-200">
+    <aside aria-labelledby="essentiel" className="mt-14 overflow-hidden rounded-[1.75rem] bg-mist-50 shadow-xl shadow-leaf-950/10 ring-1 ring-leaf-200">
       <div className="grid sm:grid-cols-[15rem_1fr]">
         <div className="flex items-center gap-4 bg-leaf-900 p-5 text-mist-50 sm:flex-col sm:items-start sm:gap-5 sm:p-7">
           {person && (
@@ -325,10 +324,12 @@ export default async function BlogPostPage({
           seconde classe max-w-* sur lui serait ignorée). */}
       <Container className="py-12 sm:py-16">
         <div className="mx-auto max-w-3xl">
-        {post.essentials && <Essentials essentials={post.essentials} />}
         {post.body.map((block, i) => (
           <Block key={i} block={block} />
         ))}
+
+        {/* Récapitulatif en fin d'article, avant l'appel à l'action. */}
+        {post.essentials && <Essentials essentials={post.essentials} />}
 
         <Reveal delay={0.1}>
           <div className="mt-14 rounded-2xl bg-leaf-950 p-8 text-center sm:p-10">
