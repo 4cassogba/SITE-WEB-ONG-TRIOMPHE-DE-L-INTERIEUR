@@ -10,7 +10,7 @@ export default async function NewNotePage({ searchParams }: { searchParams: Prom
   const editionNumber = Number(edition);
   const linked = Number.isInteger(editionNumber) && editionNumber > 0 ? editionNumber : null;
   const tpl = linked ? findTemplate(template) : undefined;
-  const back = linked ? `/admin/cigibm?edition=${linked}&tab=documents` : "/admin/resources";
+  const back = linked ? `/admin/evenements/cigibm?edition=${linked}&tab=documents` : "/admin/resources";
   return (
     <div className="mx-auto max-w-5xl">
       <Link href={back} className="text-sm text-leaf-700 underline underline-offset-4">← Retour</Link>

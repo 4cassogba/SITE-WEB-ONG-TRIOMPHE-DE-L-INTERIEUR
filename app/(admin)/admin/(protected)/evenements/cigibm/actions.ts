@@ -13,7 +13,7 @@ import {
   updateEdition,
   updateTask,
 } from "@/lib/admin/cigibm";
-import { nextStatus, validateEditionForm, validateTaskForm } from "@/lib/cigibm-hub";
+import { CIGIBM_SPACE, cigibmHref, nextStatus, validateEditionForm, validateTaskForm, type CigibmTab } from "@/lib/cigibm-hub";
 
 export type FormState = { error?: string; values?: Record<string, string> } | null;
 
@@ -24,11 +24,12 @@ function submittedValues(formData: FormData): Record<string, string> {
 }
 
 function refresh() {
-  revalidatePath("/admin/cigibm");
+  revalidatePath(CIGIBM_SPACE);
+  revalidatePath("/admin/evenements");
   revalidatePath("/admin");
 }
 
-const hub = (n: number, tab?: string) => `/admin/cigibm?edition=${n}${tab ? `&tab=${tab}` : ""}`;
+const hub = (n: number, tab?: CigibmTab) => cigibmHref(n, tab);
 
 export async function createEditionAction(_prev: FormState, formData: FormData): Promise<FormState> {
   await requireAdmin();
@@ -37,7 +38,6 @@ export async function createEditionAction(_prev: FormState, formData: FormData):
   const res = await createEdition(checked.value);
   if (!res.ok) return { error: res.error, values: submittedValues(formData) };
   refresh();
-  revalidatePath("/admin/participants");
   redirect(hub(checked.value.number));
 }
 

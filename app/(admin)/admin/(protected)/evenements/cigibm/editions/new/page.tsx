@@ -10,7 +10,7 @@ export default async function NewEditionPage() {
   const next = editions.length ? Math.max(...editions.map((e) => e.number)) + 1 : 1;
   return (
     <div className="mx-auto max-w-3xl">
-      <Link href="/admin/cigibm" className="text-sm text-leaf-700 underline underline-offset-4">← Hub CIGIBM</Link>
+      <Link href="/admin/evenements/cigibm" className="text-sm text-leaf-700 underline underline-offset-4">← CIGIBM</Link>
       <h1 className="mt-2 font-display text-2xl text-leaf-900 sm:text-3xl">Nouvelle édition</h1>
       <EditionForm action={createEditionAction} initial={{ number: String(next), theme: "", dates: "", venue: "", eventDate: "" }} submitLabel="Créer l'édition" />
     </div>

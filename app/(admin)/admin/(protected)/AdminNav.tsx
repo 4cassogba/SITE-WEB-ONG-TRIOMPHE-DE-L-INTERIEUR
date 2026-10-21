@@ -14,39 +14,10 @@ function HomeIcon({ className }: IconProps) {
   );
 }
 
-function PeopleIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-      <circle cx="9" cy="8" r="3" />
-      <path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5" strokeLinecap="round" />
-      <circle cx="17" cy="9" r="2.3" />
-      <path d="M15.2 12.2c2.3.4 3.8 2 3.8 4.3" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function StarIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
       <path d="M12 3.5 14.4 9l6 .8-4.4 4.1 1.2 5.9L12 17l-5.2 2.8 1.2-5.9L3.6 9.8l6-.8Z" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function MailIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-      <rect x="3" y="5.5" width="18" height="13" rx="2" />
-      <path d="m4 7 8 6 8-6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function ScanIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-      <path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="9" y="9" width="6" height="6" rx="1" />
     </svg>
   );
 }
@@ -113,33 +84,36 @@ type NavItem = {
   Icon: (p: IconProps) => React.ReactElement;
   exact?: boolean;
   inBar?: boolean;
+  // Sous-entrée affichée en retrait sous l'entrée précédente (barre latérale).
+  sub?: boolean;
+  // Autres adresses qui appartiennent à cette rubrique.
+  also?: string[];
   description: string;
 };
 type NavGroup = { title: string; items: NavItem[] };
 
-// Navigation regroupée par métier. inBar : présent dans la barre du bas mobile
-// (4 accès directs + « Plus », qui ouvre le menu complet). Le Scanner y reste :
-// c'est l'usage au téléphone, à une main, le jour du congrès.
+// Tout ce qui concerne le CIGIBM (participants, scanner, ambassadeurs, messages)
+// vit dans l'espace CIGIBM, sous le menu Événements.
+const CIGIBM_PATHS = ["/admin/evenements/cigibm", "/admin/cigibm", "/admin/participants", "/admin/ambassadors", "/admin/messages", "/admin/scan"];
+
+// inBar : présent dans la barre du bas mobile (4 accès directs + « Plus »).
 const groups: NavGroup[] = [
   {
     title: "Pilotage",
-    items: [{ href: "/admin", label: "Tableau de bord", shortLabel: "Accueil", Icon: HomeIcon, exact: true, inBar: true, description: "Les chiffres du jour et ce qui attend une action" }],
+    items: [{ href: "/admin", label: "Tableau de bord", shortLabel: "Accueil", Icon: HomeIcon, exact: true, inBar: true, description: "Ce qui attend une action, en un coup d'œil" }],
   },
   {
-    title: "CIGIBM",
+    title: "Événements",
     items: [
-      { href: "/admin/cigibm", label: "Hub CIGIBM", shortLabel: "CIGIBM", Icon: CongressIcon, inBar: true, description: "Tout sur une édition : préparation, public, communication, documents" },
-      { href: "/admin/participants", label: "Participants", shortLabel: "Participants", Icon: PeopleIcon, inBar: true, description: "Inscrits, présence, ajout sur place" },
-      { href: "/admin/ambassadors", label: "Ambassadeurs", shortLabel: "Ambassad.", Icon: StarIcon, description: "Les relais et leurs parrainages" },
-      { href: "/admin/messages", label: "Messages", shortLabel: "Messages", Icon: MailIcon, description: "Emails, SMS et WhatsApp aux participants" },
-      { href: "/admin/scan", label: "Scanner", shortLabel: "Scanner", Icon: ScanIcon, inBar: true, description: "Contrôle d'entrée par QR code" },
+      { href: "/admin/evenements", label: "Événements", shortLabel: "Événements", Icon: CongressIcon, exact: true, inBar: true, also: CIGIBM_PATHS, description: "Les rendez-vous de l'ONG, de la préparation au bilan" },
+      { href: "/admin/evenements/cigibm", label: "CIGIBM", shortLabel: "CIGIBM", Icon: StarIcon, sub: true, also: CIGIBM_PATHS, description: "Participants, scanner, ambassadeurs, messages, préparation, documents" },
     ],
   },
   {
     title: "L'ONG",
     items: [
-      { href: "/admin/activities", label: "Activités", shortLabel: "Activités", Icon: ListIcon, description: "Ce que l'ONG fait, par axe, publié sur le site" },
-      { href: "/admin/leads", label: "Contacts à rappeler", shortLabel: "Contacts", Icon: PhoneIcon, description: "Personnes qui ont laissé leurs coordonnées" },
+      { href: "/admin/activities", label: "Activités", shortLabel: "Activités", Icon: ListIcon, inBar: true, description: "Ce que l'ONG fait, par axe, publié sur le site" },
+      { href: "/admin/leads", label: "Contacts à rappeler", shortLabel: "Contacts", Icon: PhoneIcon, inBar: true, description: "Personnes qui ont laissé leurs coordonnées" },
       { href: "/admin/resources", label: "Dossier ressources", shortLabel: "Ressources", Icon: FolderIcon, description: "Notes et documents internes" },
     ],
   },
@@ -152,8 +126,17 @@ const groups: NavGroup[] = [
 const allItems = groups.flatMap((g) => g.items);
 const barItems = allItems.filter((i) => i.inBar);
 
-function isActive(pathname: string, href: string, exact?: boolean) {
+function matches(pathname: string, href: string, exact?: boolean) {
   return exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
+}
+
+// Barre latérale : une sous-entrée active prend la surbrillance à la place de son parent.
+function isActive(pathname: string, item: NavItem, forBar = false) {
+  const own = matches(pathname, item.href, item.exact);
+  const related = (item.also ?? []).some((p) => matches(pathname, p));
+  if (forBar) return own || related;
+  if (item.sub) return own || related;
+  return own || (related && !allItems.some((i) => i.sub && i.also === item.also));
 }
 
 // Barre latérale desktop : reste montée en permanence (lg: et plus).
@@ -166,12 +149,12 @@ export function AdminSidebarNav() {
           <p className="px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink/40">{group.title}</p>
           <div className="mt-1.5 space-y-0.5">
             {group.items.map((item) => {
-              const active = isActive(pathname, item.href, item.exact);
+              const active = isActive(pathname, item);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
+                  className={`flex items-center gap-3 rounded-lg py-2 text-sm transition-colors ${item.sub ? "ml-5 border-l border-ink/10 pl-4" : "px-3"} ${
                     active ? "bg-leaf-50 font-medium text-leaf-900" : "text-ink/75 hover:bg-leaf-50 hover:text-leaf-900"
                   }`}
                 >
@@ -191,7 +174,7 @@ export function AdminSidebarNav() {
 export function AdminBottomNav() {
   const pathname = usePathname();
   const onMorePage = pathname === "/admin/plus";
-  const inBar = barItems.some((i) => isActive(pathname, i.href, i.exact));
+  const inBar = barItems.some((i) => isActive(pathname, i, true));
   const cell = (active: boolean) =>
     `flex min-w-0 flex-1 flex-col items-center gap-1 px-0.5 py-2.5 text-[10px] transition-colors active:bg-leaf-50 ${active ? "font-semibold text-leaf-700" : "text-ink/55"}`;
   return (
@@ -200,7 +183,7 @@ export function AdminBottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 flex border-t border-ink/10 bg-mist-50/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
     >
       {barItems.map((item) => (
-        <Link key={item.href} href={item.href} className={cell(!onMorePage && isActive(pathname, item.href, item.exact))}>
+        <Link key={item.href} href={item.href} className={cell(!onMorePage && isActive(pathname, item, true))}>
           <item.Icon className="h-5 w-5" />
           <span className="max-w-full truncate">{item.shortLabel}</span>
         </Link>

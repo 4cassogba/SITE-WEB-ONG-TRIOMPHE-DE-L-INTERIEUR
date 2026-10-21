@@ -1,4 +1,7 @@
+import Link from "next/link";
+import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
+import { CIGIBM_SPACE, cigibmHref } from "@/lib/cigibm-hub";
 import { requireAdmin } from "@/lib/admin/auth";
 import { getAmbassador, updateAmbassador } from "@/lib/admin/ambassadors";
 import { uploadAmbassadorPhoto } from "@/lib/ambassadors/photo";
@@ -52,12 +55,14 @@ export default async function EditAmbassadorPage({
       active: formData.get("active") === "on",
     });
 
-    redirect("/admin/ambassadors");
+    revalidatePath(CIGIBM_SPACE);
+    redirect(cigibmHref(null, "ambassadeurs"));
   }
 
   return (
     <div>
-      <h1 className="font-display text-2xl text-leaf-900">Modifier {ambassador.fullName}</h1>
+      <Link href={cigibmHref(null, "ambassadeurs")} className="text-sm text-leaf-700 underline underline-offset-4">← Ambassadeurs du CIGIBM</Link>
+      <h1 className="mt-2 font-display text-2xl text-leaf-900">Modifier {ambassador.fullName}</h1>
       {erreur && (
         <p className="mt-4 rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-700">
           Le nom et le téléphone sont obligatoires.

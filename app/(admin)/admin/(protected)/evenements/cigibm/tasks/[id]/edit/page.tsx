@@ -14,7 +14,7 @@ export default async function EditTaskPage({ params }: { params: Promise<{ id: s
   if (!task) notFound();
   return (
     <div className="mx-auto max-w-3xl">
-      <Link href={`/admin/cigibm?edition=${task.editionNumber}&tab=preparation`} className="text-sm text-leaf-700 underline underline-offset-4">← Préparation de l&apos;édition {task.editionNumber}</Link>
+      <Link href={`/admin/evenements/cigibm?edition=${task.editionNumber}&tab=preparation`} className="text-sm text-leaf-700 underline underline-offset-4">← Préparation de l&apos;édition {task.editionNumber}</Link>
       <h1 className="mt-2 font-display text-2xl text-leaf-900 sm:text-3xl">Modifier la tâche</h1>
       <div className="mt-6">
         <TaskForm

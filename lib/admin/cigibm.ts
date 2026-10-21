@@ -129,6 +129,25 @@ export async function getEditionHub(editionNumber: number, now: Date) {
   };
 }
 
+// ---- Scanner : entrées de l'édition ----
+
+export async function getScannerSummary(editionNumber: number, now: Date) {
+  const edition = await db.edition.findUnique({ where: { number: editionNumber }, select: { id: true } });
+  if (!edition) return null;
+  const attended = await db.participant.findMany({
+    where: { editionId: edition.id, attendedAt: { not: null } },
+    select: { fullName: true, attendedAt: true, registrationSource: true },
+    orderBy: { attendedAt: "desc" },
+  });
+  const today = beninDayNumber(now);
+  return {
+    today: attended.filter((p) => beninDayNumber(p.attendedAt!) === today).length,
+    byDay: bucketByDay(attended.map((p) => p.attendedAt!)).filter((d) => d.count > 0),
+    walkIns: attended.filter((p) => p.registrationSource === "qr_walkin").length,
+    latest: attended.slice(0, 8).map((p) => ({ name: p.fullName, at: p.attendedAt! })),
+  };
+}
+
 // ---- Éditions ----
 
 export async function createEdition(input: EditionInput) {

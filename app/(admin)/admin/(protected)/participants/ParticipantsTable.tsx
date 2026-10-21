@@ -64,10 +64,11 @@ export default function ParticipantsTable({ participants }: { participants: Part
         {filtered.map((p) => (
           <div key={p.id} className="rounded-2xl border border-ink/8 bg-mist-50 p-4">
             <div className="flex items-start justify-between gap-2">
-              <p className="truncate font-medium text-leaf-900">{p.fullName}</p>
+              <p className="min-w-0 truncate font-medium text-leaf-900">{p.fullName}</p>
               <AttendancePill attended={!!p.attendedAt} />
             </div>
-            <p className="mt-1 text-xs text-ink/60">{p.phone}</p>
+            {/* break-all : un numéro saisi d'un bloc, sans espace, ne doit pas élargir la page. */}
+            <p className="mt-1 break-all text-xs text-ink/60">{p.phone}</p>
             {p.email && <p className="truncate text-xs text-ink/60">{p.email}</p>}
             {p.ambassadorName && (
               <p className="mt-2 text-xs text-leaf-700">Parrainé·e par {p.ambassadorName}</p>

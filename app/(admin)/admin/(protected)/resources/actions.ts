@@ -30,7 +30,7 @@ function submittedValues(formData: FormData): Record<string, string> {
 
 function refresh(id?: string) {
   revalidatePath("/admin/resources");
-  revalidatePath("/admin/cigibm");
+  revalidatePath("/admin/evenements/cigibm");
   if (id) revalidatePath(`/admin/resources/${id}`);
 }
 

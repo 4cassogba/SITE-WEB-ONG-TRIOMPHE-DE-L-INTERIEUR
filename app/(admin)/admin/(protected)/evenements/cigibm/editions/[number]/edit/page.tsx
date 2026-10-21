@@ -14,7 +14,7 @@ export default async function EditEditionPage({ params }: { params: Promise<{ nu
   if (!edition) notFound();
   return (
     <div className="mx-auto max-w-3xl">
-      <Link href={`/admin/cigibm?edition=${n}`} className="text-sm text-leaf-700 underline underline-offset-4">← Hub CIGIBM</Link>
+      <Link href={`/admin/evenements/cigibm?edition=${n}`} className="text-sm text-leaf-700 underline underline-offset-4">← CIGIBM</Link>
       <h1 className="mt-2 font-display text-2xl text-leaf-900 sm:text-3xl">Modifier l&apos;édition {n}</h1>
       <EditionForm
         action={updateEditionAction.bind(null, n)}

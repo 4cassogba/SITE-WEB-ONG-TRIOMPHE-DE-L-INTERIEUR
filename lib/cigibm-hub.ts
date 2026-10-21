@@ -1,6 +1,20 @@
-// Logique pure du hub CIGIBM (/admin/cigibm) : libellés, checklist type,
+// Logique pure de l'espace CIGIBM (menu Événements, /admin/evenements/cigibm) : libellés, checklist type,
 // échéances, calendrier de communication et alertes. Aucun accès base ici,
 // pour rester testable.
+
+// ---- Adresses de l'espace CIGIBM ----
+
+export const CIGIBM_SPACE = "/admin/evenements/cigibm";
+export const CIGIBM_TABS = ["apercu", "preparation", "participants", "scanner", "ambassadeurs", "communication", "documents"] as const;
+export type CigibmTab = (typeof CIGIBM_TABS)[number];
+
+export function cigibmHref(edition?: number | null, tab?: CigibmTab): string {
+  const q = new URLSearchParams();
+  if (edition) q.set("edition", String(edition));
+  if (tab && tab !== "apercu") q.set("tab", tab);
+  const query = q.toString();
+  return query ? `${CIGIBM_SPACE}?${query}` : CIGIBM_SPACE;
+}
 
 export const TASK_CATEGORIES = ["programme", "logistique", "communication", "partenaires", "finances", "bilan"] as const;
 export type TaskCategoryKey = (typeof TASK_CATEGORIES)[number];
@@ -67,7 +81,8 @@ export function phaseLabel(phase: EditionPhase): string {
     case "undated": return "Date à définir";
     case "today": return "C'est aujourd'hui";
     case "upcoming": return phase.days === 1 ? "Demain" : `J-${phase.days}`;
-    case "past": return phase.days === 1 ? "Terminée hier" : `Terminée il y a ${phase.days} jours`;
+    // Au-delà de 45 jours, le décompte n'apporte plus rien : les dates sont affichées à côté.
+    case "past": return phase.days === 1 ? "Terminée hier" : phase.days > 45 ? "Terminée" : `Terminée il y a ${phase.days} jours`;
   }
 }
 
@@ -164,17 +179,16 @@ export type InsightInput = {
 export function buildInsights(i: InsightInput): Insight[] {
   const out: Insight[] = [];
   const phase = editionPhase(i.eventDate, i.now);
-  const hub = `/admin/cigibm?edition=${i.editionNumber}`;
 
   if (phase.kind === "undated") {
-    out.push({ level: "alert", title: "Date de l'édition non définie", detail: "Sans date, pas de compte à rebours ni d'échéances automatiques.", href: `/admin/cigibm/editions/${i.editionNumber}/edit`, cta: "Définir la date" });
+    out.push({ level: "alert", title: "Date de l'édition non définie", detail: "Sans date, pas de compte à rebours ni d'échéances automatiques.", href: `${CIGIBM_SPACE}/editions/${i.editionNumber}/edit`, cta: "Définir la date" });
   }
   // Une checklist n'a de sens que pour une édition à venir ou tout juste passée (bilan).
   if (i.tasksTotal === 0 && !(phase.kind === "past" && phase.days > 30)) {
-    out.push({ level: "info", title: "Aucune checklist de préparation", detail: "Générez la checklist type (une trentaine d'étapes avec échéances), puis ajustez-la.", href: `${hub}&tab=preparation`, cta: "Ouvrir la préparation" });
+    out.push({ level: "info", title: "Aucune checklist de préparation", detail: "Générez la checklist type (une trentaine d'étapes avec échéances), puis ajustez-la.", href: cigibmHref(i.editionNumber, "preparation"), cta: "Ouvrir la préparation" });
   }
   if (i.tasksOverdue > 0) {
-    out.push({ level: "alert", title: `${i.tasksOverdue} tâche${i.tasksOverdue > 1 ? "s" : ""} en retard`, detail: "Des étapes de préparation ont dépassé leur échéance.", href: `${hub}&tab=preparation`, cta: "Voir les retards" });
+    out.push({ level: "alert", title: `${i.tasksOverdue} tâche${i.tasksOverdue > 1 ? "s" : ""} en retard`, detail: "Des étapes de préparation ont dépassé leur échéance.", href: cigibmHref(i.editionNumber, "preparation"), cta: "Voir les retards" });
   }
   if (phase.kind === "past" && i.noShows > 0) {
     out.push({
@@ -186,16 +200,16 @@ export function buildInsights(i: InsightInput): Insight[] {
     });
   }
   if (phase.kind === "upcoming" && phase.days <= 14 && i.participants === 0) {
-    out.push({ level: "alert", title: "Aucun inscrit à moins de 15 jours", detail: "Relancez les ambassadeurs et la communication.", href: "/admin/ambassadors", cta: "Voir les ambassadeurs" });
+    out.push({ level: "alert", title: "Aucun inscrit à moins de 15 jours", detail: "Relancez les ambassadeurs et la communication.", href: cigibmHref(i.editionNumber, "ambassadeurs"), cta: "Voir les ambassadeurs" });
   }
   if (phase.kind === "upcoming" && i.ambassadorsWithoutReferral > 0 && i.ambassadorsActive > 0) {
-    out.push({ level: "info", title: `${i.ambassadorsWithoutReferral} ambassadeur${i.ambassadorsWithoutReferral > 1 ? "s" : ""} sans aucun inscrit`, detail: `Sur ${i.ambassadorsActive} actifs : un message de relance leur donnerait de l'élan.`, href: "/admin/ambassadors", cta: "Voir les ambassadeurs" });
+    out.push({ level: "info", title: `${i.ambassadorsWithoutReferral} ambassadeur${i.ambassadorsWithoutReferral > 1 ? "s" : ""} sans aucun inscrit`, detail: `Sur ${i.ambassadorsActive} actifs : un message de relance leur donnerait de l'élan.`, href: cigibmHref(i.editionNumber, "ambassadeurs"), cta: "Voir les ambassadeurs" });
   }
   if (i.leadsToContact > 0) {
     out.push({ level: i.leadsNeedingHelp > 0 ? "alert" : "info", title: `${i.leadsToContact} contact${i.leadsToContact > 1 ? "s" : ""} à rappeler`, detail: i.leadsNeedingHelp > 0 ? `Dont ${i.leadsNeedingHelp} qui demande${i.leadsNeedingHelp > 1 ? "nt" : ""} de l'aide : à traiter en priorité.` : "Ils ont laissé leurs coordonnées via le pop-up.", href: "/admin/leads", cta: "Ouvrir les contacts" });
   }
   if (phase.kind === "past" && i.participants > 0 && i.attended === 0) {
-    out.push({ level: "info", title: "Aucune présence enregistrée", detail: "Si le scan n'a pas été utilisé, le bilan de présence reste à reconstituer.", href: "/admin/participants", cta: "Voir les participants" });
+    out.push({ level: "info", title: "Aucune présence enregistrée", detail: "Si le scan n'a pas été utilisé, le bilan de présence reste à reconstituer.", href: cigibmHref(i.editionNumber, "participants"), cta: "Voir les participants" });
   }
   if (i.tasksTotal > 0 && i.tasksDone === i.tasksTotal) {
     out.push({ level: "good", title: "Checklist terminée", detail: "Toutes les étapes de préparation sont faites." });

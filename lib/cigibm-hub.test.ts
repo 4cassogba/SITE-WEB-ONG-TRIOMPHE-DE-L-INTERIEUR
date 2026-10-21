@@ -40,6 +40,7 @@ describe("dates à l'heure de Cotonou", () => {
     expect(phaseLabel(editionPhase(new Date("2026-10-17T12:00:00Z"), now))).toBe("Terminée il y a 3 jours");
     expect(phaseLabel(editionPhase(new Date("2026-10-21T12:00:00Z"), now))).toBe("Demain");
     expect(phaseLabel(editionPhase(new Date("2026-11-20T12:00:00Z"), now))).toBe("J-31");
+    expect(phaseLabel(editionPhase(new Date("2023-03-29T12:00:00Z"), now))).toBe("Terminée");
   });
 });
 
