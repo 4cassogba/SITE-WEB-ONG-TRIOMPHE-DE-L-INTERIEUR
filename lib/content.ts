@@ -61,7 +61,7 @@ export const presidentQuote = {
 // URL) avant d'être ajouté ici. Ne pas ajouter d'URL non vérifiée.
 export const pressMentions = [
   {
-    outlet: "Les Nouvelles du jour",
+    outlet: "Les Nouvelles du Jour",
     title: "La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression",
     date: "21 octobre 2026",
     excerpt:

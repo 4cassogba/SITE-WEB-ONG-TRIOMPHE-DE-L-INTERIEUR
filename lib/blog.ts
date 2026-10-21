@@ -30,9 +30,7 @@ export type BlogBlock =
       heading?: string;
       items: { label: string; href: string }[];
     }
-  | { type: "video"; youtubeId: string; title: string; caption?: string }
-  // Faits clés en cartes (« En bref ») : uniquement des faits vérifiés.
-  | { type: "facts"; heading?: string; items: { value: string; label: string }[] };
+  | { type: "video"; youtubeId: string; title: string; caption?: string };
 
 export type BlogPost = {
   slug: string;
@@ -48,6 +46,15 @@ export type BlogPost = {
   // position "top" : garde le haut de l'image quand le bandeau la recadre
   // (photo de groupe dont les visages sont en haut). Centre par défaut.
   featuredImage: { src: string; alt: string; credit?: string; position?: "top" | "center" };
+  // Rubrique affichée au-dessus du titre (ex. « Revue de presse »). Par défaut : Article / Activité.
+  kicker?: string;
+  // Encart « L'essentiel » en haut de l'article : faits vérifiés uniquement. Les valeurs
+  // acceptent les liens [libellé](href) ; un lien déjà présent dans le corps ne s'y répète pas.
+  essentials?: {
+    intro: string;
+    person?: { name: string; role: string; image: string; imagePosition?: string };
+    items: { label: string; value: string }[];
+  };
   body: BlogBlock[];
 };
 
@@ -55,9 +62,9 @@ export const blogPosts: BlogPost[] = [
   {
     slug: "les-nouvelles-du-jour-cigibm-2026-resilience-face-a-la-depression",
     type: "article",
-    title: "« La résilience face à la dépression » : Les Nouvelles du jour met le CIGIBM 2026 à sa une",
+    title: "« La résilience face à la dépression » : Les Nouvelles du Jour met le CIGIBM 2026 à sa une",
     excerpt:
-      "Dans sa parution n°1569 du mercredi 21 octobre 2026, le quotidien Les Nouvelles du jour consacre sa une et sa page 6 à la 4ème édition du CIGIBM. Ce qu'en retient le journaliste Jocelyn Afaou, ce qu'a dit la marraine Ella Wama, et pourquoi cet écho compte.",
+      "Dans sa parution n°1569 du mercredi 21 octobre 2026, le quotidien Les Nouvelles du Jour consacre sa une et sa page 6 à la 4ème édition du CIGIBM. Ce qu'en retient le journaliste Jocelyn Afaou, ce qu'a dit la marraine Ella Wama, et pourquoi cet écho compte.",
     date: "21 octobre 2026",
     isoDate: "2026-10-21",
     readTime: "5 min",
@@ -66,22 +73,30 @@ export const blogPosts: BlogPost[] = [
     authorAvatar: "/images/logo-mark.png",
     featuredImage: {
       src: "/images/cigibm/reportage-nouvelles-du-jour-cover.jpg",
-      alt: "La une et la page 6 des Nouvelles du jour du mercredi 21 octobre 2026 : « La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression »",
+      alt: "La une et la page 6 des Nouvelles du Jour du mercredi 21 octobre 2026 : « La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression »",
+    },
+    kicker: "Revue de presse",
+    essentials: {
+      intro: "Le congrès dont parle le journal, et celles et ceux qui le portent.",
+      person: {
+        name: "Coach Christelle Eugénie Gnimassou",
+        role: "Présidente-fondatrice de l'ONG Triomphe de l'Intérieur et promotrice du CIGIBM",
+        image: "/images/presidente.jpg",
+        imagePosition: "50% 22%",
+      },
+      items: [
+        { label: "Le congrès", value: "[CIGIBM](/cigibm), Congrès International de Guérison Intérieure et de Bien-être Mental, 4ème édition" },
+        { label: "Dates et lieu", value: "17 et 18 octobre 2026, Palais des Congrès de Cotonou" },
+        { label: "Thème", value: "« Le vaccin de la dépression »" },
+        { label: "Organisé par", value: "[ONG Triomphe de l'Intérieur](/a-propos), qui accompagne les femmes et les jeunes vers le bien-être mental" },
+        { label: "Marraine", value: "Ella Wama, experte en genre" },
+        { label: "Dans la presse", value: "Les Nouvelles du Jour, n°1569 du mercredi 21 octobre 2026 : une et page 6" },
+      ],
     },
     body: [
       {
         type: "paragraph",
-        text: "Deux jours, deux quotidiens. Après [Fraternité](/blog/fraternite-reportage-cigibm-2026-guerison-interieure) mardi, c'est au tour des [Nouvelles du jour](https://www.facebook.com/profile.php?id=100083789449151) de revenir sur le CIGIBM 2026. Dans sa parution n°1569 de ce mercredi 21 octobre 2026, ce quotidien indépendant d'informations, d'analyses et de publicités, dans sa 16ème année, annonce le sujet dès sa une, avant de lui consacrer la page 6, rubrique Actualité, sous la plume de Jocelyn Afaou.",
-      },
-      {
-        type: "facts",
-        heading: "En bref",
-        items: [
-          { value: "N° 1569", label: "Les Nouvelles du jour, mercredi 21 octobre 2026" },
-          { value: "Une + p. 6", label: "Annoncé en une, développé en page Actualité" },
-          { value: "17-18 oct.", label: "Deux journées au Palais des Congrès de Cotonou" },
-          { value: "4ème édition", label: "Thème : « Le vaccin de la dépression »" },
-        ],
+        text: "Deux jours, deux quotidiens. Après Fraternité mardi, c'est au tour des [Nouvelles du Jour](https://www.facebook.com/profile.php?id=100083789449151) de revenir sur le CIGIBM 2026. Dans sa parution n°1569 de ce mercredi 21 octobre 2026, ce quotidien indépendant d'informations, d'analyses et de publicités, dans sa 16ème année, annonce le sujet dès sa une, avant de lui consacrer la page 6, rubrique Actualité, sous la plume de Jocelyn Afaou.",
       },
       {
         type: "heading",
@@ -91,11 +106,11 @@ export const blogPosts: BlogPost[] = [
         type: "imageText",
         image: {
           src: "/images/cigibm/nouvelles-du-jour-une-21-octobre-2026.jpg",
-          alt: "Une des Nouvelles du jour, parution n°1569 du mercredi 21 octobre 2026, avec l'encadré « Guérison intérieure et bien-être mental » consacré à Coach Christelle Eugénie Gnimassou",
+          alt: "Une des Nouvelles du Jour, parution n°1569 du mercredi 21 octobre 2026, avec l'encadré « Guérison intérieure et bien-être mental » consacré à Coach Christelle Eugénie Gnimassou",
         },
         imagePosition: "left",
         imageAspect: "portrait",
-        caption: "Les Nouvelles du jour, parution n°1569, mercredi 21 octobre 2026, une.",
+        caption: "Les Nouvelles du Jour, parution n°1569, mercredi 21 octobre 2026, une.",
         paragraphs: [
           "Le CIGIBM partage la une avec des sujets d'envergure nationale : l'examen du budget 2027 à l'Assemblée nationale, la modernisation de l'accès à la fonction publique, les prochaines assises de la presse béninoise. Dans son encadré « Guérison intérieure et bien-être mental », le journal titre : « La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression ».",
           "Cette place a un sens. La santé mentale n'est pas un sujet à part, à glisser en fin de journal : elle touche l'école, le travail, la famille, et donc la vie de tout le pays.",
@@ -109,11 +124,11 @@ export const blogPosts: BlogPost[] = [
         type: "imageText",
         image: {
           src: "/images/cigibm/nouvelles-du-jour-page-6-21-octobre-2026.jpg",
-          alt: "Page 6 des Nouvelles du jour du 21 octobre 2026, rubrique Actualité : « La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression », avec la photo de famille du congrès sur scène",
+          alt: "Page 6 des Nouvelles du Jour du 21 octobre 2026, rubrique Actualité : « La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression », avec la photo de famille du congrès sur scène",
         },
         imagePosition: "right",
         imageAspect: "portrait",
-        caption: "Les Nouvelles du jour, n°1569, page 6, rubrique Actualité. Article de Jocelyn Afaou.",
+        caption: "Les Nouvelles du Jour, n°1569, page 6, rubrique Actualité. Article de Jocelyn Afaou.",
         paragraphs: [
           "Le journaliste pose le cadre : le Palais des Congrès de Cotonou, les 17 et 18 octobre 2026, pour la 4ème édition du Congrès International de Guérison Intérieure et de Bien-être Mental, autour du thème « Le vaccin de la dépression ». Une édition portée par l'ONG Triomphe de l'Intérieur et parrainée par [Ella Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), experte en genre.",
           "Selon le quotidien, l'ambition est double : mettre fin aux difficultés liées à la santé mentale, et encourager une meilleure prise en compte des souffrances psychologiques.",
@@ -148,7 +163,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: "quote",
         text: "L'objectif principal de la cérémonie est d'encourager les personnes en difficulté à parler de leur situation avant que cela ne s'aggrave.",
-        cite: "Les Nouvelles du jour, 21 octobre 2026, page 6",
+        cite: "Les Nouvelles du Jour, 21 octobre 2026, page 6",
       },
       {
         type: "heading",
@@ -156,12 +171,12 @@ export const blogPosts: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "Le quotidien rapporte aussi l'intervention d'[Ella Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/). Après avoir salué l'engagement de la promotrice et sa détermination à aborder les sujets liés à la dépression, la marraine a rappelé une évidence trop souvent oubliée :",
+        text: "Le quotidien rapporte aussi l'intervention d'[Ella Wama](https://www.facebook.com/ella.wama). Après avoir salué l'engagement de la promotrice et sa détermination à aborder les sujets liés à la dépression, la marraine a rappelé une évidence trop souvent oubliée :",
       },
       {
         type: "quote",
         text: "La santé mentale constitue une composante essentielle de la dignité humaine et de l'épanouissement individuel et collectif.",
-        cite: "Propos d'[Ella Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), marraine du CIGIBM 2026, rapportés par Les Nouvelles du jour",
+        cite: "Propos d'Ella Wama, marraine du CIGIBM 2026, rapportés par Les Nouvelles du Jour",
       },
       {
         type: "paragraph",
@@ -192,11 +207,11 @@ export const blogPosts: BlogPost[] = [
       },
       {
         type: "heading",
-        text: "Merci aux Nouvelles du jour",
+        text: "Merci aux Nouvelles du Jour",
       },
       {
         type: "paragraph",
-        text: "Merci à la rédaction des [Nouvelles du jour](https://www.facebook.com/profile.php?id=100083789449151) et à Jocelyn Afaou d'avoir donné à la santé mentale une place en une. Pour retrouver toute la couverture du CIGIBM 2026 : le [reportage de Fraternité](/blog/fraternite-reportage-cigibm-2026-guerison-interieure), la [revue de presse](/blog/revue-de-presse-cigibm-2026-la-droiture-l-emergent), le [coup d'envoi au Palais des Congrès](/blog/cigibm-2026-coup-d-envoi-palais-des-congres) et la [conférence de presse du 10 octobre](/blog/conference-presse-cigibm-vaccin-de-la-depression).",
+        text: "Merci à la rédaction des Nouvelles du Jour et à Jocelyn Afaou d'avoir donné à la santé mentale une place en une. Pour retrouver toute la couverture du CIGIBM 2026 : le [reportage de Fraternité](/blog/fraternite-reportage-cigibm-2026-guerison-interieure), la [revue de presse](/blog/revue-de-presse-cigibm-2026-la-droiture-l-emergent), le [coup d'envoi au Palais des Congrès](/blog/cigibm-2026-coup-d-envoi-palais-des-congres) et la [conférence de presse du 10 octobre](/blog/conference-presse-cigibm-vaccin-de-la-depression).",
       },
     ],
   },
@@ -341,7 +356,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         type: "paragraph",
-        text: "Une édition se joue dans la salle, mais elle se prolonge dans les journaux. Merci au groupe de presse [Fraternité](https://fraternite.bj/), à Marina Hounnou et à Fidégnon, d'avoir donné de l'espace à un sujet que l'on traite encore trop rarement. Pour retrouver nos autres articles, parcourez la [revue de presse du CIGIBM 2026](/blog/revue-de-presse-cigibm-2026-la-droiture-l-emergent), le [coup d'envoi au Palais des Congrès](/blog/cigibm-2026-coup-d-envoi-palais-des-congres) et notre page sur la [Méthode R.A.C.I.N.E.S.](/methode-racines).",
+        text: "Une édition se joue dans la salle, mais elle se prolonge dans les journaux. Merci au groupe de presse Fraternité, à Marina Hounnou et à Fidégnon, d'avoir donné de l'espace à un sujet que l'on traite encore trop rarement. Pour retrouver nos autres articles, parcourez la [revue de presse du CIGIBM 2026](/blog/revue-de-presse-cigibm-2026-la-droiture-l-emergent), le [coup d'envoi au Palais des Congrès](/blog/cigibm-2026-coup-d-envoi-palais-des-congres) et notre page sur la [Méthode R.A.C.I.N.E.S.](/methode-racines).",
       },
     ],
   },
@@ -405,7 +420,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: "quote",
         text: "Nous soignons les corps tout en laissant les esprits saigner en silence.",
-        cite: "[Ella Mara Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), marraine de la 4ème édition du CIGIBM, citée par L'Émergent (n° 983, 19 octobre 2026)",
+        cite: "[Ella Mara Wama](https://www.facebook.com/ella.wama), marraine de la 4ème édition du CIGIBM, citée par L'Émergent (n° 983, 19 octobre 2026)",
       },
       {
         type: "heading",
@@ -467,15 +482,13 @@ export const blogPosts: BlogPost[] = [
           },
           {
             label:
-              "L'Émergent, n° 983, lundi 19 octobre 2026, une : « “Nous soignons les corps tout en laissant les esprits saigner en silence” dixit la marraine [Ella Mara WAMA](https://www.linkedin.com/in/ella-wama-mara-expertegenre/) ».",
+              "L'Émergent, n° 983, lundi 19 octobre 2026, une : « “Nous soignons les corps tout en laissant les esprits saigner en silence” dixit la marraine Ella Mara WAMA ».",
           },
           {
             label: "Organisation mondiale de la Santé, « Trouble dépressif (dépression) », principaux repères, 11 septembre 2026.",
-            href: "https://www.who.int/fr/news-room/fact-sheets/detail/depression",
           },
           {
             label: "I COM tv, « Guérison intérieure et santé mentale : coup d'envoi de la 4e éd. du CIGBM », YouTube.",
-            href: "https://youtu.be/oN71eH0b_tA",
           },
         ],
       },

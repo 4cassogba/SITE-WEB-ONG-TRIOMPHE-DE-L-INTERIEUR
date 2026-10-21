@@ -6,8 +6,9 @@ import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import { inlineLinkClass, renderInline } from "@/components/InlineLinks";
 import Button from "@/components/Button";
-import { getPostBySlug, getSortedPosts, type BlogBlock } from "@/lib/blog";
+import { getPostBySlug, getSortedPosts, type BlogBlock, type BlogPost } from "@/lib/blog";
 import { siteConfig } from "@/lib/content";
+import { frenchSpacing } from "@/lib/typography";
 import { pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
@@ -169,27 +170,6 @@ function Block({ block }: { block: BlogBlock }) {
           </figure>
         </Reveal>
       );
-    case "facts":
-      // Cartes qui apparaissent l'une après l'autre au défilement.
-      return (
-        <section className="mt-10">
-          {block.heading && (
-            <Reveal>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-leaf-700">{block.heading}</p>
-            </Reveal>
-          )}
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {block.items.map((item, i) => (
-              <Reveal key={item.label} delay={i * 0.08}>
-                <div className="h-full rounded-2xl bg-leaf-950 p-4 text-mist-50 sm:p-5">
-                  <p className="font-display text-2xl leading-tight sm:text-3xl">{item.value}</p>
-                  <p className="mt-1.5 text-xs leading-snug text-mist-100/70 sm:text-sm">{item.label}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-      );
     case "links":
       return (
         <Reveal>
@@ -217,6 +197,52 @@ function Block({ block }: { block: BlogBlock }) {
         </Reveal>
       );
   }
+}
+
+// Encart « L'essentiel » : ce qu'un lecteur pressé doit retenir (l'événement, l'ONG,
+// la personne qui le porte). Le seul moment animé de l'en-tête : les lignes
+// apparaissent l'une après l'autre.
+function Essentials({ essentials }: { essentials: NonNullable<BlogPost["essentials"]> }) {
+  const { person } = essentials;
+  return (
+    <aside aria-labelledby="essentiel" className="overflow-hidden rounded-[1.75rem] bg-mist-50 shadow-xl shadow-leaf-950/10 ring-1 ring-leaf-200">
+      <div className="grid sm:grid-cols-[15rem_1fr]">
+        <div className="flex items-center gap-4 bg-leaf-900 p-5 text-mist-50 sm:flex-col sm:items-start sm:gap-5 sm:p-7">
+          {person && (
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full ring-2 ring-leaf-300/60 sm:h-28 sm:w-28">
+              <Image src={person.image} alt={person.name} fill sizes="112px" className="object-cover" style={{ objectPosition: person.imagePosition ?? "50% 25%" }} />
+            </div>
+          )}
+          <div className="min-w-0">
+            <h2 id="essentiel" className="font-display text-2xl leading-tight">L&apos;essentiel</h2>
+            <p className="mt-1 text-sm leading-snug text-mist-100/70">{essentials.intro}</p>
+            {person && (
+              <p className="mt-4 hidden text-sm leading-snug sm:block">
+                <span className="block font-semibold text-mist-50">{person.name}</span>
+                <span className="text-leaf-200/80">{person.role}</span>
+              </p>
+            )}
+          </div>
+        </div>
+        <dl className="divide-y divide-ink/8 px-5 py-2 sm:px-7 sm:py-3">
+          {person && (
+            <div className="py-3.5 sm:hidden">
+              <dt className="text-sm font-semibold text-leaf-700">Promotrice</dt>
+              <dd className="mt-0.5 text-[15px] leading-snug text-ink">{person.name}, {person.role.charAt(0).toLowerCase() + person.role.slice(1)}</dd>
+            </div>
+          )}
+          {essentials.items.map((item, i) => (
+            <Reveal key={item.label} delay={0.15 + i * 0.07} y={10}>
+              <div className="grid gap-0.5 py-3.5 sm:grid-cols-[8.5rem_1fr] sm:gap-4">
+                <dt className="text-sm font-semibold text-leaf-700">{item.label}</dt>
+                <dd className="text-[15px] leading-snug text-ink">{renderInline(item.value)}</dd>
+              </div>
+            </Reveal>
+          ))}
+        </dl>
+      </div>
+    </aside>
+  );
 }
 
 export default async function BlogPostPage({
@@ -254,53 +280,64 @@ export default async function BlogPostPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-leaf-950">
-        <div className="relative aspect-[16/9] w-full sm:aspect-[21/9]">
-          <Image
-            src={post.featuredImage.src}
-            alt={post.featuredImage.alt}
-            fill
-            priority
-            quality={90}
-            sizes="100vw"
-            className={`object-cover ${post.featuredImage.position === "top" ? "object-top" : ""}`}
-          />
-          {/* Assombrit seulement la moitié basse, derrière le titre : la photo
-              (visages compris) reste nette et lumineuse au-dessus. */}
-          <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-leaf-950 via-leaf-950/60 to-transparent" />
-        </div>
-        <Container className="relative -mt-24 pb-12 sm:-mt-28">
-          <div>
-            <h1 className="font-display text-3xl leading-tight text-mist-50 sm:text-4xl md:text-5xl">
-              {post.title}
-            </h1>
-            <div className="mt-6 flex items-center gap-3">
-              <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full">
-                <Image
-                  src={post.authorAvatar}
-                  alt={post.author}
-                  fill
-                  sizes="44px"
-                  className="object-cover"
-                />
-              </div>
-              <div>
-                <p className="text-sm text-mist-50">
-                  <span className="font-semibold">{post.author}</span>{" "}
-                  <span className="text-mist-100/60">{post.authorRole}</span>
-                </p>
-                <p className="text-xs text-mist-100/50">
-                  {post.date} · {post.readTime} de lecture
-                </p>
-              </div>
+      {/* En-tête éditorial : le texte d'abord, sur fond vert profond ; la couverture
+          vient ensuite, entière (une de journal, photo de groupe), à cheval sur le corps. */}
+      <section className="relative overflow-hidden bg-leaf-950 text-mist-50">
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_0%,rgba(147,210,151,0.16),transparent_55%)]" />
+        <Container className="relative max-w-5xl pb-36 pt-10 sm:pb-52 sm:pt-16">
+          <nav aria-label="Fil d'Ariane" className="flex flex-wrap items-center gap-x-2 text-sm text-mist-100/60">
+            <Link href="/blog" className="rounded underline-offset-4 hover:text-mist-50 hover:underline focus-visible:outline-2 focus-visible:outline-leaf-300">
+              Blog
+            </Link>
+            <span aria-hidden>/</span>
+            <span className="text-leaf-300">{post.kicker ?? (post.type === "activite" ? "Activité" : "Article")}</span>
+          </nav>
+          <h1 className="mt-5 max-w-4xl text-balance font-display text-[2.15rem] leading-[1.08] sm:text-5xl md:text-[3.6rem]">
+            {frenchSpacing(post.title)}
+          </h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-mist-100/75 sm:text-lg">{frenchSpacing(post.excerpt)}</p>
+          <div className="mt-8 flex items-center gap-3 border-t border-mist-50/10 pt-6">
+            <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-mist-50">
+              <Image src={post.authorAvatar} alt="" fill sizes="44px" className="object-contain p-1" />
+            </div>
+            <div className="text-sm">
+              <p>
+                <span className="font-semibold">{post.author}</span>
+                <span className="text-mist-100/60">, {post.authorRole.charAt(0).toLowerCase() + post.authorRole.slice(1)}</span>
+              </p>
+              <p className="mt-0.5 flex flex-wrap gap-x-4 text-xs text-mist-100/55">
+                <time dateTime={post.isoDate}>{post.date}</time>
+                <span>{post.readTime} de lecture</span>
+              </p>
             </div>
           </div>
         </Container>
       </section>
 
+      <Container className="relative max-w-5xl -mt-28 sm:-mt-44">
+        <Reveal y={28}>
+          <figure>
+            <div className="relative aspect-[16/9] overflow-hidden rounded-[1.75rem] bg-leaf-900 shadow-2xl shadow-leaf-950/30 ring-1 ring-ink/10">
+              <Image
+                src={post.featuredImage.src}
+                alt={post.featuredImage.alt}
+                fill
+                priority
+                quality={90}
+                sizes="(min-width: 1024px) 1024px, 100vw"
+                className={`object-cover ${post.featuredImage.position === "top" ? "object-top" : ""}`}
+              />
+            </div>
+            {post.featuredImage.credit && (
+              <figcaption className="mt-2 text-right text-xs text-ink/50">{post.featuredImage.credit}</figcaption>
+            )}
+          </figure>
+        </Reveal>
+      </Container>
+
       {/* Body */}
-      <Container className="max-w-3xl py-16 sm:py-20">
+      <Container className="max-w-3xl pb-16 pt-10 sm:pb-20 sm:pt-14">
+        {post.essentials && <Essentials essentials={post.essentials} />}
         {post.body.map((block, i) => (
           <Block key={i} block={block} />
         ))}
