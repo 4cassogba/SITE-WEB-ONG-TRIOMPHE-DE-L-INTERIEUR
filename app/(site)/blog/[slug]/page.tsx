@@ -205,7 +205,7 @@ function Block({ block }: { block: BlogBlock }) {
 function Essentials({ essentials }: { essentials: NonNullable<BlogPost["essentials"]> }) {
   const { person } = essentials;
   return (
-    <aside aria-labelledby="essentiel" className="overflow-hidden rounded-[1.75rem] bg-mist-50 shadow-xl shadow-leaf-950/10 ring-1 ring-leaf-200">
+    <aside aria-labelledby="essentiel" className="mb-8 overflow-hidden rounded-[1.75rem] bg-mist-50 shadow-xl shadow-leaf-950/10 ring-1 ring-leaf-200">
       <div className="grid sm:grid-cols-[15rem_1fr]">
         <div className="flex items-center gap-4 bg-leaf-900 p-5 text-mist-50 sm:flex-col sm:items-start sm:gap-5 sm:p-7">
           {person && (
@@ -280,30 +280,37 @@ export default async function BlogPostPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* En-tête éditorial : le texte d'abord, sur fond vert profond ; la couverture
-          vient ensuite, entière (une de journal, photo de groupe), à cheval sur le corps. */}
-      <section className="relative overflow-hidden bg-leaf-950 text-mist-50">
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_0%,rgba(147,210,151,0.16),transparent_55%)]" />
-        <Container className="relative max-w-5xl pb-36 pt-10 sm:pb-52 sm:pt-16">
-          <nav aria-label="Fil d'Ariane" className="flex flex-wrap items-center gap-x-2 text-sm text-mist-100/60">
-            <Link href="/blog" className="rounded underline-offset-4 hover:text-mist-50 hover:underline focus-visible:outline-2 focus-visible:outline-leaf-300">
-              Blog
-            </Link>
-            <span aria-hidden>/</span>
-            <span className="text-leaf-300">{post.kicker ?? (post.type === "activite" ? "Activité" : "Article")}</span>
-          </nav>
-          <h1 className="mt-5 max-w-4xl text-balance font-display text-[2.15rem] leading-[1.08] sm:text-5xl md:text-[3.6rem]">
+      {/* Hero : la photo pleine largeur, le titre posé sur sa partie basse. */}
+      <section className="relative overflow-hidden bg-leaf-950">
+        <div className="relative aspect-[16/9] w-full sm:aspect-[21/9]">
+          <Image
+            src={post.featuredImage.src}
+            alt={post.featuredImage.alt}
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className={`object-cover ${post.featuredImage.position === "top" ? "object-top" : ""}`}
+          />
+          {/* Assombrit seulement la moitié basse, derrière le titre : la photo
+              (visages compris) reste nette et lumineuse au-dessus. */}
+          <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-leaf-950 via-leaf-950/75 to-transparent" />
+        </div>
+        <Container className="relative -mt-16 pb-12 sm:-mt-32 sm:pb-14">
+          <span className="inline-flex rounded-full bg-mist-50/12 px-3 py-1 text-xs font-medium text-leaf-200 ring-1 ring-mist-50/15 backdrop-blur">
+            {post.kicker ?? (post.type === "activite" ? "Activité" : "Article")}
+          </span>
+          <h1 className="mt-4 max-w-4xl text-balance font-display text-3xl leading-tight text-mist-50 [text-shadow:0_2px_16px_rgba(14,33,24,0.55)] sm:text-4xl md:text-5xl">
             {frenchSpacing(post.title)}
           </h1>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-mist-100/75 sm:text-lg">{frenchSpacing(post.excerpt)}</p>
-          <div className="mt-8 flex items-center gap-3 border-t border-mist-50/10 pt-6">
+          <div className="mt-6 flex items-center gap-3">
             <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-mist-50">
               <Image src={post.authorAvatar} alt="" fill sizes="44px" className="object-contain p-1" />
             </div>
-            <div className="text-sm">
-              <p>
-                <span className="font-semibold">{post.author}</span>
-                <span className="text-mist-100/60">, {post.authorRole.charAt(0).toLowerCase() + post.authorRole.slice(1)}</span>
+            <div>
+              <p className="text-sm text-mist-50">
+                <span className="font-semibold">{post.author}</span>{" "}
+                <span className="text-mist-100/60">{post.authorRole}</span>
               </p>
               <p className="mt-0.5 flex flex-wrap gap-x-4 text-xs text-mist-100/55">
                 <time dateTime={post.isoDate}>{post.date}</time>
@@ -314,29 +321,10 @@ export default async function BlogPostPage({
         </Container>
       </section>
 
-      <Container className="relative max-w-5xl -mt-28 sm:-mt-44">
-        <Reveal y={28}>
-          <figure>
-            <div className="relative aspect-[16/9] overflow-hidden rounded-[1.75rem] bg-leaf-900 shadow-2xl shadow-leaf-950/30 ring-1 ring-ink/10">
-              <Image
-                src={post.featuredImage.src}
-                alt={post.featuredImage.alt}
-                fill
-                priority
-                quality={90}
-                sizes="(min-width: 1024px) 1024px, 100vw"
-                className={`object-cover ${post.featuredImage.position === "top" ? "object-top" : ""}`}
-              />
-            </div>
-            {post.featuredImage.credit && (
-              <figcaption className="mt-2 text-right text-xs text-ink/50">{post.featuredImage.credit}</figcaption>
-            )}
-          </figure>
-        </Reveal>
-      </Container>
-
-      {/* Body */}
-      <Container className="max-w-3xl pb-16 pt-10 sm:pb-20 sm:pt-14">
+      {/* Body : largeur de lecture limitée (Container impose déjà max-w-6xl, une
+          seconde classe max-w-* sur lui serait ignorée). */}
+      <Container className="py-12 sm:py-16">
+        <div className="mx-auto max-w-3xl">
         {post.essentials && <Essentials essentials={post.essentials} />}
         {post.body.map((block, i) => (
           <Block key={i} block={block} />
@@ -361,6 +349,7 @@ export default async function BlogPostPage({
             </div>
           </div>
         </Reveal>
+        </div>
       </Container>
     </>
   );
