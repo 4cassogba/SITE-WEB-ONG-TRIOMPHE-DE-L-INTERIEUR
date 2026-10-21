@@ -30,7 +30,9 @@ export type BlogBlock =
       heading?: string;
       items: { label: string; href: string }[];
     }
-  | { type: "video"; youtubeId: string; title: string; caption?: string };
+  | { type: "video"; youtubeId: string; title: string; caption?: string }
+  // Faits clés en cartes (« En bref ») : uniquement des faits vérifiés.
+  | { type: "facts"; heading?: string; items: { value: string; label: string }[] };
 
 export type BlogPost = {
   slug: string;
@@ -50,6 +52,154 @@ export type BlogPost = {
 };
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: "les-nouvelles-du-jour-cigibm-2026-resilience-face-a-la-depression",
+    type: "article",
+    title: "« La résilience face à la dépression » : Les Nouvelles du jour met le CIGIBM 2026 à sa une",
+    excerpt:
+      "Dans sa parution n°1569 du mercredi 21 octobre 2026, le quotidien Les Nouvelles du jour consacre sa une et sa page 6 à la 4ème édition du CIGIBM. Ce qu'en retient le journaliste Jocelyn Afaou, ce qu'a dit la marraine Ella Wama, et pourquoi cet écho compte.",
+    date: "21 octobre 2026",
+    isoDate: "2026-10-21",
+    readTime: "5 min",
+    author: "ONG Triomphe de l'Intérieur",
+    authorRole: "Équipe de communication",
+    authorAvatar: "/images/logo-mark.png",
+    featuredImage: {
+      src: "/images/cigibm/reportage-nouvelles-du-jour-cover.jpg",
+      alt: "La une et la page 6 des Nouvelles du jour du mercredi 21 octobre 2026 : « La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression »",
+    },
+    body: [
+      {
+        type: "paragraph",
+        text: "Deux jours, deux quotidiens. Après [Fraternité](/blog/fraternite-reportage-cigibm-2026-guerison-interieure) mardi, c'est au tour des [Nouvelles du jour](https://www.facebook.com/profile.php?id=100083789449151) de revenir sur le CIGIBM 2026. Dans sa parution n°1569 de ce mercredi 21 octobre 2026, ce quotidien indépendant d'informations, d'analyses et de publicités, dans sa 16ème année, annonce le sujet dès sa une, avant de lui consacrer la page 6, rubrique Actualité, sous la plume de Jocelyn Afaou.",
+      },
+      {
+        type: "facts",
+        heading: "En bref",
+        items: [
+          { value: "N° 1569", label: "Les Nouvelles du jour, mercredi 21 octobre 2026" },
+          { value: "Une + p. 6", label: "Annoncé en une, développé en page Actualité" },
+          { value: "17-18 oct.", label: "Deux journées au Palais des Congrès de Cotonou" },
+          { value: "4ème édition", label: "Thème : « Le vaccin de la dépression »" },
+        ],
+      },
+      {
+        type: "heading",
+        text: "En une, parmi les sujets qui font l'actualité du pays",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/nouvelles-du-jour-une-21-octobre-2026.jpg",
+          alt: "Une des Nouvelles du jour, parution n°1569 du mercredi 21 octobre 2026, avec l'encadré « Guérison intérieure et bien-être mental » consacré à Coach Christelle Eugénie Gnimassou",
+        },
+        imagePosition: "left",
+        imageAspect: "portrait",
+        caption: "Les Nouvelles du jour, parution n°1569, mercredi 21 octobre 2026, une.",
+        paragraphs: [
+          "Le CIGIBM partage la une avec des sujets d'envergure nationale : l'examen du budget 2027 à l'Assemblée nationale, la modernisation de l'accès à la fonction publique, les prochaines assises de la presse béninoise. Dans son encadré « Guérison intérieure et bien-être mental », le journal titre : « La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression ».",
+          "Cette place a un sens. La santé mentale n'est pas un sujet à part, à glisser en fin de journal : elle touche l'école, le travail, la famille, et donc la vie de tout le pays.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Ce que retient le reportage",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/nouvelles-du-jour-page-6-21-octobre-2026.jpg",
+          alt: "Page 6 des Nouvelles du jour du 21 octobre 2026, rubrique Actualité : « La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression », avec la photo de famille du congrès sur scène",
+        },
+        imagePosition: "right",
+        imageAspect: "portrait",
+        caption: "Les Nouvelles du jour, n°1569, page 6, rubrique Actualité. Article de Jocelyn Afaou.",
+        paragraphs: [
+          "Le journaliste pose le cadre : le Palais des Congrès de Cotonou, les 17 et 18 octobre 2026, pour la 4ème édition du Congrès International de Guérison Intérieure et de Bien-être Mental, autour du thème « Le vaccin de la dépression ». Une édition portée par l'ONG Triomphe de l'Intérieur et parrainée par [Ella Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), experte en genre.",
+          "Selon le quotidien, l'ambition est double : mettre fin aux difficultés liées à la santé mentale, et encourager une meilleure prise en compte des souffrances psychologiques.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Une souffrance qu'on n'ose pas dire",
+      },
+      {
+        type: "paragraph",
+        text: "Le reportage pose un constat que nous entendons souvent sur le terrain : les blessures psychologiques sont difficiles à exprimer, dans des sociétés où la souffrance intérieure est parfois assimilée à un manque de foi. C'est pour cette raison, écrit le journal, que l'ONG Triomphe de l'Intérieur a organisé cette 4ème édition.",
+      },
+      {
+        type: "paragraph",
+        text: "Nous le disons simplement : croire et prendre soin de soi ne s'opposent pas. Demander de l'aide n'est ni une faiblesse ni un manque de foi. C'est un acte de lucidité.",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/coach-christelle-cigibm-2026-echarpe.jpg",
+          alt: "Coach Christelle Gnimassou, promotrice du CIGIBM, en tenue verte avec diadème et écharpe, devant les panneaux du congrès",
+        },
+        imagePosition: "left",
+        heading: "Le « vaccin », une métaphore",
+        caption: "Coach Christelle Gnimassou, promotrice du CIGIBM, lors de la 4ème édition.",
+        paragraphs: [
+          "Le journal revient sur le sens du thème, tel que l'explique la promotrice, Coach Christelle Eugénie Gnimassou : le « vaccin » ne désigne pas un produit pharmaceutique. C'est une métaphore des ressources que chacun peut mobiliser pour tenir, avant que la souffrance ne s'installe.",
+          "Autrement dit : on n'attend pas la crise. On apprend à la voir venir, à en parler et à s'entourer. C'est le cœur de la [Méthode R.A.C.I.N.E.S.](/methode-racines).",
+        ],
+      },
+      {
+        type: "quote",
+        text: "L'objectif principal de la cérémonie est d'encourager les personnes en difficulté à parler de leur situation avant que cela ne s'aggrave.",
+        cite: "Les Nouvelles du jour, 21 octobre 2026, page 6",
+      },
+      {
+        type: "heading",
+        text: "La parole de la marraine",
+      },
+      {
+        type: "paragraph",
+        text: "Le quotidien rapporte aussi l'intervention d'[Ella Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/). Après avoir salué l'engagement de la promotrice et sa détermination à aborder les sujets liés à la dépression, la marraine a rappelé une évidence trop souvent oubliée :",
+      },
+      {
+        type: "quote",
+        text: "La santé mentale constitue une composante essentielle de la dignité humaine et de l'épanouissement individuel et collectif.",
+        cite: "Propos d'[Ella Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), marraine du CIGIBM 2026, rapportés par Les Nouvelles du jour",
+      },
+      {
+        type: "paragraph",
+        text: "Elle a ensuite nommé celles et ceux que la souffrance psychologique touche de plein fouet :",
+      },
+      {
+        type: "list",
+        items: [
+          "Les jeunes, soumis aux pressions scolaires, universitaires ou professionnelles.",
+          "Les femmes qui portent les conséquences de violences ou de traumatismes familiaux.",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Pour finir, elle a plaidé pour une mobilisation de tous : les familles, les établissements scolaires et universitaires, les milieux populaires et les structures de santé.",
+      },
+      {
+        type: "heading",
+        text: "Ce que cet écho nous engage à faire",
+      },
+      {
+        type: "paragraph",
+        text: "Les femmes et les jeunes : ce sont précisément les personnes que notre ONG s'est donné pour mission d'accompagner, vers le bien-être mental et l'autonomie. Le plaidoyer de la marraine rejoint notre conviction : personne ne peut porter seul la santé mentale. Le CIGIBM est un rendez-vous ; le travail, lui, continue toute l'année, avec les familles, les écoles et les universités, les quartiers, et en orientant vers les professionnels de santé quand c'est nécessaire.",
+      },
+      {
+        type: "paragraph",
+        text: "Si vous vous reconnaissez dans ce que décrit l'article, ou si un proche traverse une période difficile, n'attendez pas que cela s'aggrave : [écrivez-nous](/contact), sans jugement. Établissements, associations, institutions : nous sommes disponibles pour construire ensemble.",
+      },
+      {
+        type: "heading",
+        text: "Merci aux Nouvelles du jour",
+      },
+      {
+        type: "paragraph",
+        text: "Merci à la rédaction des [Nouvelles du jour](https://www.facebook.com/profile.php?id=100083789449151) et à Jocelyn Afaou d'avoir donné à la santé mentale une place en une. Pour retrouver toute la couverture du CIGIBM 2026 : le [reportage de Fraternité](/blog/fraternite-reportage-cigibm-2026-guerison-interieure), la [revue de presse](/blog/revue-de-presse-cigibm-2026-la-droiture-l-emergent), le [coup d'envoi au Palais des Congrès](/blog/cigibm-2026-coup-d-envoi-palais-des-congres) et la [conférence de presse du 10 octobre](/blog/conference-presse-cigibm-vaccin-de-la-depression).",
+      },
+    ],
+  },
   {
     slug: "fraternite-reportage-cigibm-2026-guerison-interieure",
     type: "article",

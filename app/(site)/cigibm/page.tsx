@@ -432,8 +432,8 @@ export default async function CigibmPage() {
                 <Reveal key={mention.url} delay={i * 0.08}>
                   <a
                     href={mention.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    // Un reportage paru seulement sur papier renvoie vers notre article (lien interne, même onglet).
+                    {...(mention.url.startsWith("/") ? {} : { target: "_blank", rel: "noopener noreferrer" })}
                     className="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink/8 bg-mist-warm transition-all duration-300 hover:-translate-y-1 hover:border-leaf-200 hover:shadow-lg hover:shadow-ink/8"
                   >
                     <div className="relative aspect-[16/10] w-full overflow-hidden">

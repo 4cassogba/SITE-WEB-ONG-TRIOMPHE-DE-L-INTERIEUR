@@ -26,8 +26,8 @@ export default function MediaCoverageSlider() {
             key={mention.url}
             data-card
             href={mention.url}
-            target="_blank"
-            rel="noopener noreferrer"
+            // Un reportage paru seulement sur papier renvoie vers notre article (lien interne, même onglet).
+            {...(mention.url.startsWith("/") ? {} : { target: "_blank", rel: "noopener noreferrer" })}
             className="group relative flex w-[300px] shrink-0 snap-start flex-col overflow-hidden rounded-2xl bg-leaf-950 shadow-lg shadow-ink/10 transition-transform duration-300 hover:-translate-y-1 sm:w-[340px]"
           >
             <div className="relative aspect-[16/10] w-full overflow-hidden">

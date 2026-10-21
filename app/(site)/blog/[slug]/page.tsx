@@ -169,6 +169,27 @@ function Block({ block }: { block: BlogBlock }) {
           </figure>
         </Reveal>
       );
+    case "facts":
+      // Cartes qui apparaissent l'une après l'autre au défilement.
+      return (
+        <section className="mt-10">
+          {block.heading && (
+            <Reveal>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-leaf-700">{block.heading}</p>
+            </Reveal>
+          )}
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {block.items.map((item, i) => (
+              <Reveal key={item.label} delay={i * 0.08}>
+                <div className="h-full rounded-2xl bg-leaf-950 p-4 text-mist-50 sm:p-5">
+                  <p className="font-display text-2xl leading-tight sm:text-3xl">{item.value}</p>
+                  <p className="mt-1.5 text-xs leading-snug text-mist-100/70 sm:text-sm">{item.label}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      );
     case "links":
       return (
         <Reveal>

@@ -61,6 +61,15 @@ export const presidentQuote = {
 // URL) avant d'être ajouté ici. Ne pas ajouter d'URL non vérifiée.
 export const pressMentions = [
   {
+    outlet: "Les Nouvelles du jour",
+    title: "La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression",
+    date: "21 octobre 2026",
+    excerpt:
+      "En une et en page 6 de sa parution n°1569, le quotidien revient sur la 4ème édition du CIGIBM et sur le plaidoyer de la marraine, Ella Wama.",
+    url: "/blog/les-nouvelles-du-jour-cigibm-2026-resilience-face-a-la-depression",
+    image: "/images/cigibm/reportage-nouvelles-du-jour-cover.jpg",
+  },
+  {
     outlet: "Fraternité",
     title: "4e édition du CIGIBM : mettre le « vaccin de la dépression » au cœur des priorités",
     date: "12 octobre 2026",
