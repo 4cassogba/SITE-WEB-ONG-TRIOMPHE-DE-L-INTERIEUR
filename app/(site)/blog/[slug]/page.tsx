@@ -39,7 +39,7 @@ function Block({ block }: { block: BlogBlock }) {
       return (
         <Reveal>
           <h2 className="mt-10 font-display text-2xl leading-snug text-leaf-900 sm:text-3xl">
-            {block.text}
+            {frenchSpacing(block.text)}
           </h2>
         </Reveal>
       );
@@ -99,7 +99,7 @@ function Block({ block }: { block: BlogBlock }) {
       return (
         <Reveal>
           <figure className="mt-8 border-l-2 border-leaf-400 py-2 pl-6">
-            <blockquote className="font-display text-xl leading-snug text-leaf-900 sm:text-2xl">« {block.text} »</blockquote>
+            <blockquote className="font-display text-xl leading-snug text-leaf-900 sm:text-2xl">{frenchSpacing(`« ${block.text} »`)}</blockquote>
             {block.cite && <figcaption className="mt-3 text-sm text-ink/55">— {renderInline(block.cite)}</figcaption>}
           </figure>
         </Reveal>
@@ -126,13 +126,13 @@ function Block({ block }: { block: BlogBlock }) {
                 />
               </div>
               {block.caption && (
-                <figcaption className="mt-3 text-center text-xs leading-relaxed text-ink/55">{block.caption}</figcaption>
+                <figcaption className="mt-3 text-center text-xs leading-relaxed text-ink/55">{frenchSpacing(block.caption)}</figcaption>
               )}
             </figure>
             <div className={block.imagePosition === "right" ? "sm:order-1" : "sm:order-2"}>
               {block.heading && (
                 <h3 className="font-display text-xl leading-snug text-leaf-900 sm:text-2xl">
-                  {block.heading}
+                  {frenchSpacing(block.heading)}
                 </h3>
               )}
               <div className="mt-3 space-y-4">
@@ -165,7 +165,7 @@ function Block({ block }: { block: BlogBlock }) {
               />
             </div>
             {block.caption && (
-              <figcaption className="mt-3 text-center text-sm text-ink/55">{block.caption}</figcaption>
+              <figcaption className="mt-3 text-center text-sm text-ink/55">{frenchSpacing(block.caption)}</figcaption>
             )}
           </figure>
         </Reveal>
@@ -176,7 +176,7 @@ function Block({ block }: { block: BlogBlock }) {
           <div className="mt-8 rounded-2xl bg-leaf-50 p-6">
             {block.heading && (
               <p className="text-xs font-semibold uppercase tracking-wide text-leaf-700">
-                {block.heading}
+                {frenchSpacing(block.heading)}
               </p>
             )}
             <ul className="mt-3 space-y-2">
@@ -294,6 +294,9 @@ export default async function BlogPostPage({
           {/* Assombrit seulement la moitié basse, derrière le titre : la photo
               (visages compris) reste nette et lumineuse au-dessus. */}
           <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-leaf-950 via-leaf-950/75 to-transparent" />
+          {post.featuredImage.credit && (
+            <p className="absolute right-3 top-3 rounded-full bg-leaf-950/55 px-2.5 py-1 text-[10px] text-mist-50/80 backdrop-blur">{post.featuredImage.credit}</p>
+          )}
         </div>
         <Container className="relative -mt-16 pb-12 sm:-mt-32 sm:pb-14">
           <span className="inline-flex rounded-full bg-mist-50/12 px-3 py-1 text-xs font-medium text-leaf-200 ring-1 ring-mist-50/15 backdrop-blur">

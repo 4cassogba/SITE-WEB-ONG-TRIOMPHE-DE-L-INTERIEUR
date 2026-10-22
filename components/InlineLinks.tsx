@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { frenchSpacing } from "@/lib/typography";
 
 const INLINE_LINK = /\[([^\]]+)\]\(([^)\s]+)\)/g;
 
@@ -9,7 +10,10 @@ export const inlineLinkClass =
 // `[libellé](href)` -> lien : interne (next/link) si le chemin commence par « / »,
 // externe (nouvel onglet, sans nofollow : on veut transmettre l'autorité) sinon.
 // Les éléments React sont construits ici, aucun HTML brut n'est injecté.
-export function renderInline(text: string): ReactNode {
+// Typographie française appliquée au texte (jamais aux adresses) : « » : ; ! ?
+// restent attachés à leur mot et ne passent pas seuls à la ligne.
+export function renderInline(rawText: string): ReactNode {
+  const text = frenchSpacing(rawText);
   const parts: ReactNode[] = [];
   let last = 0;
   for (const match of text.matchAll(INLINE_LINK)) {

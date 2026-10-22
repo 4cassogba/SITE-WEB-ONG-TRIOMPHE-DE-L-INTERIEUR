@@ -60,6 +60,148 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "burn-out-signaux-a-reperer-et-gestes-qui-protegent",
+    type: "article",
+    title: "Burn-out : les signaux à repérer avant l'épuisement, et les gestes qui protègent",
+    excerpt:
+      "Le burn-out ne tombe pas du ciel : il s'installe, petit à petit, quand le stress du travail n'est plus géré. Comment le reconnaître à temps, et les gestes simples partagés au CIGIBM 2026 pour s'en protéger.",
+    date: "23 octobre 2026",
+    isoDate: "2026-10-23",
+    readTime: "5 min",
+    author: "ONG Triomphe de l'Intérieur",
+    authorRole: "Équipe de communication",
+    authorAvatar: "/images/logo-mark.png",
+    featuredImage: {
+      src: "/images/blog/burn-out/homme-regard-soucieux-bureau.jpg",
+      alt: "Un homme en chemise bleu clair, sacoche à l'épaule, le regard soucieux, au milieu de la foule d'une rue animée",
+      credit: "Photo : Surprising_Media / Pixabay",
+    },
+    kicker: "Bien-être mental",
+    body: [
+      {
+        type: "paragraph",
+        text: "On ne va pas se mentir : au travail, on apprend surtout à tenir. Finir le dossier, répondre au message, ne pas montrer qu'on flanche. Le problème, c'est que tenir trop longtemps sans souffler finit par coûter cher. Le burn-out ne frappe pas d'un coup : il s'installe, petit à petit, jusqu'au jour où le corps et la tête disent stop.",
+      },
+      {
+        type: "heading",
+        text: "Le burn-out, qu'est-ce que c'est vraiment ?",
+      },
+      {
+        type: "paragraph",
+        text: "L'[Organisation mondiale de la Santé](https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases) le décrit comme un syndrome qui résulte d'un stress chronique au travail qui n'a pas été géré avec succès. Elle retient trois dimensions :",
+      },
+      {
+        type: "list",
+        items: [
+          "Un sentiment d'épuisement : l'impression d'avoir l'énergie à plat.",
+          "Une distance qui s'installe avec son travail, ou un regard de plus en plus négatif, voire cynique, sur ce qu'on fait.",
+          "Une efficacité professionnelle qui baisse.",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Une précision utile : pour l'OMS, le mot burn-out concerne le travail. L'épuisement lié aux études, à la famille ou au couple n'en mérite pas moins d'attention, mais il porte d'autres noms.",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/blog/burn-out/tete-dans-les-mains-ordinateur.jpg",
+          alt: "Vu d'en haut, un homme assis à son bureau, la tête dans les mains devant son ordinateur portable, entouré de carnets et d'une tasse",
+        },
+        imagePosition: "left",
+        heading: "Les signaux qui doivent alerter",
+        caption: "Photo : lukasbieri / Pixabay",
+        paragraphs: [
+          "Avant l'épuisement, il y a presque toujours des signaux. Le piège, c'est de les mettre sur le compte d'une « mauvaise semaine », puis d'une autre, puis d'une autre encore.",
+          "Ce sont des signaux, pas un diagnostic : seul un professionnel de santé peut dire ce qu'il en est. Mais s'en reconnaître plusieurs, depuis plusieurs semaines, mérite qu'on s'arrête.",
+        ],
+      },
+      {
+        type: "list",
+        items: [
+          "Une fatigue qui ne passe plus, même après un week-end ou des congés.",
+          "Un sommeil qui se dérègle : du mal à s'endormir, des réveils la nuit en pensant au travail.",
+          "Une irritabilité inhabituelle avec les collègues ou les proches.",
+          "Du mal à se concentrer, des oublis, des erreurs qui ne vous ressemblent pas.",
+          "Une boule au ventre le dimanche soir, ou l'envie de tout lâcher.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Les gestes qui protègent, partagés au CIGIBM 2026",
+      },
+      {
+        type: "paragraph",
+        text: "Au CIGIBM 2026, le psychologue Espoir Tchéoun a consacré son intervention à la prévention du burn-out au travail. L'hebdomadaire Educ'Action en a retenu [sept pistes](/blog/educaction-cigibm-2026-prevention-de-la-depression), que nous détaillons ici :",
+      },
+      {
+        type: "list",
+        items: [
+          "Repérer les signaux : relisez la liste ci-dessus de temps en temps, honnêtement.",
+          "Demander de l'aide : à un proche, à un collègue de confiance, à sa hiérarchie ou à un professionnel.",
+          "Écouter son corps : la fatigue, les douleurs, le sommeil qui se dérègle sont des messages, pas des faiblesses.",
+          "Manger sainement : des repas réguliers, sans sauter le déjeuner « pour gagner du temps ».",
+          "Préserver une vie en dehors du travail : la famille, les amis, la foi et les loisirs ne sont pas des options.",
+          "Pratiquer le lâcher-prise : accepter de ne pas tout contrôler, et de ne pas tout faire soi-même.",
+          "Faire du sport : marcher, danser, s'étirer, à son rythme. Quelques minutes valent mieux que rien.",
+        ],
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/blog/burn-out/deux-femmes-rient-ensemble.jpg",
+          alt: "Deux jeunes femmes rient aux éclats, serrées l'une contre l'autre, sur une pelouse devant un bâtiment jaune",
+        },
+        imagePosition: "right",
+        heading: "Parler, c'est déjà se protéger",
+        caption: "Photo : JUSTADE-MOTIVES / Pixabay",
+        paragraphs: [
+          "Chez nous, on entend souvent qu'il faut « tenir ». Mais tenir seul n'est pas une force, c'est un risque. Un ami qui écoute, une collègue qui remarque, une sœur qui pose la bonne question : c'est souvent là que tout commence.",
+          "C'est l'esprit du « vaccin de la dépression », thème du CIGIBM 2026 : renforcer ses ressources avant que la souffrance ne s'installe, plutôt que d'attendre la crise.",
+        ],
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/blog/burn-out/femme-yeux-fermes-lumiere.jpg",
+          alt: "Une jeune femme les yeux fermés, le visage dans la lumière du soleil près d'une fenêtre, une main dans les cheveux",
+        },
+        imagePosition: "left",
+        heading: "Une pause de deux minutes",
+        caption: "Photo : LEVEL_uP_PICTURES / Pixabay",
+        paragraphs: [
+          "Quand la pression monte, essayez ceci : inspirez par le nez en comptant jusqu'à quatre, puis expirez doucement par la bouche en comptant jusqu'à six. Recommencez pendant deux minutes.",
+          "Ce n'est pas un traitement, c'est une pause. Mais une pause prise à temps évite souvent que la journée ne déborde.",
+        ],
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/blog/burn-out/femme-s-etire-plein-air.jpg",
+          alt: "Une femme s'étire en plein air, les bras levés, dans un paysage sec sous un ciel bleu",
+        },
+        imagePosition: "right",
+        heading: "Bouger, à son rythme",
+        caption: "Photo : StockSnap / Pixabay",
+        paragraphs: [
+          "Pas besoin de salle de sport : marcher pour rentrer, danser à la maison, s'étirer entre deux tâches. Le corps qui bouge aide la tête à relâcher.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Quand faut-il consulter ?",
+      },
+      {
+        type: "paragraph",
+        text: "Si l'épuisement dure depuis plusieurs semaines, si le sommeil, l'appétit ou l'humeur changent nettement, ou si des idées noires apparaissent, parlez-en sans attendre à un médecin ou à un professionnel de santé mentale. En cas de danger immédiat, contactez les services d'urgence.",
+      },
+      {
+        type: "paragraph",
+        text: "Et si vous avez simplement besoin d'en parler, sans jugement, notre équipe est là : [écrivez-nous](/contact). Pour aller plus loin, découvrez la [Méthode R.A.C.I.N.E.S.](/methode-racines), notre façon d'accompagner celles et ceux qui veulent retrouver leur équilibre.",
+      },
+    ],
+  },
+  {
     slug: "educaction-cigibm-2026-prevention-de-la-depression",
     type: "article",
     title: "Educ'Action : « Christelle Gnimassou pour la prévention de la dépression »",
