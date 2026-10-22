@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/auth";
 import { getEditionHub, listEditions, pickDefaultEdition } from "@/lib/admin/cigibm";
-import { CIGIBM_SPACE, cigibmHref, editionPhase } from "@/lib/cigibm-hub";
+import { CIGIBM_SPACE, cigibmHref, editionPhase, hasPreparation } from "@/lib/cigibm-hub";
 import PhasePill from "./PhasePill";
 
 const ordinal = (n: number) => (n === 1 ? "1ère" : `${n}ème`);
@@ -47,10 +47,17 @@ export default async function EventsPage() {
                   <dt className="text-xs text-mist-50/60">Présents</dt>
                   <dd className="font-display text-2xl">{hub.stats.attended}</dd>
                 </div>
-                <div>
-                  <dt className="text-xs text-mist-50/60">Préparation</dt>
-                  <dd className={`font-display ${hub.tasks.length ? "text-2xl" : "whitespace-nowrap pt-1.5 text-lg"}`}>{hub.tasks.length ? `${Math.round((hub.tasksDone / hub.tasks.length) * 100)} %` : "À lancer"}</dd>
-                </div>
+                {hasPreparation(hub.phase) ? (
+                  <div>
+                    <dt className="text-xs text-mist-50/60">Préparation</dt>
+                    <dd className={`font-display ${hub.tasks.length ? "text-2xl" : "whitespace-nowrap pt-1.5 text-lg"}`}>{hub.tasks.length ? `${Math.round((hub.tasksDone / hub.tasks.length) * 100)} %` : "À lancer"}</dd>
+                  </div>
+                ) : (
+                  <div>
+                    <dt className="text-xs text-mist-50/60">Présence</dt>
+                    <dd className="font-display text-2xl">{hub.stats.attendanceRate} %</dd>
+                  </div>
+                )}
               </dl>
             </div>
           )}

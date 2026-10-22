@@ -2,7 +2,7 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { countLeadsToContact } from "@/lib/admin/leads";
 import { getEditionHub, getScannerSummary, listEditions, pickDefaultEdition } from "@/lib/admin/cigibm";
-import { cigibmHref, type Insight } from "@/lib/cigibm-hub";
+import { cigibmHref, editionPhase, hasPreparation, type Insight } from "@/lib/cigibm-hub";
 import PhasePill from "./evenements/PhasePill";
 
 const TZ = "Africa/Porto-Novo";
@@ -45,13 +45,28 @@ export default async function AdminDashboardPage() {
     db.adminProfile.count({ where: { suspendedAt: null } }),
   ]);
 
-  // À traiter : les alertes de l'événement en cours (contacts à rappeler compris),
-  // puis ce qui reste à publier sur le site.
+  // Édition terminée depuis moins de 30 jours (autre que celle mise en avant) : ses
+  // actions de bilan (relance des absents…) restent à traiter.
+  const recent = editions
+    .filter((e) => e.number !== currentNumber && e.eventDate)
+    .map((e) => ({ e, phase: editionPhase(e.eventDate, now) }))
+    .find(({ phase }) => phase.kind === "past" && phase.days <= 30);
+  const recentHub = recent ? await getEditionHub(recent.e.number, now) : null;
+
+  // À traiter : les alertes de l'événement mis en avant (contacts à rappeler compris),
+  // celles du bilan de l'édition récente, puis ce qui reste à publier sur le site.
   const todo: Insight[] = (hub?.insights ?? []).filter((i) => i.level !== "good");
+  for (const i of recentHub?.insights ?? []) {
+    if (i.level === "good" || todo.some((t) => t.title === i.title)) continue;
+    todo.push({ ...i, title: `Édition ${recentHub!.edition.number} : ${i.title.charAt(0).toLowerCase()}${i.title.slice(1)}` });
+  }
   if (activitiesTotal > 0 && activitiesPublished === 0) {
     todo.push({ level: "info", title: `${activitiesTotal} activités en brouillon`, detail: "Aucune n'est encore publiée sur le site : relisez-les et publiez celles qui sont validées.", href: "/admin/activities" });
   }
   const eventToday = hub?.phase.kind === "today";
+  const held = editions.filter((e) => editionPhase(e.eventDate, now).kind === "past").length;
+  const preparing = editions.filter((e) => hasPreparation(editionPhase(e.eventDate, now))).map((e) => e.number);
+  const eventsNote = `CIGIBM : ${held} édition${held > 1 ? "s" : ""} tenue${held > 1 ? "s" : ""}${preparing.length ? `, la ${ordinal(Math.max(...preparing))} en préparation` : ""}`;
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -77,10 +92,17 @@ export default async function AdminDashboardPage() {
               <dt className="text-xs text-mist-50/60">Présents</dt>
               <dd className="font-display text-2xl">{hub.stats.attended}</dd>
             </div>
-            <div>
-              <dt className="text-xs text-mist-50/60">Préparation</dt>
-              <dd className={`font-display ${hub.tasks.length ? "text-2xl" : "whitespace-nowrap pt-1.5 text-lg"}`}>{hub.tasks.length ? `${Math.round((hub.tasksDone / hub.tasks.length) * 100)} %` : "À lancer"}</dd>
-            </div>
+            {hasPreparation(hub.phase) ? (
+              <div>
+                <dt className="text-xs text-mist-50/60">Préparation</dt>
+                <dd className={`font-display ${hub.tasks.length ? "text-2xl" : "whitespace-nowrap pt-1.5 text-lg"}`}>{hub.tasks.length ? `${Math.round((hub.tasksDone / hub.tasks.length) * 100)} %` : "À lancer"}</dd>
+              </div>
+            ) : (
+              <div>
+                <dt className="text-xs text-mist-50/60">Présence</dt>
+                <dd className="font-display text-2xl">{hub.stats.attendanceRate} %</dd>
+              </div>
+            )}
           </dl>
 
           <div className="mt-5 flex flex-wrap gap-2">
@@ -109,7 +131,7 @@ export default async function AdminDashboardPage() {
         <h2 className="font-display text-xl text-leaf-900">Rubriques</h2>
         <div className="mt-3 grid grid-cols-2 gap-3">
           {[
-            { href: "/admin/evenements", label: "Événements", note: `CIGIBM, ${editions.length} éditions` },
+            { href: "/admin/evenements", label: "Événements", note: eventsNote },
             { href: "/admin/activities", label: "Activités", note: `${activitiesPublished} publiées sur ${activitiesTotal}` },
             { href: "/admin/leads", label: "Contacts à rappeler", note: leads.total === 0 ? "Personne en attente" : `${leads.total} en attente` },
             { href: "/admin/resources", label: "Dossier ressources", note: `${resources} document${resources > 1 ? "s" : ""}` },

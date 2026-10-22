@@ -5,6 +5,8 @@ import {
   buildChecklist,
   buildInsights,
   editionPhase,
+  hasPreparation,
+  rescheduleChecklist,
   type EditionInput,
   type TaskInput,
   type TaskStatusKey,
@@ -159,7 +161,14 @@ export async function createEdition(input: EditionInput) {
 }
 
 export async function updateEdition(number: number, input: Omit<EditionInput, "number">) {
+  const before = await db.edition.findUniqueOrThrow({ where: { number }, select: { eventDate: true } });
   await db.edition.update({ where: { number }, data: input });
+  // Date fixée ou déplacée : les échéances de la checklist type suivent.
+  const tasks = await db.cigibmTask.findMany({ where: { editionNumber: number }, select: { id: true, title: true, dueDate: true } });
+  const changes = rescheduleChecklist(tasks, before.eventDate, input.eventDate);
+  if (changes.length) {
+    await db.$transaction(changes.map((c) => db.cigibmTask.update({ where: { id: c.id }, data: { dueDate: c.dueDate } })));
+  }
 }
 
 // ---- Checklist ----
@@ -170,6 +179,7 @@ export async function generateChecklist(editionNumber: number) {
     db.cigibmTask.count({ where: { editionNumber } }),
   ]);
   if (count > 0) return 0; // jamais de doublons : la checklist n'est générée qu'une fois
+  if (!hasPreparation(editionPhase(edition.eventDate, new Date()))) return 0; // rien à préparer pour une édition passée
   const rows = buildChecklist(edition.eventDate).map((t) => ({ ...t, editionNumber }));
   const res = await db.cigibmTask.createMany({ data: rows });
   return res.count;

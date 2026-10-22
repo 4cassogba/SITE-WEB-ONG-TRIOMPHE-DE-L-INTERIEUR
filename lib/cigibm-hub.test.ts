@@ -12,6 +12,8 @@ import {
   validateEditionForm,
   validateTaskForm,
   CHECKLIST_TEMPLATE,
+  rescheduleChecklist,
+  tabsFor,
   TASK_CATEGORIES,
   type InsightInput,
 } from "./cigibm-hub";
@@ -55,6 +57,24 @@ describe("checklist type", () => {
   it("sans date d'édition, aucune échéance inventée", () => {
     expect(buildChecklist(null).every((t) => t.dueDate === null)).toBe(true);
   });
+  it("la checklist suit la date de l'édition, sauf les échéances modifiées à la main", () => {
+    const first = new Date("2027-06-12T12:00:00Z");
+    const moved = new Date("2027-07-10T12:00:00Z");
+    const salle = CHECKLIST_TEMPLATE.find((t) => t.title.startsWith("Réserver"))!;
+    const tasks = [
+      { id: "a", title: salle.title, dueDate: null },
+      { id: "b", title: salle.title, dueDate: new Date(first.getTime() + salle.offsetDays * 86_400_000) },
+      { id: "c", title: salle.title, dueDate: new Date("2027-01-01T12:00:00Z") },
+      { id: "d", title: "Tâche ajoutée à la main", dueDate: null },
+    ];
+    // date fixée pour la première fois
+    expect(rescheduleChecklist(tasks.slice(0, 1), null, first).map((t) => toDateInput(t.dueDate))).toEqual(["2027-01-13"]);
+    // date déplacée : a (vide) et b (calée sur l'ancienne date) suivent, c (modifiée) et d (hors modèle) restent
+    const out = rescheduleChecklist(tasks, first, moved);
+    expect(out.map((t) => t.id)).toEqual(["a", "b"]);
+    expect(toDateInput(out[1].dueDate)).toBe("2027-02-10");
+    expect(rescheduleChecklist(tasks, first, first)).toEqual([]);
+  });
   it("le statut tourne todo, doing, done, todo", () => {
     expect(nextStatus("todo")).toBe("doing");
     expect(nextStatus("doing")).toBe("done");
@@ -83,8 +103,8 @@ describe("alertes", () => {
   it("sans date : demande de la définir", () => {
     expect(buildInsights({ ...base, eventDate: null }).some((x) => x.title.includes("Date"))).toBe(true);
   });
-  it("retards de checklist et contacts qui demandent de l'aide sont des alertes", () => {
-    const out = buildInsights({ ...base, tasksTotal: 10, tasksOverdue: 2, leadsToContact: 3, leadsNeedingHelp: 1 });
+  it("retards de checklist (édition à venir) et contacts qui demandent de l'aide sont des alertes", () => {
+    const out = buildInsights({ ...base, eventDate: new Date("2027-06-12T12:00:00Z"), tasksTotal: 10, tasksOverdue: 2, leadsToContact: 3, leadsNeedingHelp: 1 });
     expect(out.find((x) => x.title.startsWith("2 tâches"))?.level).toBe("alert");
     expect(out.find((x) => x.title.includes("contacts à rappeler"))?.level).toBe("alert");
   });
@@ -93,9 +113,17 @@ describe("alertes", () => {
     expect(out).toHaveLength(1);
     expect(out[0].level).toBe("good");
   });
-  it("pas de checklist proposée pour une édition ancienne", () => {
-    const out = buildInsights({ ...base, eventDate: new Date("2024-04-27T12:00:00Z") });
-    expect(out.some((x) => x.title.includes("checklist"))).toBe(false);
+  it("aucune préparation pour une édition passée, même récente", () => {
+    for (const eventDate of [new Date("2024-04-27T12:00:00Z"), new Date("2026-10-17T12:00:00Z")]) {
+      const out = buildInsights({ ...base, eventDate, tasksTotal: 0, tasksOverdue: 3 });
+      expect(out.some((x) => x.title.includes("checklist") || x.title.includes("retard"))).toBe(false);
+    }
+  });
+  it("l'onglet Préparation n'existe que pour une édition à venir ou sans date", () => {
+    const now = new Date("2026-10-22T10:00:00Z");
+    expect(tabsFor(editionPhase(new Date("2026-10-17T12:00:00Z"), now))).not.toContain("preparation");
+    expect(tabsFor(editionPhase(new Date("2027-06-12T12:00:00Z"), now))).toContain("preparation");
+    expect(tabsFor(editionPhase(null, now))).toContain("preparation");
   });
 });
 

@@ -86,6 +86,15 @@ export function phaseLabel(phase: EditionPhase): string {
   }
 }
 
+// Une édition passée n'a plus de préparation : l'onglet et les alertes disparaissent.
+export function hasPreparation(phase: EditionPhase): boolean {
+  return phase.kind !== "past";
+}
+
+export function tabsFor(phase: EditionPhase): CigibmTab[] {
+  return CIGIBM_TABS.filter((t) => t !== "preparation" || hasPreparation(phase));
+}
+
 // ---- Checklist type ----
 
 // Échéances relatives au jour de l'édition (J-150 = 150 jours avant). Ce sont
@@ -140,6 +149,26 @@ export function buildChecklist(eventDate: Date | null) {
   }));
 }
 
+// Quand le jour principal d'une édition est fixé ou déplacé, les étapes de la
+// checklist type suivent : une échéance vide ou encore calée sur l'ancienne date
+// est recalculée. Une échéance modifiée à la main n'est jamais touchée.
+export function rescheduleChecklist(
+  tasks: { id: string; title: string; dueDate: Date | null }[],
+  oldDate: Date | null,
+  newDate: Date | null,
+): { id: string; dueDate: Date | null }[] {
+  if (!newDate || (oldDate && oldDate.getTime() === newDate.getTime())) return [];
+  const offsets = new Map(CHECKLIST_TEMPLATE.map((t) => [t.title, t.offsetDays]));
+  const out: { id: string; dueDate: Date | null }[] = [];
+  for (const task of tasks) {
+    const offset = offsets.get(task.title);
+    if (offset === undefined) continue;
+    const followsOld = oldDate !== null && task.dueDate !== null && task.dueDate.getTime() === addDays(oldDate, offset).getTime();
+    if (task.dueDate === null || followsOld) out.push({ id: task.id, dueDate: addDays(newDate, offset) });
+  }
+  return out;
+}
+
 // ---- Calendrier de communication recommandé ----
 
 export type CommsStep = { offsetDays: number; label: string; detail: string };
@@ -183,11 +212,11 @@ export function buildInsights(i: InsightInput): Insight[] {
   if (phase.kind === "undated") {
     out.push({ level: "alert", title: "Date de l'édition non définie", detail: "Sans date, pas de compte à rebours ni d'échéances automatiques.", href: `${CIGIBM_SPACE}/editions/${i.editionNumber}/edit`, cta: "Définir la date" });
   }
-  // Une checklist n'a de sens que pour une édition à venir ou tout juste passée (bilan).
-  if (i.tasksTotal === 0 && !(phase.kind === "past" && phase.days > 30)) {
+  // La préparation ne concerne qu'une édition à venir : rien à préparer pour une édition passée.
+  if (hasPreparation(phase) && i.tasksTotal === 0) {
     out.push({ level: "info", title: "Aucune checklist de préparation", detail: "Générez la checklist type (une trentaine d'étapes avec échéances), puis ajustez-la.", href: cigibmHref(i.editionNumber, "preparation"), cta: "Ouvrir la préparation" });
   }
-  if (i.tasksOverdue > 0) {
+  if (hasPreparation(phase) && i.tasksOverdue > 0) {
     out.push({ level: "alert", title: `${i.tasksOverdue} tâche${i.tasksOverdue > 1 ? "s" : ""} en retard`, detail: "Des étapes de préparation ont dépassé leur échéance.", href: cigibmHref(i.editionNumber, "preparation"), cta: "Voir les retards" });
   }
   if (phase.kind === "past" && i.noShows > 0) {

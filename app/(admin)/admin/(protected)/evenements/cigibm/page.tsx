@@ -12,6 +12,8 @@ import {
   addDays,
   cigibmHref,
   daysUntil,
+  hasPreparation,
+  tabsFor,
   type CigibmTab,
   type Insight,
 } from "@/lib/cigibm-hub";
@@ -115,7 +117,7 @@ export default async function CigibmSpacePage({ searchParams }: { searchParams: 
   const editions = await listEditions();
   const requested = Number(edition);
   const current = editions.some((e) => e.number === requested) ? requested : pickDefaultEdition(editions, now);
-  const activeTab: CigibmTab = CIGIBM_TABS.includes(tab as CigibmTab) ? (tab as CigibmTab) : "apercu";
+  const requestedTab: CigibmTab = CIGIBM_TABS.includes(tab as CigibmTab) ? (tab as CigibmTab) : "apercu";
 
   if (current === null) {
     return (
@@ -128,6 +130,10 @@ export default async function CigibmSpacePage({ searchParams }: { searchParams: 
   }
 
   const hub = (await getEditionHub(current, now))!;
+  // Une édition passée n'a pas d'onglet Préparation : on retombe sur la vue d'ensemble.
+  const tabs = tabsFor(hub.phase);
+  const activeTab: CigibmTab = tabs.includes(requestedTab) ? requestedTab : "apercu";
+  const preparing = hasPreparation(hub.phase);
   const [participantsData, ambassadors, scanner] = await Promise.all([
     activeTab === "participants" ? getParticipantsForEdition(current) : null,
     activeTab === "ambassadeurs" ? listAmbassadorsWithStats() : null,
@@ -190,7 +196,7 @@ export default async function CigibmSpacePage({ searchParams }: { searchParams: 
 
       {/* ---------- Onglets ---------- */}
       <nav aria-label="Rubriques du CIGIBM" className="sticky top-[calc(env(safe-area-inset-top)+3.4rem)] z-20 -mx-4 mt-5 flex gap-1 overflow-x-auto border-b border-ink/10 bg-mist-100/95 px-4 backdrop-blur sm:mx-0 sm:px-0 lg:top-0">
-        {CIGIBM_TABS.map((t) => (
+        {tabs.map((t) => (
           <Link
             key={t}
             href={href(t)}
@@ -211,7 +217,11 @@ export default async function CigibmSpacePage({ searchParams }: { searchParams: 
               <Stat label="Inscrits" value={stats.participants} note={`${stats.withEmail} avec email`} href={href("participants")} />
               <Stat label="Présents" value={stats.attended} note={stats.participants ? `${stats.attendanceRate} % des inscrits` : "Aucun inscrit"} href={href("scanner")} />
               <Stat label="Venus par un ambassadeur" value={stats.viaAmbassadors} note={stats.participants ? `${Math.round((stats.viaAmbassadors / stats.participants) * 100)} % des inscrits` : "Aucun inscrit"} href={href("ambassadeurs")} />
-              <Stat label="Préparation" value={hub.tasks.length ? `${prepPct} %` : "À lancer"} note={hub.tasks.length ? `${hub.tasksDone} étapes sur ${hub.tasks.length}` : "Pas encore de checklist"} href={href("preparation")} />
+              {preparing ? (
+                <Stat label="Préparation" value={hub.tasks.length ? `${prepPct} %` : "À lancer"} note={hub.tasks.length ? `${hub.tasksDone} étapes sur ${hub.tasks.length}` : "Pas encore de checklist"} href={href("preparation")} />
+              ) : (
+                <Stat label="Non présents" value={stats.noShows} note={`${stats.noShowsWithEmail} joignables par email`} href={href("communication")} />
+              )}
             </div>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
               <section>
