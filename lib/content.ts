@@ -61,6 +61,15 @@ export const presidentQuote = {
 // URL) avant d'être ajouté ici. Ne pas ajouter d'URL non vérifiée.
 export const pressMentions = [
   {
+    outlet: "Educ'Action",
+    title: "CIGIBM 2026 : Christelle Gnimassou pour la prévention de la dépression",
+    date: "Semaine du 20 octobre 2026",
+    excerpt:
+      "L'hebdomadaire spécialisé dans l'éducation consacre sa page 23 au CIGIBM 2026 : la santé mentale, un investissement plutôt qu'un coût.",
+    url: "/blog/educaction-cigibm-2026-prevention-de-la-depression",
+    image: "/images/cigibm/reportage-educaction-cover.jpg",
+  },
+  {
     outlet: "Les Nouvelles du Jour",
     title: "La Coach Christelle Eugénie Gnimassou opte pour la résilience face à la dépression",
     date: "21 octobre 2026",

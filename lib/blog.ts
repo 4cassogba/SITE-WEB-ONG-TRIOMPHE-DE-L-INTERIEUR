@@ -60,6 +60,146 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "educaction-cigibm-2026-prevention-de-la-depression",
+    type: "article",
+    title: "Educ'Action : « Christelle Gnimassou pour la prévention de la dépression »",
+    excerpt:
+      "Dans son numéro 676, du 20 au 26 octobre 2026, l'hebdomadaire Educ'Action consacre sa page 23 au CIGIBM 2026. Gloria Adjivessode y retient une idée forte : la santé mentale n'est pas un coût, c'est un investissement.",
+    date: "22 octobre 2026",
+    isoDate: "2026-10-22",
+    readTime: "5 min",
+    author: "ONG Triomphe de l'Intérieur",
+    authorRole: "Équipe de communication",
+    authorAvatar: "/images/logo-mark.png",
+    featuredImage: {
+      src: "/images/cigibm/reportage-educaction-cover.jpg",
+      alt: "La page 23 d'Educ'Action n°676, « Christelle Gnimassou pour la prévention de la dépression », et la photo de famille des participants du CIGIBM 2026 sur la scène de la salle rouge",
+    },
+    kicker: "Revue de presse",
+    essentials: {
+      intro: "Le congrès dont parle le journal, et celles et ceux qui le portent.",
+      person: {
+        name: "Coach Christelle Eugénie Gnimassou",
+        role: "Présidente-fondatrice de l'ONG Triomphe de l'Intérieur et promotrice du CIGIBM",
+        image: "/images/presidente.jpg",
+        imagePosition: "50% 22%",
+      },
+      items: [
+        { label: "Le congrès", value: "[CIGIBM](/cigibm), Congrès International de Guérison Intérieure et de Bien-être Mental, 4ème édition" },
+        { label: "Dates et lieu", value: "17 et 18 octobre 2026, salle rouge du Palais des Congrès de Cotonou" },
+        { label: "Thème", value: "« Le vaccin de la dépression »" },
+        { label: "Organisé par", value: "[ONG Triomphe de l'Intérieur](/a-propos), qui accompagne les femmes et les jeunes vers le bien-être mental" },
+        { label: "Marraine", value: "Ella Wama Mara, experte en genre et développement" },
+        { label: "Dans la presse", value: "Educ'Action, n°676 (du 20 au 26 octobre 2026), page 23" },
+      ],
+    },
+    body: [
+      {
+        type: "paragraph",
+        text: "Après Fraternité mardi et [Les Nouvelles du Jour](/blog/les-nouvelles-du-jour-cigibm-2026-resilience-face-a-la-depression) mercredi, c'est au tour d'[Educ'Action](https://eduactions.bj/) de revenir sur le CIGIBM 2026. L'hebdomadaire béninois spécialisé dans les questions éducatives, déjà présent à notre [conférence de presse du 10 octobre](/blog/conference-presse-cigibm-vaccin-de-la-depression), lui consacre la page 23 de son numéro 676, daté du mardi 20 au lundi 26 octobre 2026, dans sa rubrique Actualités. L'article est signé Gloria Adjivessode.",
+      },
+      {
+        type: "heading",
+        text: "Une page entière, sous le signe de la prévention",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/educaction-n676-page-23-cigibm-2026.jpg",
+          alt: "Page 23 d'Educ'Action n°676, rubrique Actualités : « CIGIBM 2026, Christelle Gnimassou pour la prévention de la dépression », avec la photo de famille des participants",
+        },
+        imagePosition: "left",
+        imageAspect: "portrait",
+        caption: "Educ'Action, n°676 (du 20 au 26 octobre 2026), page 23, rubrique Actualités. Article de Gloria Adjivessode.",
+        paragraphs: [
+          "Le titre résume l'angle choisi : « Christelle Gnimassou pour la prévention de la dépression ». Le chapeau plante le décor : la salle rouge du Palais des Congrès de Cotonou a accueilli, le samedi 17 octobre 2026, l'ouverture officielle de la 4ème édition, en présence d'experts et de spécialistes venus mettre en lumière les différentes manières de prévenir la dépression.",
+          "Le journal présente le congrès comme une plateforme de prévention ancrée dans les communautés, qui complète l'action de l'État et des professionnels de la santé. C'est exactement la place que nous voulons tenir : en amont, aux côtés des institutions, jamais à leur place.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "« Cette journée est un puzzle »",
+      },
+      {
+        type: "paragraph",
+        text: "Au moment d'accueillir l'assistance, la promotrice du CIGIBM et présidente de l'ONG Triomphe de l'Intérieur a donné le ton : chaque intervention avait sa place dans un ensemble.",
+      },
+      {
+        type: "quote",
+        text: "Cette journée est un puzzle. Chaque intervention en est une pièce.",
+        cite: "Christelle Gnimassou, citée par Educ'Action",
+      },
+      {
+        type: "heading",
+        text: "La santé mentale, un investissement plutôt qu'un coût",
+      },
+      {
+        type: "paragraph",
+        text: "Educ'Action retient aussi un argument que nous portons auprès des décideurs : la santé mentale n'est pas un coût, c'est un investissement. Le journal rapporte les chiffres avancés par la promotrice :",
+      },
+      {
+        type: "quote",
+        text: "Les États consacrent à la santé mentale en moyenne 2 % de leur budget de santé. Et pourtant, chaque dollar investi pour soigner la dépression et l'anxiété en rapporte environ 4.",
+        cite: "Christelle Gnimassou, citée par Educ'Action",
+      },
+      {
+        type: "heading",
+        text: "Accueillir la vulnérabilité",
+      },
+      {
+        type: "paragraph",
+        text: "Experte en genre et développement, [Ella Wama Mara](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), marraine de cette édition, a rappelé que la santé mentale n'est pas un luxe réservé aux privilégiés : c'est une condition de notre dignité, de notre liberté, de notre épanouissement individuel et collectif, et de notre capacité à vivre ensemble.",
+      },
+      {
+        type: "quote",
+        text: "Nous célébrons la force mais nous avons encore du mal à accueillir la vulnérabilité. Il est temps de briser ce paradoxe.",
+        cite: "[Ella Wama Mara](https://www.facebook.com/ella.wama), citée par Educ'Action",
+      },
+      {
+        type: "heading",
+        text: "Ce que les intervenants ont transmis",
+      },
+      {
+        type: "paragraph",
+        text: "Le journal détaille trois communications, avec des repères concrets que chacun peut garder :",
+      },
+      {
+        type: "list",
+        items: [
+          "Annick Mireille Azandjèmè, « Racines émotionnelles et transgénérationnelles de la dépression » : les origines et les causes profondes de la dépression, y compris ce qui se transmet d'une génération à l'autre, ses caractéristiques et la manière d'y faire face.",
+          "Valdye Gbaguidi, créatrice de contenus, « Confiance en soi, jugement et stigmatisation » : trois règles pour retrouver confiance. Identifier les jugements, positifs comme négatifs, dont on fait l'objet ; se forger un avis personnel sur soi-même ; quitter un environnement où l'on n'est pas valorisé.",
+          "Espoir Tchéoun, psychologue, « Prévenir le burn-out au travail » : repérer les signaux, demander de l'aide, écouter son corps, manger sainement, préserver une vie en dehors du travail, pratiquer le lâcher-prise et faire du sport.",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "La journée a aussi fait place à des interventions sur la foi et les blessures intérieures, à la présentation du « vaccin de la dépression » et à un grand panel sur la résilience, la famille, la foi et les finances. Le congrès s'est achevé le 18 octobre par des séances pratiques, que le journal décrit comme consacrées à la « libération des traumatismes », suivies de moments de convivialité.",
+      },
+      {
+        type: "imageText",
+        image: {
+          src: "/images/cigibm/cigibm-photo-ensemble-scene.jpg",
+          alt: "Photo de famille du CIGIBM 2026 : participants, intervenants et équipe réunis debout sur la scène de la salle rouge du Palais des Congrès",
+        },
+        imagePosition: "right",
+        heading: "Tous sur scène",
+        caption: "Vue d'ensemble des participants, la photo retenue par Educ'Action (photo : Jores Karl).",
+        paragraphs: [
+          "Le journal illustre son article par la photo de famille du congrès : participants, intervenants et équipe réunis sur la scène de la salle rouge.",
+          "Si vous y étiez, merci. Et si vous traversez une période difficile, n'attendez pas que cela s'aggrave : [écrivez-nous](/contact), sans jugement.",
+        ],
+      },
+      {
+        type: "heading",
+        text: "Merci à Educ'Action",
+      },
+      {
+        type: "paragraph",
+        text: "Merci à la rédaction d'Educ'Action et à Gloria Adjivessode pour cette page. Qu'un hebdomadaire consacré à l'éducation s'empare du sujet compte : l'école et l'université sont souvent les premières à voir qu'un jeune ne va pas bien. Pour prolonger la lecture, retrouvez aussi notre [revue de presse de La Droiture et de L'Émergent](/blog/revue-de-presse-cigibm-2026-la-droiture-l-emergent).",
+      },
+    ],
+  },
+  {
     slug: "les-nouvelles-du-jour-cigibm-2026-resilience-face-a-la-depression",
     type: "article",
     title: "« La résilience face à la dépression » : Les Nouvelles du Jour met le CIGIBM 2026 à sa une",
@@ -295,7 +435,7 @@ export const blogPosts: BlogPost[] = [
           alt: "L'équipe du CIGIBM en tenue blanche et vert, souriante, autour de Christelle Gnimassou en tenue verte, devant le panneau du congrès",
         },
         imagePosition: "right",
-        caption: "L'équipe du CIGIBM autour de sa promotrice (photo : Jean Karl).",
+        caption: "L'équipe du CIGIBM autour de sa promotrice (photo : Jores Karl).",
         paragraphs: [
           "C'est dans la Salle Rouge du Palais des Congrès de Cotonou que s'est ouverte, le 17 octobre, la 4ème édition. Fraternité rappelle que l'événement est organisé par l'ONG Triomphe de l'Intérieur à l'initiative de sa promotrice, avec le soutien de l'ONG [Filles en Action](https://www.fillesenactions.org/), de Ghana Access et d'autres partenaires.",
           "Le ton de la journée a été donné dès la cérémonie d'ouverture par la marraine, [Ella Wama](https://www.linkedin.com/in/ella-wama-mara-expertegenre/), experte en genre. Le reportage en détaille ensuite les temps forts.",
@@ -320,7 +460,7 @@ export const blogPosts: BlogPost[] = [
         },
         imagePosition: "left",
         heading: "Une salle, une même cause",
-        caption: "Photo de famille du CIGIBM 2026 (photo : Jean Karl).",
+        caption: "Photo de famille du CIGIBM 2026 (photo : Jores Karl).",
         paragraphs: [
           "À la fin de la journée, participants, intervenants et équipe se sont retrouvés sur scène pour la photo de famille. Une image qui dit mieux que des mots ce que le congrès voulait montrer : un sujet qu'on ne porte plus seul.",
         ],
