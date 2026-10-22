@@ -14,6 +14,7 @@ import {
   CHECKLIST_TEMPLATE,
   rescheduleChecklist,
   tabsFor,
+  isEditionLocked,
   TASK_CATEGORIES,
   type InsightInput,
 } from "./cigibm-hub";
@@ -118,6 +119,12 @@ describe("alertes", () => {
       const out = buildInsights({ ...base, eventDate, tasksTotal: 0, tasksOverdue: 3 });
       expect(out.some((x) => x.title.includes("checklist") || x.title.includes("retard"))).toBe(false);
     }
+  });
+  it("une édition terminée ne se modifie plus", () => {
+    const now = new Date("2026-10-22T10:00:00Z");
+    expect(isEditionLocked(editionPhase(new Date("2026-10-17T12:00:00Z"), now))).toBe(true);
+    expect(isEditionLocked(editionPhase(new Date("2026-10-22T12:00:00Z"), now))).toBe(false);
+    expect(isEditionLocked(editionPhase(null, now))).toBe(false);
   });
   it("l'onglet Préparation n'existe que pour une édition à venir ou sans date", () => {
     const now = new Date("2026-10-22T10:00:00Z");

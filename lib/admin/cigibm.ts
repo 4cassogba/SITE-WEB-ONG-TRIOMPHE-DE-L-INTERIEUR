@@ -198,6 +198,10 @@ export async function setTaskStatus(id: string, status: TaskStatusKey) {
   return db.cigibmTask.update({ where: { id }, data: { status } });
 }
 
+export async function getEdition(number: number) {
+  return Number.isInteger(number) ? db.edition.findUnique({ where: { number } }) : null;
+}
+
 export async function getTask(id: string) {
   return db.cigibmTask.findUnique({ where: { id } });
 }

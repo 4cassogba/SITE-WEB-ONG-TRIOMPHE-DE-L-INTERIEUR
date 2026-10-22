@@ -13,6 +13,7 @@ import {
   cigibmHref,
   daysUntil,
   hasPreparation,
+  isEditionLocked,
   tabsFor,
   type CigibmTab,
   type Insight,
@@ -182,7 +183,10 @@ export default async function CigibmSpacePage({ searchParams }: { searchParams: 
           <p className="mt-3 font-display text-2xl leading-tight sm:text-3xl">{ed.theme}</p>
           <p className="mt-2 text-sm text-mist-50/75">{ed.dates}, {ed.venue}</p>
           <div className="mt-5 flex flex-wrap gap-2">
-            <Link href={`${CIGIBM_SPACE}/editions/${ed.number}/edit`} className="inline-flex min-h-10 items-center rounded-full bg-mist-50 px-4 text-sm font-bold text-leaf-900">Modifier l&apos;édition</Link>
+            {/* Une édition terminée est archivée : plus de modification possible. */}
+            {!isEditionLocked(phase) && (
+              <Link href={`${CIGIBM_SPACE}/editions/${ed.number}/edit`} className="inline-flex min-h-10 items-center rounded-full bg-mist-50 px-4 text-sm font-bold text-leaf-900">Modifier l&apos;édition</Link>
+            )}
             <a href="/cigibm" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center rounded-full border border-mist-50/30 px-4 text-sm font-semibold text-mist-50">Voir la page publique</a>
           </div>
         </section>

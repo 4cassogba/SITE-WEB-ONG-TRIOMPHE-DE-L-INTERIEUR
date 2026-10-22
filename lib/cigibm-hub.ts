@@ -91,6 +91,11 @@ export function hasPreparation(phase: EditionPhase): boolean {
   return phase.kind !== "past";
 }
 
+// Une édition terminée est archivée : ses informations ne se modifient plus.
+export function isEditionLocked(phase: EditionPhase): boolean {
+  return phase.kind === "past";
+}
+
 export function tabsFor(phase: EditionPhase): CigibmTab[] {
   return CIGIBM_TABS.filter((t) => t !== "preparation" || hasPreparation(phase));
 }

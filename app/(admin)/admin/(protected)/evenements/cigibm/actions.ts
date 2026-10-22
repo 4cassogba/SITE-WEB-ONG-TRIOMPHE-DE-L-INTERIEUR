@@ -8,12 +8,13 @@ import {
   createTask,
   deleteTask,
   generateChecklist,
+  getEdition,
   getTask,
   setTaskStatus,
   updateEdition,
   updateTask,
 } from "@/lib/admin/cigibm";
-import { CIGIBM_SPACE, cigibmHref, nextStatus, validateEditionForm, validateTaskForm, type CigibmTab } from "@/lib/cigibm-hub";
+import { CIGIBM_SPACE, cigibmHref, editionPhase, isEditionLocked, nextStatus, validateEditionForm, validateTaskForm, type CigibmTab } from "@/lib/cigibm-hub";
 
 export type FormState = { error?: string; values?: Record<string, string> } | null;
 
@@ -43,6 +44,11 @@ export async function createEditionAction(_prev: FormState, formData: FormData):
 
 export async function updateEditionAction(number: number, _prev: FormState, formData: FormData): Promise<FormState> {
   await requireAdmin();
+  const current = await getEdition(number);
+  if (!current) return { error: "Édition introuvable.", values: submittedValues(formData) };
+  if (isEditionLocked(editionPhase(current.eventDate, new Date()))) {
+    return { error: "Cette édition est terminée : ses informations ne se modifient plus.", values: submittedValues(formData) };
+  }
   formData.set("number", String(number)); // le numéro d'une édition existante ne change pas
   const checked = validateEditionForm(formData);
   if (!checked.ok) return { error: checked.error, values: submittedValues(formData) };

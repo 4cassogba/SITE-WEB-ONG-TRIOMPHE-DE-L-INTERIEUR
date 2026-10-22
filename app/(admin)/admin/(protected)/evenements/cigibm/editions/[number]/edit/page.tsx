@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin/auth";
-import { db } from "@/lib/db";
-import { toDateInput } from "@/lib/cigibm-hub";
+import { getEdition } from "@/lib/admin/cigibm";
+import { cigibmHref, editionPhase, isEditionLocked, toDateInput } from "@/lib/cigibm-hub";
 import EditionForm from "../../../EditionForm";
 import { updateEditionAction } from "../../../actions";
 
@@ -10,11 +10,13 @@ export default async function EditEditionPage({ params }: { params: Promise<{ nu
   await requireAdmin();
   const { number } = await params;
   const n = Number(number);
-  const edition = Number.isInteger(n) ? await db.edition.findUnique({ where: { number: n } }) : null;
+  const edition = await getEdition(n);
   if (!edition) notFound();
+  // Une édition terminée est archivée : retour à son espace, en lecture seule.
+  if (isEditionLocked(editionPhase(edition.eventDate, new Date()))) redirect(cigibmHref(n));
   return (
     <div className="mx-auto max-w-3xl">
-      <Link href={`/admin/evenements/cigibm?edition=${n}`} className="text-sm text-leaf-700 underline underline-offset-4">← CIGIBM</Link>
+      <Link href={cigibmHref(n)} className="text-sm text-leaf-700 underline underline-offset-4">← CIGIBM</Link>
       <h1 className="mt-2 font-display text-2xl text-leaf-900 sm:text-3xl">Modifier l&apos;édition {n}</h1>
       <EditionForm
         action={updateEditionAction.bind(null, n)}
