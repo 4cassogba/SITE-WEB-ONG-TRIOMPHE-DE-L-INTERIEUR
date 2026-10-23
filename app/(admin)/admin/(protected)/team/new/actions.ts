@@ -27,7 +27,7 @@ export async function addScannersAction(_prev: BatchState, formData: FormData): 
   const rows: BatchRow[] = [];
   for (const line of lines) {
     const email = line.email ?? generateScannerEmail(line.fullName, EMAIL_DOMAIN);
-    const password = generatePassword();
+    const password = generatePassword(role);
     try {
       const result = await upsertTeamMember({ fullName: line.fullName, email, password, role });
       rows.push({

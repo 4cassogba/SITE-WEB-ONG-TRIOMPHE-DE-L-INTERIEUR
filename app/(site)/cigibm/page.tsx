@@ -193,18 +193,18 @@ export default async function CigibmPage() {
             )}
             <Reveal delay={poster ? 0.1 : 0} className={poster ? "" : "mx-auto max-w-2xl text-center"}>
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-leaf-300">
-                C&apos;était il y a quelques jours
+                Retour sur la dernière édition
               </p>
               <h2 className="font-display text-3xl leading-tight text-mist-50 sm:text-4xl">
                 {cigibm.nextEdition.edition}, « {cigibm.nextEdition.theme} »
               </h2>
               <p className="mt-5 text-base text-mist-100/80">
-                17 octobre 2026 · {cigibm.nextEdition.venue}
+                17 et 18 octobre 2026 · {cigibm.nextEdition.venue}
               </p>
               <p className="mt-4 max-w-xl text-base leading-relaxed text-mist-100/70">
-                Une salle pleine, des intervenants engagés et une idée simple : on se protège de la
-                dépression avant la crise, pas seulement après. La presse béninoise en a parlé, et on vous
-                raconte tout.
+                Deux jours dans la salle rouge, des intervenants engagés et une idée simple : on se protège
+                de la dépression avant la crise, pas seulement après. La presse béninoise en a parlé, et on
+                vous raconte tout.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Button href="/blog/fraternite-reportage-cigibm-2026-guerison-interieure" variant="primary">
@@ -342,8 +342,9 @@ export default async function CigibmPage() {
               <p className="mt-4 text-base leading-relaxed text-mist-100/70">
                 Ambassadrice CIGIBM 2025, récompensée pour le plus grand
                 nombre d&apos;inscriptions valides et mise à l&apos;honneur
-                devant tout le congrès. La 4ème édition cherche déjà celui ou
-                celle qui prendra sa suite.
+                devant tout le congrès. À la 4ème édition, Coach Christelle a
+                de nouveau remis des distinctions aux ambassadeurs et challengers
+                engagés dans la cause.
               </p>
             </Reveal>
           </div>
@@ -351,7 +352,7 @@ export default async function CigibmPage() {
           {activeAmbassadors.length > 0 && (
             <div className="mt-16">
               <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.2em] text-leaf-300">
-                Ambassadeurs de l&apos;édition 2026
+                Les ambassadeurs de la 4ème édition
               </p>
               <AmbassadorSlider ambassadors={activeAmbassadors} />
             </div>

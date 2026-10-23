@@ -13,6 +13,12 @@ const MAX_AMOUNT = 2_000_000;
 const POLL_INTERVAL_MS = 3000;
 const POLL_TIMEOUT_MS = 90_000;
 
+// Horloge lue uniquement depuis les gestionnaires d'événement et l'intervalle de
+// suivi du paiement, jamais pendant le rendu.
+function nowMs() {
+  return Date.now();
+}
+
 // Pays et opérateurs réellement pris en charge par Feexpay pour un
 // paiement Mobile Money (vérifié dans docs.feexpay.me > API > Payin, pas
 // deviné) — voir la correspondance exacte vers les réseaux Feexpay dans
@@ -70,11 +76,11 @@ export default function DonationForm() {
   // résolution réelle (ou l'expiration du délai) avant d'afficher quoi que
   // ce soit de définitif.
   function pollStatus(reference: string) {
-    pollStartRef.current = Date.now();
+    pollStartRef.current = nowMs();
     setWaitingTimedOut(false);
     stopPolling();
     pollRef.current = setInterval(async () => {
-      if (Date.now() - pollStartRef.current > POLL_TIMEOUT_MS) {
+      if (nowMs() - pollStartRef.current > POLL_TIMEOUT_MS) {
         stopPolling();
         setWaitingTimedOut(true);
         return;
@@ -120,7 +126,7 @@ export default function DonationForm() {
     if (json.paymentUrl) {
       // Moov/Wave/Orange Côte d'Ivoire : pas de push vers le téléphone,
       // le donateur paie sur une page dédiée.
-      window.location.href = json.paymentUrl;
+      window.location.assign(json.paymentUrl);
       return;
     }
 

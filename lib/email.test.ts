@@ -131,8 +131,18 @@ describe("buildAmbassadorBadgeAnnouncementEmail", () => {
   });
 });
 
+// Le compte à rebours dépend de l'heure : on fige l'horloge une semaine avant
+// l'édition, sinon le test casse dès que la date du congrès est passée.
+const BEFORE_EDITION = new Date("2026-10-10T10:00:00Z");
+
 describe("buildParticipantTeaserEmail", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("shows a whole-day countdown and links a working Google Calendar entry", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(BEFORE_EDITION);
     const message = buildParticipantTeaserEmail("Aïcha Traoré");
 
     expect(message.subject).toContain("Aïcha");
@@ -154,7 +164,13 @@ describe("buildParticipantTeaserEmail", () => {
 });
 
 describe("buildAmbassadorBoosterEmail", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("gives one concrete action for today plus the referral link, not a generic pep talk", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(BEFORE_EDITION);
     const message = buildAmbassadorBoosterEmail("Fatou Diallo", "https://ongtriomphedelinterieur.com/r/fatou");
 
     expect(message.subject).toContain("Fatou");

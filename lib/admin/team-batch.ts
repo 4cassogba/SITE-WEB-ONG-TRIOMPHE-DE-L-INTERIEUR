@@ -27,6 +27,28 @@ export function generateScannerEmail(fullName: string, domain: string): string {
   return `${slug}.${randomInt(100, 1000)}@${domain}`;
 }
 
-export function generatePassword(): string {
-  return `scan${randomInt(10000, 100000)}`;
+// Mots courts, sans accent ni majuscule : faciles à dicter à une hôtesse le jour
+// du congrès et à taper sur un téléphone.
+const WORDS = [
+  "soleil", "mangue", "lagune", "palmier", "baobab", "colibri", "riviere", "savane", "pirogue", "tambour",
+  "ananas", "papaye", "goyave", "citron", "orange", "banane", "cocotier", "jasmin", "hibiscus", "lotus",
+  "plage", "vague", "sable", "nuage", "etoile", "lune", "aurore", "brise", "orage", "pluie",
+  "jardin", "marche", "village", "colline", "foret", "chemin", "pont", "phare", "port", "ile",
+  "lion", "zebre", "girafe", "tortue", "dauphin", "aigle", "hibou", "abeille", "papillon", "panthere",
+  "perle", "ambre", "corail", "jade", "rubis", "saphir", "cristal", "bronze", "argent", "cuivre",
+  "violon", "guitare", "kora", "balafon", "chanson", "danse", "rythme", "melodie", "tam", "flute",
+  "lumiere", "espoir", "courage", "sagesse", "victoire", "racine", "graine", "fleur", "feuille", "arbre",
+  "matin", "midi", "soir", "saison", "voyage", "sourire", "lettre", "livre", "plume", "crayon",
+  "bateau", "velo", "train", "avion", "fusee", "boussole", "carte", "lanterne", "miroir", "horloge",
+] as const;
+
+function word(): string {
+  return WORDS[randomInt(0, WORDS.length)];
+}
+
+// Scanner : deux mots + 3 chiffres (≈ 10 millions de combinaisons), assez simple
+// pour être dicté. Administrateur : trois mots + 2 chiffres (≈ 100 millions), car
+// ce compte ouvre tout l'admin. Tirage par crypto.randomInt, jamais Math.random.
+export function generatePassword(role: "scanner" | "admin" = "scanner"): string {
+  return role === "admin" ? `${word()}-${word()}-${word()}-${randomInt(10, 100)}` : `${word()}-${word()}-${randomInt(100, 1000)}`;
 }

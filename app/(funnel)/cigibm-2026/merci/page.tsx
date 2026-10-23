@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import { cigibm, siteConfig } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
@@ -94,12 +95,12 @@ export default async function MerciPage({ searchParams }: { searchParams: Promis
               </a>
               .
             </p>
-            <a
+            <Link
               href="/"
               className="mt-8 inline-flex items-center justify-center gap-2 rounded-full border border-mist-50/25 px-7 py-3.5 text-sm font-semibold tracking-wide text-mist-50 transition-colors hover:bg-mist-50/10"
             >
               Découvrir l&apos;ONG
-            </a>
+            </Link>
           </div>
         </Reveal>
       </div>

@@ -12,13 +12,15 @@ describe("database connection and Edition seed", () => {
     await db.$disconnect();
   });
 
-  it("connects and returns exactly 4 éditions", async () => {
-    const editions = await db.edition.findMany({ orderBy: { number: "asc" } });
-    expect(editions).toHaveLength(4);
+  // Les éditions suivantes (5, 6…) se créent depuis l'admin : le test ne vérifie
+  // que les 4 éditions historiques posées par le seed.
+  it("connects and holds the 4 historical éditions", async () => {
+    const editions = await db.edition.findMany({ where: { number: { lte: 4 } }, orderBy: { number: "asc" } });
+    expect(editions.map((e) => e.number)).toEqual([1, 2, 3, 4]);
   });
 
   it("marks éditions 1-3 as having no participant data, and édition 4 as having it", async () => {
-    const editions = await db.edition.findMany({ orderBy: { number: "asc" } });
+    const editions = await db.edition.findMany({ where: { number: { lte: 4 } }, orderBy: { number: "asc" } });
     expect(editions.map((e) => e.hasParticipantData)).toEqual([false, false, false, true]);
   });
 
